@@ -1,0 +1,11 @@
+
+\par 2002/10/4:
+    - Explicit lexid: Defined by %lexid derivative.
+    - Implicit lexid: Solely defined as \em Expression \em Macro which is used
+      in at least one production.
+
+\par 2002/10/3:
+    - \em $X is better than \em"#define X" because the latter messes up file pos.
+    - $X is supposed to denote a C++ expression of type or value. (Expression Macro)
+    - %Y is supposed to denote a source segment containing multiple statements
+      in either C++ or ScannerGen syntaxes. (Block Macro)

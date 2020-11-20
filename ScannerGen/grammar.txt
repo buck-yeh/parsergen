@@ -1,0 +1,371 @@
+class   C_ScannerParser
+lexid   Spaces
+lexid   Epsilon         // used by FA.h
+
+//
+//      Operator Precedency
+//
+left   = >>
+left   |
+left   + *
+left   ,
+prec   - ^
+right  ~
+right  ( ) { }
+
+//
+//      Grammar with Semantic Rules
+//
+<All> ::= <Line>            [[]]
+<All> ::= <All> "\n" <Line> [[]]
+
+<Line> ::=                              [[]]
+<Line> ::= # include $String            [[
+    const auto filename = bux::unlex<std::string>($3);
+    $p.reservePostShift([&,filename]{
+            parseFile(filename, $P, '\n');
+        }, 1);
+]]
+<Line> ::= % $Id <OptionValue>          [[
+    const auto &name = bux::unlex<std::string>($2);
+    auto &value = bux::unlex<C_StrList>($3);
+    $c.addOption(name, value);
+]]
+<Line> ::= $Id = <RegExpr> <LexResult>  [[
+    const auto &name = bux::unlex<std::string>($1);
+    auto &c = $c;
+    if (c.eraseRE(name))
+        $p.onError($1, "Duplicate regular expression name \""+name+"\"");
+    auto &t = $3.m_attr;
+    auto &val = dynamic_cast<C_NfaLex&>(*t);
+    if (auto const action = bux::tryUnlex<C_WeightedStrList>($4))
+    {
+        action->m_1stFit = val.m_1stFit;
+        val.m_NFA.setAction(std::move(*action));
+    }
+    c.addRE(name, val);
+    t.disown(); // val (aka *t) has been taken as &val the pointer.
+]]
+
+<OptionValue> ::= $Bracketed    [[
+    C_StrList t;
+    t.emplace_back(bux::unlex<std::string>($1));
+    $r = bux::createLex(t);
+]]
+<OptionValue> ::= <LexExpr>     [[ $r = $1; ]]
+
+<RegExpr> ::= <RegExprSeq>              [[ $r = $1; ]]
+<RegExpr> ::= <RegExpr> | <RegExprSeq>  [[
+    auto        &dst = dynamic_cast<C_NfaLex&>(*$1);
+    const auto  &src = dynamic_cast<C_NfaLex&>(*$3);
+    dst.m_NFA |= src.m_NFA;
+    dst.m_1stFit |= src.m_1stFit;
+    $r = $1;
+]]
+
+<RegExprSeq> ::= <RegExprTerm>              [[ $r = $1; ]]
+<RegExprSeq> ::= <RegExprSeq> <RegExprTerm> [[
+    auto        &dst = dynamic_cast<C_NfaLex&>(*$1);
+    const auto  &src = dynamic_cast<C_NfaLex&>(*$2);
+    dst.m_NFA.append(src.m_NFA);
+    dst.m_1stFit |=src.m_1stFit;
+    $r = $1;
+]]
+
+<RegExprTerm> ::= ( <RegExpr> ) [[ $r = $2; ]]
+<RegExprTerm> ::= { <RegExpr> } [[
+    dynamic_cast<C_NfaLex&>(*$2).m_NFA.changeTo(bux::FA_OPTIONAL);
+    $r = $2;
+]]
+<RegExprTerm> ::= $Id               [[
+    const auto &name = bux::unlex<std::string>($1);
+    if (const auto nfa = $c.findRE(name))
+        // Clone an existing NFA
+    {
+        $r = new C_NfaLex(*nfa);
+        return;
+    }
+    $p.onError($1, "Unknown expression name \""+name+"\"");
+    $r = new C_NfaLex; // An idea to recover
+]]
+<RegExprTerm> ::= $String           [[
+    bux::C_NewNode<C_NfaLex> ret;
+    for (auto i: bux::unlex<std::string>($1))
+        ret->m_NFA.append(C_LexSet(i));
+
+    $r = ret;
+]]
+<RegExprTerm> ::= $Key              [[
+    bux::C_NewNode<C_NfaLex> ret;
+    ret->m_NFA.append(C_LexSet(bux::unlex<uint32_t>($1)));
+    $r = ret;
+]]
+<RegExprTerm> ::= <RegExprTerm> *   [[
+    dynamic_cast<C_NfaLex&>(*$1).m_NFA.changeTo(bux::FA_REPEATABLE|bux::FA_OPTIONAL);
+    $r = $1;
+]]
+<RegExprTerm> ::= <RegExprTerm> +   [[
+    dynamic_cast<C_NfaLex&>(*$1).m_NFA.changeTo(bux::FA_REPEATABLE);
+    $r = $1;
+]]
+<RegExprTerm> ::= <RegExprTerm> $Num    [[
+    switch (const auto n = dynamic_cast<bux::C_IntegerLex&>(*$2).value<unsigned>())
+    {
+    case 0:
+        $p.onError($2, "Zero repeat");
+        break;
+    case 1:
+        break;
+    default:
+        auto &dst = dynamic_cast<C_NfaLex&>(*$1).m_NFA;
+        const auto addee{dst};
+        for (unsigned i = 1; i < n; ++i)
+            dst.append(addee);
+    }
+    $r = $1;
+]]
+<RegExprTerm> ::= [ <BW_List> ]     [[
+    $r = $2;
+]]
+
+<BW_List> ::=                           [[
+    bux::C_NewNode<C_NfaLex> ret;
+    C_LexSet t;
+    t.complement();
+    ret->m_NFA.append(t);
+    ret->m_1stFit = true;
+    $r = ret;
+]]
+<BW_List> ::= <SubCharSet>              [[
+    bux::C_NewNode<C_NfaLex> ret;
+    ret->m_NFA.append(bux::unlex<C_LexSet>($1));
+    $r = ret;
+]]
+<BW_List> ::= ^ <OptionalSubCharSet>    [[
+    bux::C_NewNode<C_NfaLex> ret;
+    if (auto src = bux::tryUnlex<C_LexSet>($2))
+    {
+        src->complement();
+        ret->m_NFA.append(*src);
+    }
+    else
+    {
+        C_LexSet t;
+        t.complement();
+        ret->m_NFA.append(t);
+        ret->m_1stFit = true;
+    }
+    $r = ret;
+]]
+
+<OptionalSubCharSet> ::=                [[]]
+<OptionalSubCharSet> ::= <SubCharSet>   [[
+    $r = $1;
+]]
+
+<SubCharSet> ::= <SubCharSet> , <SubCharSet>    [[
+    bux::unlex<C_LexSet>($1) |= bux::unlex<C_LexSet>($3);
+    $r = $1;
+]]
+<SubCharSet> ::= $String                        [[
+    const auto t = bux::unlex<std::string>($1);
+    $r = bux::createLex<C_LexSet>(t.begin(), t.end());
+]]
+<SubCharSet> ::= $Id                            [[
+    const auto t = bux::unlex<std::string>($1);
+    $r = bux::createLex<C_LexSet>(t.begin(), t.end());
+]]
+<SubCharSet> ::= $Num                           [[
+    const auto t = dynamic_cast<bux::C_IntegerLex&>(*$1).str();
+    $r = bux::createLex<C_LexSet>(t.begin(), t.end());
+]]
+<SubCharSet> ::= $Key <OptionalUBKey>           [[
+    auto c1 = bux::unlex<uint32_t>($1);
+    if (auto c2 = bux::tryUnlex<uint32_t>($2))
+    {
+        if (c1 > *c2)
+        {
+            $p.onError($1, "Lower bound key is greater than upper bound key");
+            const auto t = c1;
+            c1 = *c2;
+            *c2 = t;
+        }
+        $r = bux::createLex<C_LexSet>(c1, *c2);
+    }
+    else
+        $r = bux::createLex<C_LexSet>(c1);
+]]
+<SubCharSet> ::= $Charset                       [[
+    std::string s;
+    if (auto errPos = spec2charset(bux::unlex<std::string>($1), s))
+        // On error
+    {
+        const char *err;
+        switch (errPos->second)
+        {
+        case SCE_INVALID_CHAR:          err = "Invalid char";       break;
+        case SCE_MSSING_UB:             err = "Missing range UB";   break;
+        case SCE_NOT_IN_SAME_GROUP:     err = "Not in same group";  break;
+        case SCE_LB_GREATOR_THAN_UB:    err = "Range LB < UB";      break;
+        default:                        err = "Unknown error";
+        }
+        auto pos = $1.m_pos;
+        pos.m_Col += unsigned(errPos->first);
+        $p.onError(pos, err);
+    }
+    else
+        // On success
+        $r = bux::createLex<C_LexSet>(s.begin(), s.end());
+]]
+
+<OptionalUBKey> ::=         [[]]
+<OptionalUBKey> ::= - $Key  [[
+    $r = $2;
+]]
+
+<LexResult> ::=                                 [[]]
+<LexResult> ::= >> <LexExpr> <WithFinalCond>    [[
+    int w = 0;
+    C_StrList *is_final = nullptr;
+    auto &cond = $3.m_attr;
+    if (!$3)
+        ;
+    else if (bux::C_IntegerLex *i = cond)
+        w = i->value<int>();
+    else if (auto f = bux::tryUnlex<C_StrList>(cond))
+        is_final = f;
+    else if (auto wf = bux::tryUnlex<std::pair<int,C_StrList>>(cond))
+    {
+        w = wf->first;
+        is_final = &wf->second;
+    }
+    else
+        $p.onError($3, "Unexpected <FinalCond> type "+HRTN(std::ref(*cond)));
+
+    $r = bux::createLex<C_WeightedStrList>(w, bux::unlex<C_StrList>($2), is_final);
+]]
+
+<WithFinalCond> ::= [[]]
+<WithFinalCond> ::= @ <FinalCond>   [[
+    $r = $2;
+]]
+
+<FinalCond> ::= <Integer> <OptionalIfFinal> [[
+    if (!$2)
+        $r = $1;
+    else
+        $r = bux::createLex<std::pair<int,C_StrList>>(
+                dynamic_cast<bux::C_IntegerLex&>(*$1).value<int>(),
+                std::move(bux::unlex<C_StrList>($2)));
+]]
+<FinalCond> ::= <IfFinal>                   [[
+    $r = $1;
+]]
+
+<OptionalIfFinal> ::= [[]]
+<OptionalIfFinal> ::= <IfFinal> [[
+    $r = $1;
+]]
+
+<IfFinal> ::= if <LexExpr>  [[
+    $r = $2;
+]]
+
+<Integer> ::= $Num      [[ $r = $1; ]]
+<Integer> ::= + $Num    [[
+    dynamic_cast<bux::C_IntegerLex&>(*$2).prependPlus();
+    $r =$2;
+]]
+<Integer> ::= - $Num    [[
+    dynamic_cast<bux::C_IntegerLex&>(*$2).negate();
+    $r =$2;
+]]
+
+<LexExpr> ::= <LexTerm>             [[
+    C_StrList t;
+    t.emplace_back(bux::unlex<std::string>($1));
+    $r = bux::createLex(t);
+]]
+<LexExpr> ::= <LexExpr> <LexTerm>   [[
+    bux::unlex<C_StrList>($1).emplace_back(bux::unlex<std::string>($2));
+    $r = $1;
+]]
+
+<LexTerm> ::= $Operator     [[ $r = $1; ]]
+<LexTerm> ::= <@operator>   [[ $r = $1; ]]
+<LexTerm> ::= $Id           [[ $r = $1; ]]
+<LexTerm> ::= <@keyword>    [[ $r = $1; ]]
+<LexTerm> ::= $Num          [[
+    $r = bux::createLex(' ' + dynamic_cast<bux::C_IntegerLex&>(*$1).str());
+]]
+<LexTerm> ::= $Key          [[
+    $r = bux::createLex('\'' + asciiLiteral(bux::unlex<uint32_t>($1)) + '\'');
+]]
+
+//
+//      Output Options
+//
+%CONTEXT    [[C_Context]]
+%CHAR_TYPE  [[bux::C_LexUTF32]]
+
+%HEADERS_FOR_HEADER [[
+#include "Context.h"    // C_Context, C_StrList, C_WeightedStrList
+]]
+
+%HEADERS_FOR_CPP [[
+#include "LexBase.h"        // bux::T_LexID
+#include "LogStream.h"      // HRTN()
+#include "spec2charset.h"   // spec2charset()
+
+void parseFile(const std::string &filename, class C_ScannerParser &parser, bux::T_LexID endToken);
+]]
+
+%LOCAL_CPP          [[
+using namespace bux;
+
+//
+//      In-Module Types
+//
+typedef bux::C_Stack<bux::T_LexID> C_IdStack;
+
+struct C_LexListLex: bux::I_LexAttr
+{
+    // Data
+    C_IdStack list;
+
+    // Nonvirtuals
+    C_LexListLex()
+        {}
+    template<class T_Iter>
+    C_LexListLex(T_Iter beg, T_Iter end)
+        { list.push(beg, end); }
+};
+]]
+
+%ON_ERROR [[
+    $c.issueError(LL_ERROR, $pos, $message);
+]]
+
+%UPCAST_TOKEN [[
+    if (isascii($token) && !iscntrl($token) && !isalnum($token) && !isspace($token))
+    {
+        $attr.assign(bux::createLex<std::string>(1,char($token)), true);
+        $token = TID_LEX_Operator;
+        return true;
+    }
+    return false;
+]]
+
+%SCANNEROPTION  [[
+#include    "RE_Suite.txt"
+%NAMEPREFIX Scanner
+
+EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec_digit)+  >>bux::createPlainString<TID_LEX_Charset,CHAR_TYPE> @-1
+]]
+%HEADERS_FOR_SCANNER_CPP    [[
+#include "BracketBalance.h"
+]]
+
+%EXTRA_TOKENS   [[oct_num|dec_num|hex_num|identifier|spaces|c_char|c_str|bracketed|EasyCharset]]
+%EXTRA_TOKENS   [[c_comment|line_comment]]
+//%SHOW_UNDEFINED

@@ -1,0 +1,19 @@
+#include    "RE_Suite.txt"
+%NAMEPREFIX Scanner
+
+EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec_digit)+  >>bux::createPlainString<TID_LEX_Charset,CHAR_TYPE> @-1
+
+%CHAR_TYPE	    bux::C_LexUTF32
+
+_literal_3e3e 	= ">>"	>>bux::createNothing<TID_LITERAL_3e3e,bux::C_LexUTF32> @+1
+_literal_i_f_ 	= "if"	>>bux::createNothing<TID_KEYWORD_if,bux::C_LexUTF32> @+1
+_literal_i_n_c_l_u_d_e_ 	= "include"	>>bux::createNothing<TID_KEYWORD_include,bux::C_LexUTF32> @+1
+_the_very_last_ = _literal_3e3e|_literal_i_f_|_literal_i_n_c_l_u_d_e_ | oct_num|dec_num|hex_num|identifier|spaces|c_char|c_str|bracketed|EasyCharset|c_comment|line_comment
+
+%HEADERS_FOR_CPP     [[
+#include "ParserIdDef.h"
+
+// %HEADERS_FOR_SCANNER_CPP expanded BEGIN
+#include "BracketBalance.h"
+// %HEADERS_FOR_SCANNER_CPP expanded END
+]]

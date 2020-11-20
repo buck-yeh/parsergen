@@ -1,0 +1,24 @@
+class Main::C_BNFParser
+lexid Spaces
+
+//
+//      Predefined Lexicon
+//
+#include "ginc/grammar.cpp"
+#include "ginc/impl.cpp"
+
+%CHAR_TYPE          [[bux::C_LexUTF32]]
+%SCANNEROPTION      [[
+#include        "../ScannerGen/RE_Suite.txt"
+%NAMEPREFIX     Parser
+
+LexSymbol       = '$' identifier                    >>bux::createPlainString<TID_LEX_LexSymbol,CHAR_TYPE,1,0>
+Nonterminal     = '<' {'@'} identifier '>' | "<@>"  >>bux::createPlainString<TID_LEX_Nonterminal,CHAR_TYPE,1,1>
+]]
+%HEADERS_FOR_SCANNER_CPP    [[
+#include "BracketBalance.h"
+]]
+%SHOW_UNDEFINED    // Massive includes and this line are for demonstration and selftest
+
+%EXTRA_TOKENS   [[dec_num|hex_num|identifier|c_char|c_str|spaces|bracketed|c_comment|line_comment]]
+%EXTRA_TOKENS   [[LexSymbol|Nonterminal|CompoundSymbol|win32_newline]]

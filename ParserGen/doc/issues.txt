@@ -1,0 +1,2 @@
+2015/8/16
+1. Cannot handle multiple productions with the same lvalue <@>

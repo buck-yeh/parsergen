@@ -1,0 +1,5 @@
+When the underlying infrastructure evolves and causes ParserGen build errors:
+1. Manually correct generated parts to pass build;
+2. Revise Output.cpp, maybe among other modules, to generate correct answers. (Iterative process by comparing generated files with manually corrected ones)
+3. Verify the revision by applying new ParserGen + ScannerGen suite to themselves then to examples.
+4. Commit.
