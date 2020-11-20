@@ -5,5 +5,9 @@ Makefile
 cmake_install.cmake
 CTestTestfile.cmake
 _deps
+bux
 CBrackets
-
+grammarstrip
+parsergen
+scannergen
+handycharset
