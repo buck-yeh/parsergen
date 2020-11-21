@@ -1,4 +1,4 @@
-#include        "../../app/ScannerGen/RE_Suite.txt"
+#include        "../../ScannerGen/RE_Suite.txt"
 %NAMEPREFIX     Calc
 
 %CHAR_TYPE	    bux::C_LexUTF32
