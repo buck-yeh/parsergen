@@ -1,0 +1,81 @@
+// Taken from https://www.gnu.org/software/bison/manual/html_node/Simple-GLR-Parsers.html
+// Against ambiguous expression: type subrange = (a) .. b;
+class   C_GLRPOC
+lexid   Spaces
+
+//
+//      Output Options
+//
+%CHAR_TYPE  [[bux::C_LexUTF32]]
+
+%HEADERS_FOR_CPP [[
+#include "AST.h"        // All lex types for this parser
+#include <iostream>     // std::cerr
+]]
+
+%PRECLASSDECL    [[
+extern int errors;
+]]
+
+%SCOPED_CPP_HEAD [[
+int errors =0;
+]]
+
+%ON_ERROR [[
+    std::cerr <<"COL#" <<$pos.m_Col <<": " <<$message <<'\n';
+]]
+
+%SCANNEROPTION  [[
+#include        "../../app/ScannerGen/RE_Suite.txt"
+%NAMEPREFIX     GLR
+]]
+
+%EXTRA_TOKENS   [[spaces|identifier]]
+
+//
+//      Operator Precedency
+//
+left + -
+left * /
+
+//
+//      Grammar with Reduction Code
+//
+<type_decl> ::= type $Id = <type> ; [[
+    $r = new C_TypeDecl{bux::unlex<std::string>($2), $4};
+]]
+
+<type> ::= ( <id_list> )        [[
+    $r = $2;
+]]
+<type> ::= <expr> .. <expr>     [[
+    $r = new C_BinaryOp{"..", $1, $3};
+]]
+
+<id_list> ::= $Id               [[
+    $r = bux::createLex<C_IdList>({bux::unlex<std::string>($1)});
+]]
+<id_list> ::= <id_list> , $Id   [[
+    auto t{bux::unlex<C_IdList>($1)};
+    t.emplace_back(bux::unlex<std::string>($3));
+    $r = bux::createLex<C_IdList>(t);
+]]
+
+<expr> ::= ( <expr> )           [[
+    $r = bux::createLex<C_LexPtr>($2);
+]]
+<expr> ::= <expr> + <expr>      [[
+    $r = new C_BinaryOp{"+", $1, $3};
+]]
+<expr> ::= <expr> - <expr>      [[
+    $r = new C_BinaryOp{"-", $1, $3};
+]]
+<expr> ::= <expr> * <expr>      [[
+    $r = new C_BinaryOp{"*", $1, $3};
+]]
+<expr> ::= <expr> / <expr>      [[
+    $r = new C_BinaryOp{"/", $1, $3};
+]]
+<expr> ::= $Id                  [[
+    $r = $1;
+]]

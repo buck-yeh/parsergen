@@ -1,0 +1,12 @@
+#include        "../../app/ScannerGen/RE_Suite.txt"
+%NAMEPREFIX     GLR
+
+%CHAR_TYPE	    bux::C_LexUTF32
+
+_literal_2e2e 	= ".."	>>bux::createNothing<TID_LITERAL_2e2e,bux::C_LexUTF32> @+1
+_literal_t_y_p_e_ 	= "type"	>>bux::createNothing<TID_KEYWORD_type,bux::C_LexUTF32> @+1
+_the_very_last_ = _literal_2e2e|_literal_t_y_p_e_ | spaces|identifier
+
+%HEADERS_FOR_CPP     [[
+#include "ParserIdDef.h"
+]]

@@ -23,3 +23,4 @@ project(ParserSuite)
 
 add_subdirectory (ParserGen)
 add_subdirectory (ScannerGen)
+add_subdirectory (example)

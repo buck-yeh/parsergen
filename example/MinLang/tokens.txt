@@ -1,0 +1,6 @@
+%NAMEPREFIX     Min
+
+
+%HEADERS_FOR_CPP     [[
+#include "ParserIdDef.h"
+]]

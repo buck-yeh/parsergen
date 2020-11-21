@@ -11,3 +11,6 @@ grammarstrip
 parsergen
 scannergen
 handycharset
+bisonglr
+calci
+minlang
