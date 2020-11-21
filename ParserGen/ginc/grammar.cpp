@@ -1,6 +1,8 @@
 %HEADERS_FOR_CPP    [[
-#include "ParseFile.h"      // parseFile()
-#include "UnicodeCvt.h"     // bux::to_utf8()
+#include "ParseFile.h"  // parseFile()
+//-----------------------------------------------------
+#include "StrUtil.h"    // bux::expand_env()
+#include "UnicodeCvt.h" // bux::to_utf8()
 ]]
 
 //
@@ -79,7 +81,7 @@
     if (!$c.testCond())
         return;
 
-    const auto filename = bux::unlex<std::string>($2);
+    const auto filename = bux::expand_env(bux::unlex<std::string>($2).c_str());
     $p.reservePostShift([&,filename]{
             parseFile(filename, $P, '\n');
         }, 1);

@@ -2,6 +2,10 @@ class   C_ScannerParser
 lexid   Spaces
 lexid   Epsilon         // used by FA.h
 
+%HEADERS_FOR_CPP    [[
+#include "StrUtil.h"    // bux::expand_env()
+]]
+
 //
 //      Operator Precedency
 //
@@ -21,7 +25,7 @@ right  ( ) { }
 
 <Line> ::=                              [[]]
 <Line> ::= # include $String            [[
-    const auto filename = bux::unlex<std::string>($3);
+    const auto filename = bux::expand_env(bux::unlex<std::string>($3).c_str());
     $p.reservePostShift([&,filename]{
             parseFile(filename, $P, '\n');
         }, 1);

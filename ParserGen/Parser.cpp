@@ -3,8 +3,10 @@
 // Read ParserGen.chm for further info.
 
 // %HEADERS_FOR_CPP expanded BEGIN
-#include "ParseFile.h"      // parseFile()
-#include "UnicodeCvt.h"     // bux::to_utf8()
+#include "ParseFile.h"  // parseFile()
+//-----------------------------------------------------
+#include "StrUtil.h"    // bux::expand_env()
+#include "UnicodeCvt.h" // bux::to_utf8()
 // %HEADERS_FOR_CPP expanded END
 #include "Parser.h"
 #include "ParserIdDef.h"
@@ -649,7 +651,7 @@ void _reduce_9(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
     if (!dynamic_cast<C_BNFParser&>(_paRSeR_).m_context.testCond())
         return;
 
-    const auto filename = bux::unlex<std::string>(_geT_(1));
+    const auto filename = bux::expand_env(bux::unlex<std::string>(_geT_(1)).c_str());
     _paRSeR_.reservePostShift([&,filename]{
             parseFile(filename, dynamic_cast<C_BNFParser&>(_paRSeR_), '\n');
         }, 1);
