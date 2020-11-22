@@ -6,5 +6,5 @@ add_executable(minlang
     Parser.cpp
     Scanner.cpp
     )
-target_include_directories(minlang PRIVATE "../../bux/include")
+target_include_directories(minlang PRIVATE "../../../bux/include")
 target_link_libraries(minlang Bux)

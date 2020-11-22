@@ -9,13 +9,13 @@ FetchContent_Declare(
   FetchedBux
   GIT_REPOSITORY https://github.com/buck-yeh/bux.git
   GIT_TAG        main
-  SOURCE_DIR     bux
+  SOURCE_DIR     ../bux
 )
 FetchContent_Declare(
   FetchedCBrackets
   GIT_REPOSITORY https://github.com/buck-yeh/CBrackets.git
   GIT_TAG        main
-  SOURCE_DIR     CBrackets
+  SOURCE_DIR     ../CBrackets
 )
 FetchContent_MakeAvailable(FetchedBux FetchedCBrackets)
 
