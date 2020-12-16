@@ -1,4 +1,4 @@
-list(APPEND CMAKE_CXX_FLAGS "-Og -g3 -std=c++20")
+string(APPEND CMAKE_CXX_FLAGS "-Og -g3 -std=c++20")
 set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(bisonglr
