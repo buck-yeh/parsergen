@@ -12,8 +12,8 @@ include(FindPkgConfig)
 
 include_directories("../../bux/include" "../../CBrackets") # ${Boost_INCLUDE_DIRS})
 #link_directories("../../lib/bux" "../CBrackets")
-string(APPEND CMAKE_CXX_FLAGS "-Wall -Wextra -Wconversion -Wno-parentheses -Wno-unknown-pragmas -O3 -std=c++2a")
-#string(APPEND CMAKE_CXX_FLAGS "-Wall -Wextra -Wno-parentheses -Wno-unknown-pragmas -g3 -Og -std=c++2a")
+string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wconversion -Wno-parentheses -Wno-unknown-pragmas -O3 -std=c++2a")
+#string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wno-parentheses -Wno-unknown-pragmas -g3 -Og -std=c++2a")
 
 add_executable(parsergen
     ActionMap.cpp

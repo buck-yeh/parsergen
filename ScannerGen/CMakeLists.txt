@@ -11,7 +11,7 @@
 
 include_directories("../../bux/include" "../../CBrackets")
 #link_directories("../../bux/src" "../CBrackets")
-string(APPEND CMAKE_CXX_FLAGS "-Wall -Wextra -Wshadow -Wconversion -Wno-parentheses -Wno-unknown-pragmas -Wno-maybe-uninitialized -O3 -std=c++2a")
+string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Wno-parentheses -Wno-unknown-pragmas -Wno-maybe-uninitialized -O3 -std=c++2a")
 
 add_executable(scannergen
     Context.cpp
