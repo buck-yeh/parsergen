@@ -7,4 +7,4 @@ add_executable(bisonglr
     Scanner.cpp
     )
 target_include_directories(bisonglr PRIVATE "../../../bux/include")
-target_link_libraries(bisonglr Bux)
+target_link_libraries(bisonglr Bux fmt)

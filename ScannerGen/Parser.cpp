@@ -3,8 +3,6 @@
 // Read ParserGen.chm for further info.
 
 // %HEADERS_FOR_CPP expanded BEGIN
-#include "StrUtil.h"    // bux::expand_env()
-
 #include "LexBase.h"        // bux::T_LexID
 #include "LogStream.h"      // HRTN()
 #include "spec2charset.h"   // spec2charset()
@@ -974,7 +972,7 @@ constinit const struct C_MapGoto {
 void _reduce_1(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <Line> ::= # include $String
 {
-    const auto filename = bux::expand_env(bux::unlex<std::string>(_geT_(2)).c_str());
+    const auto filename = dynamic_cast<C_ScannerParser&>(_paRSeR_).m_context.expand_include(bux::unlex<std::string>(_geT_(2)));
     _paRSeR_.reservePostShift([&,filename]{
             parseFile(filename, dynamic_cast<C_ScannerParser&>(_paRSeR_), '\n');
         }, 1);

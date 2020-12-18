@@ -1,4 +1,4 @@
-#include "ginc/impl.h"
+#include "impl.h"
 
 %ON_ERROR [[
     $c.issueError(LL_ERROR, $pos, $message);

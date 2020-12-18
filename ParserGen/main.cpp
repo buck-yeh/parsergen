@@ -40,8 +40,8 @@ enum
     //      Version Macros
     //
     VERSION_MAJOR           = 1,
-    VERSION_MINOR           = 4,
-    VERSION_RELEASE         = 1,
+    VERSION_MINOR           = 5,
+    VERSION_RELEASE         = 0,
     //
     //      Error Codes
     //
@@ -63,28 +63,44 @@ int main(int argc, const char* argv[])
         "  1. <Grammar> refers to a grammar definition file.\n"
         "  2. The resulting C++ source files are named as <Filename>IdDef.h <Filename>.h\n"
         "     and <Filename>.cpp\n"
-        "  3. Token definition file for compound literals are written to standard\n"
-        "     output by default or to <TokensOutput> if present.\n"
-        "  4. The file mentioned in 3. will be output in favor of CreateScanner.exe\n"
-        "     rather than ScannerGen.exe if <TokensOutput> begins with -\n",
-        VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
-    ezargs.position_args({"Grammar","Filename","TokensOutput"}, {2});
+        "  3. Token definitions for compound literals are written to <TokensOutput>.\n"
+        , VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
+    C_Paths         inc_dirs;
+    ezargs.position_args({"Grammar","Filename","TokensOutput"})
+          .add_flag("include_dir", 'I', "Search path of #include derivatives within tokens.txt",
+                    [&](auto s){
+                        std::istringstream in{std::string{s}};
+                        for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
+                    });
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
         fmt::print("{}\n", ret.m_error);
         return MAIN_ARG_ERROR;
     }
+    if (!inc_dirs.empty())
+    {
+        fmt::print("INCLUDE_PATHS: {{");
+        bool first = true;
+        for (auto &i: inc_dirs)
+        {
+            if (first)
+                first = false;
+            else
+                fmt::print(", ");
 
+            fmt::print("{}", i.string());
+        }
+        fmt::print("}}\n");
+    }
     catchSE();
     try
     {
         // Syntax analysis
         std::ios_base::sync_with_stdio(true);
-        fmt::print("About to parse '{}' ... ", argv[1]);
 
         const auto          startTime = std::chrono::system_clock::now();
-        Main::C_BNFParser   parser;
+        Main::C_BNFParser   parser{inc_dirs};
         parseFile(argv[1], parser, TID_EOF);
         if (!parser.accepted())
         {

@@ -1,13 +1,13 @@
 #include "BNFContext.h"
-#include "ParserIdDef.h"    // namespace Main::LexId
+//--------------------------------------------------------------------
+#include "FsUtil.h"         // bux::search_dirs()
+#include "LogStream.h"      // HRTN()
+#include "StrUtil.h"        // bux::expand_env()
+#include "XException.h"     // RUNTIME_ERROR()
 #include <cstring>          // memcmp()
 #include <fstream>          // std::ifstream
-#include <fmt/core.h>       // fmt::print()
+#include <fmt/core.h>       // fmt::print(), fmt::format()
 #include <limits>           // std::numeric_limits<>
-#include <sstream>          // std::ostringstream
-#include <stdlib.h>         // atexit()
-#include "LogStream.h"      // HRTN()
-#include "XException.h"     // RUNTIME_ERROR()
 
 namespace {
 
@@ -26,13 +26,6 @@ using namespace Main;
 //
 //      Implement Classes
 //
-C_BNFContext::C_BNFContext():
-    m_PriorWeight(1),
-    m_BuilinNonterminalMask(0)
-{
-    for (size_t i =0; i < TOTAL_ERRORLEVEL; m_ErrorTotal[i++] =0);
-}
-
 C_BNFContext::~C_BNFContext()
 {
     for (auto &i: m_PriorRaws)
@@ -234,6 +227,11 @@ bool C_BNFContext::equal(const C_Semantic &a, const C_Semantic &b) const
     return true;*/
 }
 
+std::string C_BNFContext::expand_include(const std::string &org_path) const
+{
+    return bux::search_dirs(bux::expand_env(org_path.c_str()), m_IncDirs).string();
+}
+
 void C_BNFContext::issueError(bux::E_LogLevel level, const C_SourcePos &pos, const std::string &message)
 {
     static const char *const KIND[] ={
@@ -253,11 +251,7 @@ void C_BNFContext::issueError(bux::E_LogLevel level, const C_SourcePos &pos, con
         std::numeric_limits<size_t>::max()
     };
     if (++m_ErrorTotal[level] > ERR_LIMIT[level])
-    {
-        std::ostringstream out;
-        out <<"Too many (" <<m_ErrorTotal[level] <<") " <<kind <<"s to go !";
-        RUNTIME_ERROR(out.str())
-    }
+        RUNTIME_ERROR(fmt::format("Too many ({}) {}s!", m_ErrorTotal[level] ,kind))
 }
 
 void C_BNFContext::normalize(const C_Semantic &src, C_Semantic &dst) const
@@ -392,7 +386,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
         // Parse the source
     {
         // Extract & assign ids for m_Lex2ID & m_GenLex2Id
-        std::ifstream in(found->expand().c_str());
+        std::ifstream in(found->expand());
         unsigned long tid_max = 0;
         for (std::string s; getline(in, s);)
         {
@@ -479,20 +473,17 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
             }
             else
             {
-                std::ostringstream out;
-                out <<"Duplicate priority assignments on id " <<id;
+                auto out = fmt::format("Duplicate priority assignments on id {}", id);
                 if (id < 127)
-                    out <<"(\'" <<asciiLiteral(char(id)) <<"\')";
-                issueError(LL_ERROR, pos, out.str());
+                    out += fmt::format("(\'{}\')", asciiLiteral(char(id)));
+                issueError(LL_ERROR, pos, out);
             }
         }
         else
         {
             issueError(LL_ERROR, pos, errMsg);
-            std::ostringstream out;
-            out <<"Fail to get id from the " <<count
-                <<"th priority record with token type " <<HRTN(*i->m_pAttr);
-            issueError(LL_WARNING, pos, out.str());
+            issueError(LL_WARNING, pos,
+                fmt::format("Fail to get id from the {}th priority record with token type {}", count, HRTN(*i->m_pAttr)));
         }
     }
 
@@ -562,10 +553,8 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
                 t->m_Rval.emplace_back(new C_StrLiteral(i.first));
             }
 
-            std::ostringstream out;
-            out <<"$r = createLex<std::string>(\"" <<asciiLiteral(i.first) <<"\");";
             C_Semantic s;
-            s.emplace_back(new C_BracketedLex(out.str()));
+            s.emplace_back(new C_BracketedLex(fmt::format("$r = createLex<std::string>(\"{}\");",asciiLiteral(i.first))));
             addProduction(*t, &s);
         } // for (auto &i: m_Literal2IdName)
 

@@ -1,9 +1,13 @@
-#include <fstream>              // std::ifstream
-#include "Parser.h"             // Main::C_BNFParser
-#include "Scanner.h"            // C_ParserScanner
+#include "Parser.h"     // Main::C_BNFParser
+#include "Scanner.h"    // C_ParserScanner
+//--------------------------------------------------------------------
+#include <fmt/core.h>   // fmt::print()
+#include <fstream>      // std::ifstream
 
 void parseFile(const std::string &filename, Main::C_BNFParser &parser, bux::T_LexID endToken)
 {
+    fmt::print("About to parse '{}' ...\n", filename);
+
     std::ifstream   in(filename);
     if (!in.is_open())
     {

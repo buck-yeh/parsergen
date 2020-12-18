@@ -15,10 +15,10 @@
 #include "LogStream.h"      // HRTN()
 #include "Range2Type.h"     // bux::fittestType()
 #include "XConsole.h"       // bux::testWritability()
-#include <fstream>          // std::ifstream
+#include <filesystem>       // std::filesystem::path
 #include <fmt/core.h>       // fmt::print()
+#include <fstream>          // std::ifstream
 #include <iostream>         // std::cin, std::cerr
-#include <filesystem>       // std::filesystem::*
 #include <limits>           // std::numeric_limits<>
 #include <cstring>          // strlen()
 
@@ -38,12 +38,12 @@ enum
     //      Version Macros
     //
     VERSION_MAJOR           = 1,
-    VERSION_MINOR           = 3,
+    VERSION_MINOR           = 4,
     VERSION_RELEASE         = 0,
     //
     //      Error Codes
     //
-    LEVEL_OK                =0,
+    LEVEL_OK                = 0,
     LEVEL_HELP,
     LEVEL_NOT_ACCEPTED,
     LEVEL_PARSE_ERROR,
@@ -145,6 +145,8 @@ std::string banner()
 
 void parseFile(const std::string &filename, std::istream &in, C_ScannerParser &parser, bux::T_LexID endToken)
 {
+    fmt::print("About to parse '{}' ...\n", filename);
+
     bux::C_ScreenerNo<TID_LEX_Spaces>   preparser(parser);
     C_ScannerScanner                    scanner(preparser);
     const auto                          curFile = parser.setSource(filename);
@@ -558,7 +560,13 @@ int main(int argc, const char *argv[])
         "  2. <REn> is definition file with reqular expressions productions.\n"
         "  3. If no <REn> file is assigned, standard input will be read.\n",
         VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
-    ezargs.position_args({"ScannerBase", "RE1", "RE2"}, {1,2}, true);
+    C_Paths         inc_dirs;
+    ezargs.position_args({"ScannerBase", "RE1", "RE2"}, {1,2}, true)
+          .add_flag("include_dir", 'I', "Search path of #include derivatives within tokens.txt",
+                    [&](auto s){
+                        std::istringstream in{std::string{s}};
+                        for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
+                    });
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
@@ -570,25 +578,27 @@ int main(int argc, const char *argv[])
     try
     {
         // Parse inputs
-        C_ScannerParser     parser;
-        if (argc > 2)
+        C_ScannerParser     parser{inc_dirs};
+        const auto          n_pos_args = int(ezargs.parsed_position_argc());
+        if (n_pos_args > 1)
         {
-            state =1;
-            for (int i =2; i < argc; ++i)
+            fmt::print("#pos_args = {}\n", n_pos_args);
+            state = 1;
+            for (int i = 2; i < n_pos_args; ++i)
             {
-                state =2;
-                ::parseFile(argv[i], parser, i+1 == argc? bux::T_LexID(bux::TID_EOF): '\n');
+                state = 2;
+                ::parseFile(argv[i], parser, i+1 == n_pos_args? bux::T_LexID(bux::TID_EOF): '\n');
             }
         }
         else
         {
-            state =3;
+            state = 3;
             parseFile("<CON", std::cin, parser, bux::TID_EOF);
         }
 
         if (!parser.accepted())
         {
-            std::cerr <<"Not accepted on EOF\n";
+            fmt::print("Not accepted on EOF\n");
             return LEVEL_NOT_ACCEPTED;
         }
 
@@ -602,7 +612,7 @@ int main(int argc, const char *argv[])
         const auto pnfa = c.finalExpr();
         state =5;
         FC_SolveConflict    solve(c);
-        C_LexDfa            dfa(pnfa? *pnfa: C_LexNfa(), solve);
+        C_LexDfa            dfa(pnfa? *pnfa: C_LexNfa(), solve); // Algorithm MinDFA appllied
         const fs::path      path(argv[1]);
         const std::string   base =path.stem().generic_string();
         const std::string   path_h =path.string()+".h";
@@ -653,7 +663,7 @@ void parseFile(const std::string &filename, C_ScannerParser &parser, bux::T_LexI
     if (!in.is_open())
     {
         parser.m_context.issueError(LL_FATAL, bux::C_SourcePos(filename,0,0),
-            "Fail to open the source file");
+            fmt::format("Fail to open the source file '{}'", filename));
         return;
     }
     parseFile(filename, in, parser, endToken);

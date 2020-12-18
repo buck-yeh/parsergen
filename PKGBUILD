@@ -5,7 +5,7 @@
 
 # Maintainer: Your Name <youremail@domain.com>
 pkgname=parsergen
-pkgver=1.4.1
+pkgver=1.5.0
 pkgrel=1
 epoch=
 pkgdesc='LR1/GLR parser generator into Modern C++ code which must be built with bux library'
@@ -14,7 +14,7 @@ url='https://github.com/buck-yeh/parsergen.git'
 license=('MIT')
 groups=()
 depends=()
-makedepends=('cmake' 'make' 'gcc' 'git')
+makedepends=('cmake' 'make' 'gcc' 'git' 'binutils' 'fmt')
 checkdepends=()
 optdepends=()
 provides=()
@@ -30,27 +30,29 @@ md5sums=()
 validpgpkeys=()
 
 prepare() {
-	rm -Rf "$pkgname-$pkgver"
-	mkdir -p "$pkgname-$pkgver"
-	cd "$pkgname-$pkgver"
+	rm -Rf "$pkgname"
+	mkdir -p "$pkgname"
+	cd "$pkgname" || return 1
 	git clone -b main --single-branch $url .
 }
 
 build() {
-	cd "$pkgname-$pkgver"
+	cd "$pkgname" || return 1
 	rm -Rf CMakeCache.txt CMakeFiles/
 	cmake .
 	make -j
 }
 
 check() {
-	echo "Enter check()"
-	cd "$pkgname-$pkgver"
-	#make -k check
+	cd "$pkgname" || return 1
+	if [[ -x ParserGen/parsergen && -x ParserGen/grammarstrip && -x ScannerGen/scannergen && -f ScannerGen/RE_Suite.txt ]]; then
+		return 0
+	else
+		return 1
+	fi
 }
 
 package() {
-	echo "Enter package()"
-	cd "$pkgname-$pkgver"
-	#make DESTDIR="$pkgdir/" install
+	cd "$pkgname" || return 1
+	cp ParserGen/parsergen ParserGen/grammarstrip ScannerGen/scannergen ScannerGen/RE_Suite.txt "$pkgdir/"
 }

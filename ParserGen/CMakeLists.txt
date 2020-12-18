@@ -24,6 +24,7 @@ add_executable(parsergen
     Scanner.cpp
     Output.cpp
     )
+#target_compile_options(parsergen PRIVATE -O0 -g3)
 target_link_libraries(parsergen bracketPairing Bux fmt)
 #add_dependencies(parsergen bracketPairing Bux)
 

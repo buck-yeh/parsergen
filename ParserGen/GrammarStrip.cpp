@@ -36,7 +36,13 @@ int main(int argc, const char* argv[])
     bux::C_EZArgs   ezargs{
         "\t1. <Grammar> is a grammar definition file.\n"
         "\t2. The stripped grammar items will be printed to standard output.\n"};
-    ezargs.position_args({"Grammar"});
+    C_Paths         inc_dirs;
+    ezargs.position_args({"Grammar"})
+          .add_flag("include_dir", 'I', "Search path of #include derivatives within tokens.txt",
+                    [&](auto s){
+                        std::istringstream in{std::string{s}};
+                        for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
+                    });
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
@@ -50,7 +56,7 @@ int main(int argc, const char* argv[])
         // Syntax analysis
         std::ios_base::sync_with_stdio(true);
 
-        Main::C_BNFParser   parser;
+        Main::C_BNFParser   parser{inc_dirs};
         parseFile(argv[1], parser, TID_EOF);
         if (!parser.accepted())
         {

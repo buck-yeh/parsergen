@@ -1,8 +1,12 @@
 #include "Context.h"
+#include "FsUtil.h"     // bux::search_dirs()
+#include "StrUtil.h"    // bux::expand_env()
 #include <fmt/core.h>   // fmt::print()
 #include <limits>       // std::numeric_limits<>
 
 namespace {
+
+namespace fs = std::filesystem;
 
 //
 //      In-Module Types
@@ -25,20 +29,18 @@ struct FC_AddStr
 std::string expand(const C_StrList &src, const C_Context &c)
 {
     std::string ret;
-    for (C_StrList::const_iterator i =src.begin(), end =src.end(); i != end; ++i)
+    for (auto &i :src)
     {
         std::string value;
-        if (!c.getOptionString(*i, value))
-            value =*i;
+        if (!c.getOptionString(i, value))
+            value = i;
         if (value.empty())
             continue;
-        if (size_t n =ret.size())
-        {
-            const char lastCh =ret[n-1];
-            if (isalnum(lastCh) && isalnum(value[0]))
-                ret +=' ';
-        }
-        ret +=value;
+
+        if (!ret.empty() && isalnum(ret.back()) && isalnum(value.front()))
+            ret += ' ';
+
+        ret += value;
     }
     return ret;
 }
@@ -52,11 +54,6 @@ std::string getOptionString(const C_Context &c, const std::string &name, const s
 //
 //      Implement Classes
 //
-C_Context::C_Context()
-{
-    for (size_t i =0; i < TOTAL_ERRORLEVEL; m_ErrorTotal[i++] =0);
-}
-
 C_Context::~C_Context()
 {
     for (C_RegExprMap::const_iterator i =m_PoolRE.begin(); i != m_PoolRE.end(); ++i)
@@ -68,7 +65,7 @@ void C_Context::addOption(const std::string &name, C_StrList &value)
     if (name == "CPP_INCLUDE")
         // Special treat
     {
-        C_StrList &dst = m_Options["HEADERS_FOR_CPP"];
+        auto &dst = m_Options["HEADERS_FOR_CPP"];
         dst.emplace_back("#include ");
         dst.insert(dst.end(), value.begin(), value.end());
         dst.emplace_back("\n");
@@ -79,7 +76,7 @@ void C_Context::addOption(const std::string &name, C_StrList &value)
         name == "LOCAL_ACTION_DEFS")
         // Append value
     {
-        C_StrList &dst = m_Options[name];
+        auto &dst = m_Options[name];
         dst.insert(dst.end(), value.begin(), value.end());
     }
     else
@@ -89,14 +86,13 @@ void C_Context::addOption(const std::string &name, C_StrList &value)
 
 void C_Context::addRE(const std::string &name, C_NfaLex &val)
 {
-    m_PoolRE[name] =&val;
-    m_BuildName =name; // The lat ladded is assumed as the build root
+    m_PoolRE[name] = &val;
+    m_BuildName = name; // The lat ladded is assumed as the build root
 }
 
 bool C_Context::eraseRE(const std::string &name)
 {
-    C_RegExprMap::iterator found =m_PoolRE.find(name);
-    if (found != m_PoolRE.end())
+    if (auto found = m_PoolRE.find(name); found != m_PoolRE.end())
     {
         delete found->second;
         m_PoolRE.erase(found);
@@ -105,18 +101,22 @@ bool C_Context::eraseRE(const std::string &name)
     return false;
 }
 
+std::string C_Context::expand_include(const std::string &org_path) const
+{
+    return bux::search_dirs(bux::expand_env(org_path.c_str()), m_IncDirs).string();
+}
+
 const C_LexNfa *C_Context::finalExpr() const
 {
-    C_RegExprMap::const_iterator found =m_PoolRE.find(m_BuildName);
-    if (found != m_PoolRE.end())
+    if (auto found =m_PoolRE.find(m_BuildName); found != m_PoolRE.end())
         return &found->second->m_NFA;
+
     return 0;
 }
 
 const C_NfaLex *C_Context::findRE(const std::string &name) const
 {
-    C_RegExprMap::const_iterator found =m_PoolRE.find(name);
-    if (found != m_PoolRE.end())
+    if (auto found =m_PoolRE.find(name); found != m_PoolRE.end())
         return found->second;
 
     return 0;

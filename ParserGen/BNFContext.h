@@ -3,7 +3,8 @@
 
 #include "ParserGenBase.h"  // C_ParserInfo, ...
 #include "Logger.h"         // bux::E_LogLevel
-#include "LR1.h"            // bux::LR1::I_ParserPolicy
+#include "LR1.h"            // bux::LR1::C_LexPtr
+#include <filesystem>       // std::filesystem::path
 
 namespace ParserGen {
 
@@ -19,16 +20,18 @@ enum
 //      Types
 //
 typedef std::list<C_StringList> C_TemplateArgs;
+typedef std::vector<std::filesystem::path> C_Paths;
 
 class C_BNFContext: public C_ParserInfo
 {
 public:
 
     // Data
-    size_t m_ErrorTotal[TOTAL_ERRORLEVEL];
+    const C_Paths   &m_IncDirs;
+    size_t          m_ErrorTotal[TOTAL_ERRORLEVEL]{};
 
     // Ctor/Dtor
-    C_BNFContext();
+    explicit C_BNFContext(const C_Paths &inc_dirs): m_IncDirs(inc_dirs) {}
     ~C_BNFContext();
 
     // Nonvirtuals
@@ -46,6 +49,7 @@ public:
     bool checkUnusedOptions() const;
         // Return true if unused options are found
     bool equal(const C_Semantic &a, const C_Semantic &b) const;
+    std::string expand_include(const std::string &org_path) const;
     void incWeight() { ++m_PriorWeight; }
     void issueError(bux::E_LogLevel level, const bux::C_SourcePos &pos,
         const std::string &message);
@@ -105,8 +109,8 @@ private:
     C_OntoPtrs              m_OntoJumps;
     C_ProductionPtrs        m_Semanticless;
     C_CondStack             m_CondStack;
-    size_t                  m_PriorWeight;
-    int                     m_BuilinNonterminalMask;
+    size_t                  m_PriorWeight{1};
+    int                     m_BuilinNonterminalMask{};
 
     // Nonvirtuals (%%%%% superseded by C_Semantics::expand() when C_CallProductionLex obsoletes)
     void normalize(const C_Semantic &src, C_Semantic &dst) const;

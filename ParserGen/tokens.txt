@@ -1,4 +1,4 @@
-#include        "../ScannerGen/RE_Suite.txt"
+#include        "RE_Suite.txt"
 %NAMEPREFIX     Parser
 
 LexSymbol       = '$' identifier                    >>bux::createPlainString<TID_LEX_LexSymbol,CHAR_TYPE,1,0>

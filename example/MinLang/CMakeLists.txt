@@ -7,4 +7,4 @@ add_executable(minlang
     Scanner.cpp
     )
 target_include_directories(minlang PRIVATE "../../../bux/include")
-target_link_libraries(minlang Bux)
+target_link_libraries(minlang Bux fmt)

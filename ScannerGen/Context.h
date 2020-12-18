@@ -1,13 +1,14 @@
 #ifndef ContextH
 #define ContextH
 
-#include <map>              // std::map<>
-#include <vector>           // std::vector<>
 #include "FA.h"             // bux::C_NFA<>
 #include "Intervals.h"      // bux::C_Intervals<>
 #include "LexBase.h"        // bux::T_LexID
 #include "Logger.h"         // bux::E_LogLevel
 #include "ParserIdDef.h"    // TID_LEX_Epsilon
+#include <filesystem>       // std::filesystem::path
+#include <map>              // std::map<>
+#include <vector>           // std::vector<>
 
 #undef min
 
@@ -61,20 +62,23 @@ typedef std::map<std::string,C_NfaLex*> C_RegExprMap;
 
 typedef std::map<std::string,C_StrList> C_Options;
 typedef std::function<void(const std::string&)> FH_ApplyLexTerm;
+typedef std::vector<std::filesystem::path> C_Paths;
 
 class C_Context
 {
 public:
 
     // Data
-    size_t                  m_ErrorTotal[TOTAL_ERRORLEVEL];
+    const C_Paths       &m_IncDirs;
+    size_t              m_ErrorTotal[TOTAL_ERRORLEVEL]{};
 
     // Nonvirtuals
-    C_Context();
+    explicit C_Context(const C_Paths &inc_dirs): m_IncDirs(inc_dirs) {}
     ~C_Context();
     void addOption(const std::string &name, C_StrList &value);
     void addRE(const std::string &name, C_NfaLex &val);
     bool eraseRE(const std::string &name);
+    std::string expand_include(const std::string &org_path) const;
     const C_LexNfa *finalExpr() const;
     const C_NfaLex *findRE(const std::string &name) const;
     bool forEachOptionTerm(const std::string &name, FH_ApplyLexTerm apply) const;
@@ -85,9 +89,9 @@ public:
 private:
 
     // Data
-    C_Options               m_Options;
-    C_RegExprMap            m_PoolRE;
-    std::string             m_BuildName;
+    C_Options           m_Options;
+    C_RegExprMap        m_PoolRE;
+    std::string         m_BuildName;
 
     // Nonvirtuals
     bool forEachOptionTerm_(const std::string &name, C_StrList &fifo, FH_ApplyLexTerm apply) const;

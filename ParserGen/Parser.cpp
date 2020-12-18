@@ -648,10 +648,11 @@ void _reduce_8(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
 void _reduce_9(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <PreProcLine> ::= include $String
 {
-    if (!dynamic_cast<C_BNFParser&>(_paRSeR_).m_context.testCond())
+    auto &C = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    if (!C.testCond())
         return;
 
-    const auto filename = bux::expand_env(bux::unlex<std::string>(_geT_(1)).c_str());
+    const auto filename = C.expand_include(bux::unlex<std::string>(_geT_(1)));
     _paRSeR_.reservePostShift([&,filename]{
             parseFile(filename, dynamic_cast<C_BNFParser&>(_paRSeR_), '\n');
         }, 1);

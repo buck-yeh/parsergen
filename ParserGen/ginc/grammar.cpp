@@ -78,10 +78,11 @@
     $c.endifCond($1);
 ]]
 <PreProcLine> ::= include $String   [[
-    if (!$c.testCond())
+    auto &C = $c;
+    if (!C.testCond())
         return;
 
-    const auto filename = bux::expand_env(bux::unlex<std::string>($2).c_str());
+    const auto filename = C.expand_include(bux::unlex<std::string>($2));
     $p.reservePostShift([&,filename]{
             parseFile(filename, $P, '\n');
         }, 1);
