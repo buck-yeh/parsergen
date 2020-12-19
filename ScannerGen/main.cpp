@@ -9,11 +9,12 @@
 //
 #include "Parser.h"         // C_ScannerParser
 #include "Scanner.h"        // C_ScannerScanner
-
+//------------------------------------------------------------------------------
 #include "EZArgs.h"         // bux::C_EZArgs
 #include "FA.h"             // bux::C_DFA
 #include "LogStream.h"      // HRTN()
 #include "Range2Type.h"     // bux::fittestType()
+#include "StrUtil.h"        // bux::C_IMemStream<>
 #include "XConsole.h"       // bux::testWritability()
 #include <filesystem>       // std::filesystem::path
 #include <fmt/core.h>       // fmt::print()
@@ -564,7 +565,7 @@ int main(int argc, const char *argv[])
     ezargs.position_args({"ScannerBase", "RE1", "RE2"}, {1,2}, true)
           .add_flag("include_dir", 'I', "Search path of #include derivatives within tokens.txt",
                     [&](auto s){
-                        std::istringstream in{std::string{s}};
+                        bux::C_IMemStream in{s.data(), s.size()};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
                     });
     auto ret = ezargs.parse(argc, argv);

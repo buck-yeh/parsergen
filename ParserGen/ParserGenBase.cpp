@@ -1,6 +1,5 @@
 //---------------------------------------------------------------------------
 #include <ctype.h>          // isascii(), isalnum()
-#include <sstream>          // std::ostringstream
 #include "LogStream.h"      // HRTN()
 #include "XException.h"     // RUNTIME_ERROR()
 #pragma hdrstop

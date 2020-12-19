@@ -7,7 +7,6 @@
 #include <ctype.h>          // isascii(), isalnum()
 #include <fstream>          // std::ofstream
 #include <fmt/ostream.h>    // fmt::print() for std::ostream
-#include <sstream>          // std::ostringstream
 #include <filesystem>       // std::filesystem::*
 #include <cstring>          // strlen(), strchr(), strcat(), ...
 #include <iostream>         // std::cout
@@ -876,10 +875,8 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
             input +=' ';
 
         out <<input <<i.m_Rval.size() <<"}";
-        std::ostringstream os;
-        os <<"\t// " <<prodNum <<": " <<i.str();
-        restOfLine =os.str();
-        first =false;
+        restOfLine = fmt::format("\t// {}: {}", prodNum, i.str());
+        first = false;
     }
     if (acceptID < 0)
         RUNTIME_ERROR("Accept id: {}", acceptID);
@@ -1188,19 +1185,15 @@ std::string FC_Output::outputFindKey(const C_Alphabet &alphabet)
 {
     if (auto ret = m_alphaPrimes.find(alphabet))
     {
-        std::ostringstream out;
-        out <<"findPrime" <<ret->first <<'_' <<ret->second <<'_' <<alphabet.size();
-        const auto funcName = out.str();
+        const auto funcName = fmt::format("findPrime{}_{}_{}", ret->first, ret->second, alphabet.size());
         if (m_findPrimes.find(funcName) == m_findPrimes.end())
             // Not yet defined
         {
-            out.str("");
-            out <<"return findKey(" <<alphaPrime(ret->first);
+            auto out = "return findKey(" + alphaPrime(ret->first);
             if (ret->second)
-                out <<'+' <<ret->second;
+                out += fmt::format("+{}", ret->second);
 
-            out <<',' <<alphabet.size() <<",key);";
-            m_findPrimes[funcName] = out.str();
+            m_findPrimes[funcName] = out += fmt::format(",{},key);", alphabet.size());
         }
         return funcName;
     }
