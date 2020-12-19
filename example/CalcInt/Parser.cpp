@@ -328,7 +328,7 @@ struct C_ShiftTraits
 {
     template<class T1, class T2>
     static uint8_t map(T1 &&t1, T2 &&t2) { return static_cast<uint8_t>(t1+t2); }
-    static uint8_t valueError() { RUNTIME_ERROR("SHIFT ERROR") }
+    static uint8_t valueError() { RUNTIME_ERROR("SHIFT ERROR"); }
 };
 
 //
@@ -384,7 +384,7 @@ bux::T_StateID C_ParserPolicy::nextState(bux::T_StateID state, bux::T_LexID inpu
     if (input >= bux::MIN_TOKEN_ID)
         input = ZIP_TOKEN(input);
     else if (input >= ENCODED_TOKEN_LB)
-        LOGIC_ERROR("Invalid input: state=" <<(int)state <<" input=" <<printToken(input))
+        LOGIC_ERROR("Invalid input: state={} input={}", (int)state, printToken(input));
 
     auto end = mapGoto + 20;
     auto found = std::lower_bound(mapGoto, end, state, [](const C_MapGoto &i, bux::T_StateID state_) {
@@ -393,7 +393,7 @@ bux::T_StateID C_ParserPolicy::nextState(bux::T_StateID state, bux::T_LexID inpu
     if (found != end && found->m_curState == state)
         return index2value<uint8_t,uint8_t,int8_t,C_ShiftTraits>(found->m_k2v, found->m_nextStateEx, input);
 
-    RUNTIME_ERROR("Invalid state: state=" <<(int)state <<" input=" <<printToken(input))
+    RUNTIME_ERROR("Invalid state: state={} input={}", (int)state, printToken(input));
 }
 
 void C_ParserPolicy::getReduceInfo(size_t id, C_ReduceInfo &info) const
@@ -409,7 +409,7 @@ void C_ParserPolicy::onError(bux::LR1::C_Parser &, const bux::C_SourcePos &pos, 
     // User-defined %ON_ERROR begins
     std::cerr <<"COL#" <<pos.m_Col <<": " <<message <<'\n';
     if (++errors > 10)
-        RUNTIME_ERROR("Too many errors !")
+        RUNTIME_ERROR("Too many errors !");
     // User-defined %ON_ERROR ends
 }
 

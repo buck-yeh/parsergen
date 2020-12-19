@@ -222,7 +222,7 @@ bool C_BNFContext::equal(const C_Semantic &a, const C_Semantic &b) const
                 return false;
         }
         else
-            RUNTIME_ERROR("Unknown semantic lex type" <<HRTN(*ia))
+            RUNTIME_ERROR("Unknown semantic lex type {}", HRTN(*ia));
     }
     return true;*/
 }
@@ -251,7 +251,7 @@ void C_BNFContext::issueError(bux::E_LogLevel level, const C_SourcePos &pos, con
         std::numeric_limits<size_t>::max()
     };
     if (++m_ErrorTotal[level] > ERR_LIMIT[level])
-        RUNTIME_ERROR(fmt::format("Too many ({}) {}s!", m_ErrorTotal[level] ,kind))
+        RUNTIME_ERROR("Too many ({}) {}s!", m_ErrorTotal[level] ,kind);
 }
 
 void C_BNFContext::normalize(const C_Semantic &src, C_Semantic &dst) const
@@ -280,7 +280,7 @@ void C_BNFContext::normalize(
         {
             auto found = m_OptMap.find(o->m_Var);
             if (found == m_OptMap.end())
-                RUNTIME_ERROR("Option \"" <<o->m_Var <<"\" not found")
+                RUNTIME_ERROR("Option \"{}\" not found", o->m_Var);
 
             found->second.m_Used = true;
             normalize(found->second, dst, remains);
@@ -288,12 +288,12 @@ void C_BNFContext::normalize(
         else if (auto l =dynamic_cast<C_LexSymbol*>(i))
         {
             if (m_Lex2ID.find(l->m_Var) == m_Lex2ID.end())
-                RUNTIME_ERROR("Lex \"" <<l->m_Var <<"\" not found")
+                RUNTIME_ERROR("Lex \"{}\" not found", l->m_Var);
 
             remains.append("TID_LEX_").append(l->m_Var);
         }
         else
-            RUNTIME_ERROR("Unknown semantic lex type" <<HRTN(i))
+            RUNTIME_ERROR("Unknown semantic lex type {}", HRTN(i));
     }
 }
 
@@ -406,11 +406,11 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
                 else if (!tid_max && !t)
                     ; // First TID_xxxx
                 else
-                    RUNTIME_ERROR("tid_max="<<tid_max<<" but next id is "<<t)
+                    RUNTIME_ERROR("tid_max={} but next id is {}", tid_max, t);
 
                 const auto posEndName = s.find_first_of(" \t", posName);
                 if (posName == std::string::npos)
-                    RUNTIME_ERROR("End of name not found \""<<s.substr(posName)<<'\"')
+                    RUNTIME_ERROR("End of name not found \"{}\"", s.substr(posName));
                 if (!memcmp(s.data()+posName, "TID_LEX_", 8))
                 {
                     const auto off = posName + 8;
@@ -423,7 +423,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
             {
                 s = s.substr(posName);
                 if (s != "TID_UB_")
-                    RUNTIME_ERROR("Not expected final "<<s)
+                    RUNTIME_ERROR("Not expected final {}", s);
             }
         }
         fmt::print("MAX(IdDef) = {}\n", tid_max);

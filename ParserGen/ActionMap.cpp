@@ -52,7 +52,7 @@ std::optional<int> makeCompare(
             compare = -1;
             break;
         default:
-            RUNTIME_ERROR("Unknown associativity " <<i1->second.m_Assoc)
+            RUNTIME_ERROR("Unknown associativity {}", i1->second.m_Assoc);
         }
     return compare;
 }

@@ -50,7 +50,6 @@ int main(int argc, const char* argv[])
         return MAIN_ARG_ERROR;
     }
 
-    catchSE();
     try
     {
         // Syntax analysis

@@ -1,6 +1,8 @@
 #include "Parser.h"     // C_MinParser, errors
 #include "Scanner.h"    // C_MinScanner
+//-------------------------------------------------------------
 #include "LogStream.h"  // HRTN()
+#include "StrUtil.h"    // bux::C_IMemStream<>
 #include <iostream>     // std::cin, std::cerr
 
 enum
@@ -18,7 +20,7 @@ int main(int argc, char* argv[])
         {
             C_MinParser         parser;
             C_MinScanner        scanner(parser);
-            std::istringstream  in(line);
+            bux::C_IMemStream   in{line.data(), line.size()};
             bux::scanFile(">", in, scanner);
 
             // Acceptance

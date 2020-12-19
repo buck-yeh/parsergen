@@ -27,4 +27,4 @@ add_executable(handycharset
     HandyCharset.cpp
     spec2charset.cpp
     )
-target_link_libraries(handycharset Bux)
+target_link_libraries(handycharset Bux fmt)

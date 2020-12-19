@@ -179,7 +179,7 @@ void C_Context::issueError  (
         std::numeric_limits<size_t>::max()
     };
     if (++m_ErrorTotal[level] > LIMIT[level])
-        RUNTIME_ERROR("Too many errors !")
+        RUNTIME_ERROR("Too many errors !");
 }
 
 C_WeightedStrList::C_WeightedStrList(int w, C_StrList &expr, C_StrList *isFinal):

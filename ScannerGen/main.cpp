@@ -163,7 +163,7 @@ void FC_CollectNS::operator()(const std::string &term)
     if (m_ShouldBeId)
     {
         if (!bux::isIdentifier(term))
-            RUNTIME_ERROR("Namespace contains non-identifier term \"" <<term <<'\"')
+            RUNTIME_ERROR("Namespace contains non-identifier term \"{}\"", term);
 
         m_NS.emplace_back(term);
         m_ShouldBeId =false;
@@ -171,7 +171,7 @@ void FC_CollectNS::operator()(const std::string &term)
     else
     {
         if (term != "::")
-            RUNTIME_ERROR("Namespace should separate identifiers only by \"::\"")
+            RUNTIME_ERROR("Namespace should separate identifiers only by \"::\"");
 
         m_ShouldBeId =true;
     }
@@ -186,10 +186,10 @@ C_Output::C_Output(const C_LexDfa &dfa, const C_Context &context):
     if (context.getOptionString("NAMEPREFIX",m_Prefix))
     {
         if (!bux::isIdentifier(m_Prefix))
-            RUNTIME_ERROR("Illegal prefix contents: " <<m_Prefix)
+            RUNTIME_ERROR("Illegal prefix contents: {}", m_Prefix);
     }
     else
-        RUNTIME_ERROR("Option %NAMEPREFIX must be explicitly defined")
+        RUNTIME_ERROR("Option %NAMEPREFIX must be explicitly defined");
 
     m_buxNS = "bux::";
     if (!m_NS.empty() && m_NS.front() == "bux")

@@ -82,7 +82,7 @@ size_t C_ParserPolicy::getAcceptId() const
 bux::T_StateID C_ParserPolicy::nextState(bux::T_StateID state, bux::T_LexID input) const
 {
     // Empty mapGoto[]
-    RUNTIME_ERROR("Invalid state: state=" <<(int)state <<" input=" <<printToken(input))
+    RUNTIME_ERROR("Invalid state: state={} input={}", (int)state, printToken(input));
 }
 
 void C_ParserPolicy::getReduceInfo(size_t id, C_ReduceInfo &info) const
@@ -96,7 +96,7 @@ void C_ParserPolicy::getReduceInfo(size_t id, C_ReduceInfo &info) const
 void C_ParserPolicy::onError(bux::LR1::C_Parser &, const bux::C_SourcePos &pos, const std::string &message) const
 {
     // User-defined %ON_ERROR begins
-    RUNTIME_ERROR("COL#" <<pos.m_Col <<": " <<message)
+    RUNTIME_ERROR("COL#{}: {}", pos.m_Col, message);
     // User-defined %ON_ERROR ends
 }
 

@@ -3,6 +3,7 @@
 
 #include "ActionMap.h"      // C_ActionMap
 #include "ParserGenBase.h"  // C_ParserInfo
+#include "XException.h"     // RUNTIME_ERROR()
 #include <optional>         // std::optional<>
 
 namespace bux { // reusability to be assessed
@@ -74,7 +75,7 @@ template<class T>
 void C_PrimeBelts<T>::add(const C_Belt &belt)
 {
     if (m_wrappedUp)
-        RUNTIME_ERROR("Add after wrapup")
+        RUNTIME_ERROR("Add after wrapup");
 
     // Find if any existing alphabet contains the new one
     bool found = false;

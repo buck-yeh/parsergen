@@ -21,7 +21,7 @@ int errors =0;
 %ON_ERROR [[
     std::cerr <<"COL#" <<$pos.m_Col <<": " <<$message <<'\n';
     if (++errors > 10)
-        RUNTIME_ERROR("Too many errors !")
+        RUNTIME_ERROR("Too many errors !");
 ]]
 
 %SCANNEROPTION  [[

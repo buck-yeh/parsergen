@@ -3,7 +3,6 @@
 #include "LR1.h"            // bux::LR1::ACTION_REDUCE_MIN
 #include "Range2Type.h"     // bux::fittestType()
 #include "XConsole.h"       // bux::testWritability()
-#include "XException.h"     // RUNTIME_ERROR(), LOGIC_ERROR()
 #include "Cfa.h"            // C_GotoMap
 #include <ctype.h>          // isascii(), isalnum()
 #include <fstream>          // std::ofstream
@@ -883,7 +882,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
         first =false;
     }
     if (acceptID < 0)
-        RUNTIME_ERROR("Accept id: " <<acceptID)
+        RUNTIME_ERROR("Accept id: {}", acceptID);
 
     fmt::print(out,
         " {0}\n"
@@ -905,7 +904,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
             "{{\n"
             "    template<class T1, class T2>\n"
             "    static {0} map(T1 &&t1, T2 &&t2) {{ return static_cast<{0}>(t1+t2); }}\n"
-            "    static {0} valueError() {{ RUNTIME_ERROR(\"SHIFT ERROR\") }}\n"
+            "    static {0} valueError() {{ RUNTIME_ERROR(\"SHIFT ERROR\"); }}\n"
             "}};\n"
             "\n", m_StateType);
 
@@ -1060,7 +1059,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
         out <<"    if (input >= bux::MIN_TOKEN_ID)\n"
               "        input = ZIP_TOKEN(input);\n"
               "    else if (input >= " ENCODED_TOKEN_LB_str ")\n"
-              "        LOGIC_ERROR(\"Invalid input: state=\" <<(int)state <<\" input=\" <<printToken(input))\n"
+              "        LOGIC_ERROR(\"Invalid input: state={} input={}\", (int)state, printToken(input));\n"
               "\n"
               "    auto end = mapGoto + " <<m_state2next.size() <<";\n"
               "    auto found = std::lower_bound(mapGoto, end, state, [](const C_MapGoto &i, bux::T_StateID state_) {\n"
@@ -1071,7 +1070,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
             <<",C_ShiftTraits>(found->m_k2v, found->m_nextStateEx, input);\n"
               "\n";
 
-    out <<"    RUNTIME_ERROR(\"Invalid state: state=\" <<(int)state <<\" input=\" <<printToken(input))\n"
+    out <<"    RUNTIME_ERROR(\"Invalid state: state={} input={}\", (int)state, printToken(input));\n"
           "}\n";
     if (foundUpcastToken)
     {
@@ -1143,7 +1142,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
         out <<"\n"
               "void C_ParserPolicy::onError(" <<parserArgType <<", const bux::C_SourcePos &pos, const std::string &message) const\n"
               "{\n"
-              "    RUNTIME_ERROR(pos.m_Source<<\"@(\"<<pos.m_Line<<','<<pos.m_Col<<\": \"<<message)\n"
+              "    RUNTIME_ERROR(\"{}@({},{}): {}\", pos.m_Source, pos.m_Line, pos.m_Col, message);\n"
               "}\n";
     out <<"\n"
           "} // namespace\n";
@@ -1211,7 +1210,7 @@ std::string FC_Output::outputFindKey(const C_Alphabet &alphabet)
         s += s.empty()? '{': ',';
         s += m_lex2str.find(i)->second;
     }
-    LOGIC_ERROR("Missing alphabet "<<s<<'}')
+    LOGIC_ERROR("Missing alphabet {}}}", s);
 }
 
 std::string FC_Output::outputIsKey(bux::T_LexID key) const
@@ -1240,7 +1239,7 @@ void FC_Output::outputTokens(std::ostream &out, const std::string &headerBase) c
         if (found && !found->empty())
             charType = found->expand();
         if (charType.empty())
-            RUNTIME_ERROR("Empty %CHAR_TYPE")
+            RUNTIME_ERROR("Empty %CHAR_TYPE");
 
         for (auto &i: literals)
         {
@@ -1310,7 +1309,7 @@ size_t FC_Output::serial(const C_Production *prod) const
 {
     auto i = m_ProdNums.find(prod);
     if (i == m_ProdNums.end())
-        RUNTIME_ERROR("No production number")
+        RUNTIME_ERROR("No production number");
 
     return i->second;
 }

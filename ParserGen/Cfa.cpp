@@ -146,7 +146,7 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
 
 #ifdef __BuckDebug
             if (!deps.empty() && i.second.m_Nullable)
-                RUNTIME_ERROR("!deps.empty() && i->second.m_Nullable")
+                RUNTIME_ERROR("!deps.empty() && i->second.m_Nullable");
 #endif
         next_i:;
         } // for (auto &i: m_AttrMap)
@@ -201,7 +201,7 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
                         break;
                     }
                     else
-                        RUNTIME_ERROR("Unknown type" <<HRTN(lex))
+                        RUNTIME_ERROR("Unknown type {}", HRTN(lex));
                 } // for (; j->first != j->second; ++j->first)
 
                 if (spareDep || j->first == j->second)
@@ -279,7 +279,7 @@ void FC_CreateClosure::operator()(C_StateItems &dst) const
                                 goto afterMergeLookahead;
                             }
                             else
-                                RUNTIME_ERROR("Unknown type" <<HRTN(*k))
+                                RUNTIME_ERROR("Unknown type {}", HRTN(*k));
 
                         // Thru nullable prefix
                         la.insert(i.second.begin(), i.second.end());
@@ -300,7 +300,7 @@ const FC_CreateClosure::C_FunctionalAttrs &
     const auto pa = m_AttrMap.find(key);
     if (pa == m_AttrMap.end())
         // Not found
-        RUNTIME_ERROR("Key '" <<key <<"' not found")
+        RUNTIME_ERROR("Key '{}' not found", key);
 
     return pa->second;
 }

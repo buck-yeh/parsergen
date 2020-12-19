@@ -1,10 +1,11 @@
-#include <iostream>         // std::cin, std::cerr
-#include "LogStream.h"      // HRTN()
-
+#include "AST.h"            // All lex types for this parser
 #include "Parser.h"         // C_GLRPOC
 #include "ParserIdDef.h"    // TID_LEX_Spaces
 #include "Scanner.h"        // C_GLRScanner
-#include "AST.h"            // All lex types for this parser
+//-------------------------------------------------------------
+#include "LogStream.h"      // HRTN()
+#include "StrUtil.h"        // bux::C_IMemStream<>
+#include <iostream>         // std::cin, std::cerr
 
 enum
 {
@@ -26,7 +27,7 @@ int main(int argc, char* argv[])
             C_GLRPOC                            parser;
             bux::C_ScreenerNo<TID_LEX_Spaces>   preparser(parser);
             C_GLRScanner                        scanner(preparser);
-            std::istringstream                  in(line);
+            bux::C_IMemStream                   in{line.data(), line.size()};
             bux::scanFile(">", in, scanner);
 
             // Check if parsing is ok

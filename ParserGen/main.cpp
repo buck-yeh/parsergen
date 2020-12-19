@@ -93,7 +93,6 @@ int main(int argc, const char* argv[])
         }
         fmt::print("}}\n");
     }
-    catchSE();
     try
     {
         // Syntax analysis

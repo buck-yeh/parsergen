@@ -111,7 +111,7 @@ std::string C_Semantic::expand() const
                     ret += j;
         }
         else
-            RUNTIME_ERROR("Unknown semantic lex type " <<HRTN(i))
+            RUNTIME_ERROR("Unknown semantic lex type ", HRTN(i));
 
     // Post process
     if (!ret.empty() && ret.front() == '\n')
@@ -213,7 +213,7 @@ const std::string *C_ParserInfo::getReduction(size_t index) const
 std::string C_ParserInfo::getReduction(const C_IndexedProd &prod) const
 {
     if (prod.m_Index >= m_Reductions.size())
-        RUNTIME_ERROR("Production index " <<prod.m_Index <<" > production count " <<m_Reductions.size())
+        RUNTIME_ERROR("Production index {} > production count {}", prod.m_Index, m_Reductions.size());
 
     return m_Reductions[prod.m_Index];
 }
@@ -243,14 +243,14 @@ std::string C_ParserInfo::outputId(const I_ProductionTerm *term) const
     else if (auto const lex =dynamic_cast<const C_LexSymbol*>(term))
     {
         if (m_Lex2ID.find(lex->m_Var) == m_Lex2ID.end())
-            RUNTIME_ERROR("Lex '" <<lex->m_Var << "' not found")
+            RUNTIME_ERROR("Lex '{}' not found", lex->m_Var);
 
         idstr.assign("TID_LEX_").append(lex->m_Var);
     }
     else if (auto const slex =dynamic_cast<const C_StrLiteral*>(term))
         return std::string(1,'\'').append(asciiLiteral(slex->m_Str[0])).append(1,'\'');
     else
-        RUNTIME_ERROR(idstr <<"Fail to produce output id for " <<HRTN(*term))
+        RUNTIME_ERROR("{}Fail to produce output id for {}", idstr, HRTN(*term));
 
     return std::string("ZIP_TOKEN(").append(idstr).append(1,')');
 }
@@ -260,7 +260,7 @@ T_LexID C_ParserInfo::prodTerm2id(const I_ProductionTerm *attr) const
     T_LexID id;
     std::string errMsg;
     if (!prodTerm2id(attr, id, errMsg))
-        RUNTIME_ERROR(errMsg)
+        RUNTIME_ERROR("{}", errMsg);
 
     return id;
 }
@@ -325,7 +325,7 @@ bool C_ParserInfo::prodTerm2id(const I_ProductionTerm *term, T_LexID &id, std::s
 void C_ParserInfo::wrapup()
 {
     if (getGeneratedID)
-        LOGIC_ERROR("getGeneratedID already assigned")
+        LOGIC_ERROR("getGeneratedID already assigned");
 
     getGeneratedID = [ignoreCases = ignoreKeywordCase()](const std::string &str, std::string &dst) {
         if (str.size() == 1)
@@ -428,7 +428,7 @@ T_LexID FC_LessLex::id(const I_ProductionTerm *term) const
         if (!reason.empty())
             msg.append("\t(").append(reason) += ')';
 
-        RUNTIME_ERROR(msg)
+        RUNTIME_ERROR("{}", msg);
     }
     return ret;
 }
