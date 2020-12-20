@@ -5,7 +5,7 @@
 
 # Maintainer: Your Name <youremail@domain.com>
 pkgname=parsergen
-pkgver=1.5.0
+pkgver=VERSION
 pkgrel=1
 epoch=
 pkgdesc='LR1/GLR parser generator into Modern C++ code which must be built with bux library'
@@ -13,8 +13,8 @@ arch=('x86_64')
 url='https://github.com/buck-yeh/parsergen.git'
 license=('MIT')
 groups=()
-depends=()
-makedepends=('cmake' 'make' 'gcc' 'git' 'binutils' 'fmt')
+depends=('fmt' 'gcc')
+makedepends=('cmake' 'make' 'git' 'binutils' 'fakeroot' 'sed' 'gawk')
 checkdepends=()
 optdepends=()
 provides=()
@@ -36,6 +36,17 @@ prepare() {
 	git clone -b main --single-branch $url .
 }
 
+pkgver() {
+	cd "$pkgname" || return 1
+	_ret=
+	for i in $(sed -n '
+s/^ *VERSION_MAJOR *= *\([0-9][0-9]*\).*/\1/p
+s/^ *VERSION_MINOR *= *\([0-9][0-9]*\).*/.\1/p
+s/^ *VERSION_RELEASE *= *\([0-9][0-9]*\).*/.\1/p
+' ParserGen/main.cpp); do _ret="$_ret$i"; done
+	echo "$_ret"
+ }
+
 build() {
 	cd "$pkgname" || return 1
 	rm -Rf CMakeCache.txt CMakeFiles/
@@ -45,14 +56,20 @@ build() {
 
 check() {
 	cd "$pkgname" || return 1
-	if [[ -x ParserGen/parsergen && -x ParserGen/grammarstrip && -x ScannerGen/scannergen && -f ScannerGen/RE_Suite.txt ]]; then
-		return 0
-	else
+	for i in ParserGen/parsergen ParserGen/grammarstrip ScannerGen/scannergen; do
+		if [[ ! -x "$i" ]]; then
+			return 1
+		fi
+	done
+	if [[ ! -f ScannerGen/RE_Suite.txt ]]; then
 		return 1
 	fi
 }
 
 package() {
 	cd "$pkgname" || return 1
-	cp ParserGen/parsergen ParserGen/grammarstrip ScannerGen/scannergen ScannerGen/RE_Suite.txt "$pkgdir/"
+	mkdir -p "$pkgdir/usr/bin"
+	mkdir -p "$pkgdir/usr/share/$pkgname"
+	for i in ParserGen/parsergen ParserGen/grammarstrip ScannerGen/scannergen; do cp "$i" "$pkgdir/usr/bin/"; done
+	cp ScannerGen/RE_Suite.txt "$pkgdir/usr/share/$pkgname/"
 }
