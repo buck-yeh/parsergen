@@ -25,8 +25,8 @@ add_executable(parsergen
     Output.cpp
     )
 #target_compile_options(parsergen PRIVATE -O0 -g3)
-target_link_libraries(parsergen bracketPairing Bux fmt)
-#add_dependencies(parsergen bracketPairing Bux)
+target_link_libraries(parsergen bracketPairing bux fmt)
+#add_dependencies(parsergen bracketPairing bux)
 
 add_executable(grammarstrip
     GrammarStrip.cpp
@@ -34,5 +34,5 @@ add_executable(grammarstrip
     Parser.cpp ParseFile.cpp ParserGenBase.cpp
     Scanner.cpp
     )
-target_link_libraries(grammarstrip bracketPairing Bux fmt)
-#add_dependencies(grammarstrip bracketPairing Bux)
+target_link_libraries(grammarstrip bracketPairing bux fmt)
+#add_dependencies(grammarstrip bracketPairing bux)
