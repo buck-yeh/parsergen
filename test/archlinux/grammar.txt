@@ -1,0 +1,74 @@
+class   C_CalcParser
+lexid   Spaces
+
+//
+//      Output Options
+//
+%CHAR_TYPE  [[bux::C_LexUTF32]]
+
+%HEADERS_FOR_CPP [[
+#include <iostream>     // std::cerr
+]]
+
+%PRECLASSDECL    [[
+extern int errors;
+]]
+
+%SCOPED_CPP_HEAD [[
+int errors =0;
+]]
+
+%ON_ERROR [[
+    std::cerr <<"COL#" <<$pos.m_Col <<": " <<$message <<'\n';
+    if (++errors > 10)
+        RUNTIME_ERROR("Too many errors !");
+]]
+
+%SCANNEROPTION  [[
+#include        "RE_Suite.txt"
+%NAMEPREFIX     Calc
+]]
+
+%EXTRA_TOKENS   [[dec_num|oct_num|hex_num|spaces]]
+//%SHOW_UNDEFINED
+
+//
+//      Operator Precedency
+//
+left   + -
+left   * / %
+right  ( )
+
+//
+//      Grammar with Reduction Code
+//
+<@> ::= <Expr>  [[
+    $r = $1;
+]]
+
+<Expr> ::= <Expr> + <Expr>  [[
+    bux::unlex<int>($1) += bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= <Expr> - <Expr>  [[
+    bux::unlex<int>($1) -= bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= <Expr> * <Expr>  [[
+    bux::unlex<int>($1) *= bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= <Expr> / <Expr>  [[
+    bux::unlex<int>($1) /= bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= <Expr> % <Expr>  [[
+    bux::unlex<int>($1) %= bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= ( <Expr> )       [[
+    $r = $2;
+]]
+<Expr> ::= $Num             [[
+    $r = bux::createLex(dynamic_cast<bux::C_IntegerLex&>(*$1).value<int>());
+]]

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+parsergen grammar.txt Parser tokens.txt || exit 1
+scannergen Scanner tokens.txt -I /usr/share/parsergen
