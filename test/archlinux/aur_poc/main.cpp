@@ -2,8 +2,8 @@
 #include "ParserIdDef.h"    // TID_LEX_Spaces
 #include "Scanner.h"        // C_CalcScanner
 //-------------------------------------------------------------
-#include <LogStream.h>      // HRTN()
-#include <StrUtil.h>        // bux::C_IMemStream<>
+#include <bux/LogStream.h>  // HRTN()
+#include <bux/MemIn.h>      // bux::C_IMemStream<>
 #include <iostream>         // std::cin, std::cerr
 
 enum
@@ -26,7 +26,7 @@ int main()
             C_CalcParser                        parser;
             bux::C_ScreenerNo<TID_LEX_Spaces>   preparser(parser);
             C_CalcScanner                       scanner(preparser);
-            bux::C_IMemStream                   in{line.data(), line.size()};
+            bux::C_IMemStream<char>             in{line};
             bux::scanFile(">", in, scanner);
 
             // Check if parsing is ok

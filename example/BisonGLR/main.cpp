@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
             C_GLRPOC                            parser;
             bux::C_ScreenerNo<TID_LEX_Spaces>   preparser(parser);
             C_GLRScanner                        scanner(preparser);
-            bux::C_IMemStream                   in{line.data(), line.size()};
+            bux::C_IMemStream<char>             in{line};
             bux::scanFile(">", in, scanner);
 
             // Check if parsing is ok
