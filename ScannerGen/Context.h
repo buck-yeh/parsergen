@@ -1,11 +1,12 @@
 #ifndef ContextH
 #define ContextH
 
-#include "FA.h"             // bux::C_NFA<>
-#include "Intervals.h"      // bux::C_Intervals<>
-#include "LexBase.h"        // bux::T_LexID
-#include "Logger.h"         // bux::E_LogLevel
 #include "ParserIdDef.h"    // TID_LEX_Epsilon
+//--------------------------------------------------------------------
+#include "bux/FA.h"         // bux::C_NFA<>
+#include "bux/Intervals.h"  // bux::C_Intervals<>
+#include "bux/LexBase.h"    // bux::T_LexID
+#include "bux/Logger.h"     // bux::E_LogLevel
 #include <filesystem>       // std::filesystem::path
 #include <map>              // std::map<>
 #include <vector>           // std::vector<>

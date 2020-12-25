@@ -1,9 +1,10 @@
 #include "Output.h"
-#include "GLR.h"            // bux::GLR::ACTION_REDUCE_MIN
-#include "LR1.h"            // bux::LR1::ACTION_REDUCE_MIN
-#include "Range2Type.h"     // bux::fittestType()
-#include "XConsole.h"       // bux::testWritability()
 #include "Cfa.h"            // C_GotoMap
+//---------------------------------------------------------------------------
+#include "bux/GLR.h"        // bux::GLR::ACTION_REDUCE_MIN
+#include "bux/LR1.h"        // bux::LR1::ACTION_REDUCE_MIN
+#include "bux/Range2Type.h" // bux::fittestType()
+#include "bux/XConsole.h"   // bux::testWritability()
 #include <ctype.h>          // isascii(), isalnum()
 #include <fstream>          // std::ofstream
 #include <fmt/ostream.h>    // fmt::print() for std::ostream
@@ -399,7 +400,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
               "#ifndef " <<base <<"IdDef_H\n"
               "#define " <<base <<"IdDef_H\n"
               "\n"
-              "#include \"LexBase.h\"    // bux::TOKENGEN_LB\n";
+              "#include <bux/LexBase.h>    // bux::TOKENGEN_LB\n";
         if (!m_Parsed.idSet())
         {
             fmt::print("Yet to set id values of m_Parsed.lex2ID() & m_Parsed.geneTokens()\n");
@@ -503,7 +504,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
         "#ifndef {1}H\n"
         "#define {1}H\n"
         "\n"
-        "#include \"{2}.h\"\n", m_Banner, base, nsLR);
+        "#include <bux/{2}.h>\n", m_Banner, base, nsLR);
     writeUserSection(out, "HEADERS_FOR_HEADER");
     m_Parsed.enterNamespaces(out);
     writeUserSection(out, "PRECLASSDECL");
@@ -568,8 +569,8 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     fmt::print(out,
         "#include \"{0}.h\"\n"
         "#include \"{0}IdDef.h\"\n"
-        "#include \"Impl{1}.h\"\n"
-        "#include \"XException.h\"\n"
+        "#include <bux/Impl{1}.h>\n"
+        "#include <bux/XException.h>\n"
         "\n"
         "namespace {{\n"
         "\n"
@@ -1281,9 +1282,9 @@ void FC_Output::outputTokens(std::ostream &out, const std::string &headerBase) c
         if (found && !found->empty())
             out <<"_the_very_last_ = " <<found->expand() <<'\n';
     }
-    out <<"\n"
-          "%HEADERS_FOR_CPP     [[\n"
-          "#include \"" <<headerBase <<"IdDef.h\"\n";
+    fmt::print(out,"\n"
+                   "%HEADERS_FOR_CPP     [[\n"
+                   "#include \"{}IdDef.h\"\n", headerBase);
     writeUserSection(out, "HEADERS_FOR_SCANNER_CPP");
     if (!ns.empty())
         out <<"using namespace " <<ns <<";\n";

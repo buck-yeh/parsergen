@@ -1,7 +1,6 @@
 #ifndef ParserGenBaseH
 #define ParserGenBaseH
 
-#include "LexBase.h"
 #include "ParserIdDef.h"    // Main::TID_xxxx
 #include <functional>       // std::function<>
 #include <list>             // std::list<>

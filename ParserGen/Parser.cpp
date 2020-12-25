@@ -3,15 +3,15 @@
 // Read ParserGen.chm for further info.
 
 // %HEADERS_FOR_CPP expanded BEGIN
-#include "ParseFile.h"  // parseFile()
+#include "ParseFile.h"      // parseFile()
 //-----------------------------------------------------
-#include "StrUtil.h"    // bux::expand_env()
-#include "UnicodeCvt.h" // bux::to_utf8()
+#include <bux/StrUtil.h>    // bux::expand_env()
+#include <bux/UnicodeCvt.h> // bux::to_utf8()
 // %HEADERS_FOR_CPP expanded END
 #include "Parser.h"
 #include "ParserIdDef.h"
-#include "ImplLR1.h"
-#include "XException.h"
+#include <bux/ImplLR1.h>
+#include <bux/XException.h>
 
 namespace {
 

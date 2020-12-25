@@ -313,9 +313,9 @@ right  ( ) { }
 ]]
 
 %HEADERS_FOR_CPP [[
-#include "LexBase.h"        // bux::T_LexID
-#include "LogStream.h"      // HRTN()
 #include "spec2charset.h"   // spec2charset()
+#include <bux/LexBase.h>    // bux::T_LexID
+#include <bux/LogStream.h>  // HRTN()
 
 void parseFile(const std::string &filename, class C_ScannerParser &parser, bux::T_LexID endToken);
 ]]

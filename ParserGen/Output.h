@@ -3,7 +3,8 @@
 
 #include "ActionMap.h"      // C_ActionMap
 #include "ParserGenBase.h"  // C_ParserInfo
-#include "XException.h"     // RUNTIME_ERROR()
+//---------------------------------------------------------------------------
+#include "bux/XException.h" // RUNTIME_ERROR()
 #include <optional>         // std::optional<>
 
 namespace bux { // reusability to be assessed

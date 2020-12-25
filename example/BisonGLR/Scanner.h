@@ -4,7 +4,7 @@
 #ifndef ScannerH
 #define ScannerH
 
-#include "ImplScanner.h"
+#include <bux/ImplScanner.h>
 
 class C_GLRScanner: public bux::C_ScannerImpl<uint8_t,int8_t,bux::C_LexUTF32>
 {

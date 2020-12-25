@@ -5,7 +5,7 @@
 #ifndef ParserH
 #define ParserH
 
-#include "LR1.h"
+#include <bux/LR1.h>
 
 // %HEADERS_FOR_HEADER expanded BEGIN
 #include "Context.h"    // C_Context, C_StrList, C_WeightedStrList

@@ -1,8 +1,8 @@
 %HEADERS_FOR_CPP    [[
-#include "ParseFile.h"  // parseFile()
+#include "ParseFile.h"      // parseFile()
 //-----------------------------------------------------
-#include "StrUtil.h"    // bux::expand_env()
-#include "UnicodeCvt.h" // bux::to_utf8()
+#include <bux/StrUtil.h>    // bux::expand_env()
+#include <bux/UnicodeCvt.h> // bux::to_utf8()
 ]]
 
 //

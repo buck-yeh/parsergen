@@ -2,8 +2,9 @@
 #define BNFContextH
 
 #include "ParserGenBase.h"  // C_ParserInfo, ...
-#include "Logger.h"         // bux::E_LogLevel
-#include "LR1.h"            // bux::LR1::C_LexPtr
+//-------------------------------------------------------
+#include "bux/Logger.h"     // bux::E_LogLevel
+#include "bux/LR1.h"        // bux::LR1::C_LexPtr
 #include <filesystem>       // std::filesystem::path
 
 namespace ParserGen {

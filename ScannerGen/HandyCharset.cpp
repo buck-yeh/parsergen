@@ -1,5 +1,6 @@
 #include "spec2charset.h"   // spec2charset()
-#include "LexBase.h"        // bux::asciiLiteral()
+//--------------------------------------------------------------------
+#include "bux/LexBase.h"    // bux::asciiLiteral()
 #include <iostream>         // std::cout
 
 enum

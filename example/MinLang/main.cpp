@@ -1,9 +1,9 @@
-#include "Parser.h"     // C_MinParser, errors
-#include "Scanner.h"    // C_MinScanner
+#include "Parser.h"         // C_MinParser, errors
+#include "Scanner.h"        // C_MinScanner
 //-------------------------------------------------------------
-#include "LogStream.h"  // HRTN()
-#include "StrUtil.h"    // bux::C_IMemStream<>
-#include <iostream>     // std::cin, std::cerr
+#include "bux/LogStream.h"  // HRTN()
+#include "bux/MemIn.h"      // bux::C_IMemStream<>
+#include <iostream>         // std::cin, std::cerr
 
 enum
 {

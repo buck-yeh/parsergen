@@ -3,8 +3,8 @@
 #include "ParserIdDef.h"    // TID_LEX_Spaces
 #include "Scanner.h"        // C_GLRScanner
 //-------------------------------------------------------------
-#include "LogStream.h"      // HRTN()
-#include "StrUtil.h"        // bux::C_IMemStream<>
+#include "bux/LogStream.h"  // HRTN()
+#include "bux/MemIn.h"      // bux::C_IMemStream<>
 #include <iostream>         // std::cin, std::cerr
 
 enum

@@ -38,7 +38,7 @@ prepare() {
 
 pkgver() {
 	cd "$pkgname" || return 1
-	_ret=
+	local _ret=
 	for i in $(sed -n '
 s/^ *VERSION_MAJOR *= *\([0-9][0-9]*\).*/\1/p
 s/^ *VERSION_MINOR *= *\([0-9][0-9]*\).*/.\1/p
@@ -50,9 +50,9 @@ s/^ *VERSION_RELEASE *= *\([0-9][0-9]*\).*/.\1/p
 build() {
 	cd "$pkgname" || return 1
 	cmake .
-	cd ParserGen/
+	cd ParserGen/ || return 1
 	make -j
-	cd ../ScannerGen/
+	cd ../ScannerGen/ || return 1
 	make -j
 }
 

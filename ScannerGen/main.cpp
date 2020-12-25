@@ -10,12 +10,12 @@
 #include "Parser.h"         // C_ScannerParser
 #include "Scanner.h"        // C_ScannerScanner
 //------------------------------------------------------------------------------
-#include "EZArgs.h"         // bux::C_EZArgs
-#include "FA.h"             // bux::C_DFA
-#include "LogStream.h"      // HRTN()
-#include "Range2Type.h"     // bux::fittestType()
-#include "StrUtil.h"        // bux::C_IMemStream<>
-#include "XConsole.h"       // bux::testWritability()
+#include "bux/EZArgs.h"     // bux::C_EZArgs
+#include "bux/FA.h"         // bux::C_DFA
+#include "bux/LogStream.h"  // HRTN()
+#include "bux/MemIn.h"      // bux::C_IMemStream<>
+#include "bux/Range2Type.h" // bux::fittestType()
+#include "bux/XConsole.h"   // bux::testWritability()
 #include <filesystem>       // std::filesystem::path
 #include <fmt/core.h>       // fmt::print()
 #include <fstream>          // std::ifstream
@@ -40,7 +40,7 @@ enum
     //
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 4,
-    VERSION_RELEASE         = 0,
+    VERSION_RELEASE         = 1,
     //
     //      Error Codes
     //
@@ -432,7 +432,7 @@ void C_Output::writeHeader(std::ostream &out, const std::string &base) const
           "#define " <<base <<"H\n"
           "\n";
 
-    out <<"#include \"ImplScanner.h\"\n";
+    out <<"#include <bux/ImplScanner.h>\n";
     writeUserSection(out, "HEADERS_FOR_HEADER");
     out <<'\n';
     enterNamespaces(out);
@@ -565,7 +565,7 @@ int main(int argc, const char *argv[])
     ezargs.position_args({"ScannerBase", "RE1", "RE2"}, {1,2}, true)
           .add_flag("include_dir", 'I', "Search path of #include derivatives within tokens.txt",
                     [&](auto s){
-                        bux::C_IMemStream in{s.data(), s.size()};
+                        bux::C_IMemStream in{s};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
                     });
     auto ret = ezargs.parse(argc, argv);

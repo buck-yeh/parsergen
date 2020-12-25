@@ -1,10 +1,10 @@
 #include "ParseFile.h"      // parseFile()
 #include "Parser.h"         // Main::C_BNFParserPolicy, Main::C_BNFParser
 //------------------------------------------------------------------------------
-#include "EZArgs.h"         // bux::C_EZArgs
-#include "LogStream.h"      // HRTN()
-#include "StrUtil.h"        // bux::C_IMemStream<>
-#include "XException.h"     // bux::catchSE()
+#include "bux/EZArgs.h"     // bux::C_EZArgs
+#include "bux/LogStream.h"  // HRTN()
+#include "bux/MemIn.h"      // bux::C_IMemStream<>
+#include "bux/XException.h" // bux::catchSE()
 #include <fmt/core.h>       // fmt::print()
 
 #undef PROGNAME
@@ -41,7 +41,7 @@ int main(int argc, const char* argv[])
     ezargs.position_args({"Grammar"})
           .add_flag("include_dir", 'I', "Search path of #include derivatives within tokens.txt",
                     [&](auto s){
-                        bux::C_IMemStream in{s.data(), s.size()};
+                        bux::C_IMemStream in{s};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
                     });
     auto ret = ezargs.parse(argc, argv);

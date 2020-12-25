@@ -1,12 +1,9 @@
-//---------------------------------------------------------------------------
-#include <ctype.h>          // isascii(), isalnum()
-#include "LogStream.h"      // HRTN()
-#include "XException.h"     // RUNTIME_ERROR()
-#pragma hdrstop
-
-#include "ParserIdDef.h"    // namespace Main::LexId
 #include "ParserGenBase.h"
+#include "ParserIdDef.h"    // namespace Main::LexId
 //---------------------------------------------------------------------------
+#include "bux/LogStream.h"  // HRTN()
+#include "bux/XException.h" // RUNTIME_ERROR()
+#include <ctype.h>          // isascii(), isalnum()
 
 namespace ParserGen {
 

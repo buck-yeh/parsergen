@@ -1,8 +1,9 @@
 #include "Context.h"
-#include "FsUtil.h"     // bux::search_dirs()
-#include "StrUtil.h"    // bux::expand_env()
-#include <fmt/core.h>   // fmt::print()
-#include <limits>       // std::numeric_limits<>
+//--------------------------------------------------------------------
+#include "bux/FsUtil.h"     // bux::search_dirs()
+#include "bux/StrUtil.h"    // bux::expand_env()
+#include <fmt/core.h>       // fmt::print()
+#include <limits>           // std::numeric_limits<>
 
 namespace {
 

@@ -3,16 +3,16 @@
 // Read ParserGen.chm for further info.
 
 // %HEADERS_FOR_CPP expanded BEGIN
-#include "LexBase.h"        // bux::T_LexID
-#include "LogStream.h"      // HRTN()
 #include "spec2charset.h"   // spec2charset()
+#include <bux/LexBase.h>    // bux::T_LexID
+#include <bux/LogStream.h>  // HRTN()
 
 void parseFile(const std::string &filename, class C_ScannerParser &parser, bux::T_LexID endToken);
 // %HEADERS_FOR_CPP expanded END
 #include "Parser.h"
 #include "ParserIdDef.h"
-#include "ImplLR1.h"
-#include "XException.h"
+#include <bux/ImplLR1.h>
+#include <bux/XException.h>
 
 namespace {
 

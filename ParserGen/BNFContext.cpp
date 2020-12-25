@@ -1,9 +1,9 @@
 #include "BNFContext.h"
 //--------------------------------------------------------------------
-#include "FsUtil.h"         // bux::search_dirs()
-#include "LogStream.h"      // HRTN()
-#include "StrUtil.h"        // bux::expand_env()
-#include "XException.h"     // RUNTIME_ERROR()
+#include "bux/FsUtil.h"     // bux::search_dirs()
+#include "bux/LogStream.h"  // HRTN()
+#include "bux/StrUtil.h"    // bux::expand_env()
+#include "bux/XException.h" // RUNTIME_ERROR()
 #include <cstring>          // memcmp()
 #include <fstream>          // std::ifstream
 #include <fmt/core.h>       // fmt::print(), fmt::format()

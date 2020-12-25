@@ -5,7 +5,7 @@
 #ifndef ParserH
 #define ParserH
 
-#include "GLR.h"
+#include <bux/GLR.h>
 
 // %PRECLASSDECL expanded BEGIN
 extern int errors;

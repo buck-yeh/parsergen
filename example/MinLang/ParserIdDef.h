@@ -5,7 +5,7 @@
 #ifndef ParserIdDef_H
 #define ParserIdDef_H
 
-#include "LexBase.h"    // bux::TOKENGEN_LB
+#include <bux/LexBase.h>    // bux::TOKENGEN_LB
 
 // Token Id Constants
 enum

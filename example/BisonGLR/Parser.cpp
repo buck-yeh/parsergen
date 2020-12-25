@@ -8,8 +8,8 @@
 // %HEADERS_FOR_CPP expanded END
 #include "Parser.h"
 #include "ParserIdDef.h"
-#include "ImplGLR.h"
-#include "XException.h"
+#include <bux/ImplGLR.h>
+#include <bux/XException.h>
 
 namespace {
 

@@ -1,7 +1,7 @@
 #ifndef AST_h_
 #define AST_h_
 
-#include "GLR.h"
+#include "bux/GLR.h"
 
 struct C_BinaryOp: bux::I_LexAttr
 {

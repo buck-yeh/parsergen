@@ -5,7 +5,7 @@
 #ifndef ParserH
 #define ParserH
 
-#include "LR1.h"
+#include <bux/LR1.h>
 
 class C_MinParser: public bux::LR1::C_Parser
 {
