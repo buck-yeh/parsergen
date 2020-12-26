@@ -26,7 +26,7 @@ int main()
             C_CalcParser                        parser;
             bux::C_ScreenerNo<TID_LEX_Spaces>   preparser(parser);
             C_CalcScanner                       scanner(preparser);
-            bux::C_IMemStream<char>             in{line};
+            bux::C_IMemStream                   in{line};
             bux::scanFile(">", in, scanner);
 
             // Check if parsing is ok

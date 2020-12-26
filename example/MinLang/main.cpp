@@ -18,9 +18,9 @@ int main(int argc, char* argv[])
         std::string line;
         while (std::getline(std::cin, line))
         {
-            C_MinParser             parser;
-            C_MinScanner            scanner(parser);
-            bux::C_IMemStream<char> in{line};
+            C_MinParser         parser;
+            C_MinScanner        scanner(parser);
+            bux::C_IMemStream   in{line};
             bux::scanFile(">", in, scanner);
 
             // Acceptance
