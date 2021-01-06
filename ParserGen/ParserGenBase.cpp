@@ -188,7 +188,7 @@ std::string C_ParserInfo::fullNamespace() const
 
 const C_Semantic *C_ParserInfo::getOption(const std::string &name) const
 {
-    const C_Semantic *ret = 0;
+    const C_Semantic *ret{};
     auto i = m_OptMap.find(name);
     if (i != m_OptMap.end())
     {
@@ -216,7 +216,7 @@ std::string C_ParserInfo::getReduction(const C_IndexedProd &prod) const
 
 bool C_ParserInfo::hasLexSymbol(const std::string &id) const
 {
-    return m_Lex2ID.find(id) != m_Lex2ID.end();
+    return m_Lex2ID.contains(id);
 }
 
 void C_ParserInfo::leaveNamespaces(std::ostream &out) const
@@ -238,7 +238,7 @@ std::string C_ParserInfo::outputId(const I_ProductionTerm *term) const
         ;
     else if (auto const lex =dynamic_cast<const C_LexSymbol*>(term))
     {
-        if (m_Lex2ID.find(lex->m_Var) == m_Lex2ID.end())
+        if (!m_Lex2ID.contains(lex->m_Var))
             RUNTIME_ERROR("Lex '{}' not found", lex->m_Var);
 
         idstr.assign("TID_LEX_").append(lex->m_Var);
@@ -253,21 +253,17 @@ std::string C_ParserInfo::outputId(const I_ProductionTerm *term) const
 
 T_LexID C_ParserInfo::prodTerm2id(const I_ProductionTerm *attr) const
 {
-    T_LexID id;
-    std::string errMsg;
-    if (!prodTerm2id(attr, id, errMsg))
-        RUNTIME_ERROR("{}", errMsg);
+    auto ret = prodTerm2idIfAny(attr);
+    if (ret.index())
+        RUNTIME_ERROR("{}", std::get<1>(ret));
 
-    return id;
+    return std::get<0>(ret);
 }
 
-bool C_ParserInfo::prodTerm2id(const I_ProductionTerm *term, T_LexID &id, std::string &errMsg) const
+auto C_ParserInfo::prodTerm2idIfAny(const I_ProductionTerm *term) const -> C_LexOrError
 {
     if (!term)
-    {
-        id =TID_EOF;
-        return true;
-    }
+        return TID_EOF;
 
     std::string idstr;
     if (term->generateId(idstr))
@@ -276,22 +272,13 @@ bool C_ParserInfo::prodTerm2id(const I_ProductionTerm *term, T_LexID &id, std::s
         {
             auto found = m_GenLex2Id.find(idstr);
             if (found != m_GenLex2Id.end())
-            {
-                id = found->second;
-                return true;
-            }
+                return found->second;
+
             found = m_Nonterm2Id.find(idstr);
             if (found != m_Nonterm2Id.end())
-            {
-                id =found->second;
-                return true;
-            }
+                return found->second;
         }
-        errMsg
-            .assign("User-defined id ")
-            .append(idstr)
-            .append(" not generated");
-        return false;
+        return "User-defined id "+idstr+" not generated";
     }
     if (auto const lex = dynamic_cast<const C_LexSymbol*>(term))
     {
@@ -299,23 +286,14 @@ bool C_ParserInfo::prodTerm2id(const I_ProductionTerm *term, T_LexID &id, std::s
         {
             auto found = m_Lex2ID.find(lex->m_Var);
             if (found != m_Lex2ID.end())
-            {
-                id = found->second;
-                return true;
-            }
+                return found->second;
         }
-        errMsg
-            .assign("Number id of $")
-            .append(lex->m_Var)
-            .append(" not found");
-        return false;
+        return "Number id of $"+lex->m_Var+" not found";
     }
     if (auto const slex = dynamic_cast<const C_StrLiteral*>(term))
-    {
-        id = slex->m_Str[0];
-        return true;
-    }
-    return false;
+        return T_LexID(slex->m_Str[0]);
+
+    return "Unexpected "+HRTN(term);
 }
 
 void C_ParserInfo::wrapup()
@@ -416,17 +394,11 @@ bool FC_LessLex::operator()(const I_ProductionTerm *a, const I_ProductionTerm *b
 
 T_LexID FC_LessLex::id(const I_ProductionTerm *term) const
 {
-    T_LexID ret;
-    std::string reason;
-    if (!m_Parsed.prodTerm2id(term, ret, reason))
-    {
-        std::string msg = "No id for " + term->displayStr();
-        if (!reason.empty())
-            msg.append("\t(").append(reason) += ')';
+    const auto ret = m_Parsed.prodTerm2idIfAny(term);
+    if (ret.index())
+        RUNTIME_ERROR("No id for {}\t({})", term->displayStr(), std::get<1>(ret));
 
-        RUNTIME_ERROR("{}", msg);
-    }
-    return ret;
+    return std::get<0>(ret);
 }
 
 } // namespace ParserGen

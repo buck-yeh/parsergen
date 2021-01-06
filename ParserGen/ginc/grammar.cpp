@@ -18,10 +18,11 @@
     if (!c.testCond())
         return;
 
-    std::string errMsg;
-    bool ok = false;
     if (auto targs = bux::tryUnlex<C_TemplateArgs>($3))
-        ok = c.setClassName(bux::unlex<C_StringList>($2), *targs, errMsg);
+    {
+        if (auto err = c.setClassName(bux::unlex<C_StringList>($2), *targs))
+            $p.onError($1, *err);
+    }
     else
     {
         C_TemplateArgs t;
@@ -30,11 +31,9 @@
             t.emplace_back();
             t.back().emplace_back(*sarg);
         }
-        ok = c.setClassName(bux::unlex<C_StringList>($2), t, errMsg);
+        if (auto err = c.setClassName(bux::unlex<C_StringList>($2), t))
+            $p.onError($1, *err);
     }
-
-    if (!ok)
-        $p.onError($1, errMsg);
 ]]
 <Line> ::= <NewLexIds>              [[]]
 <Line> ::= <OperatorAssociation>    [[
@@ -109,7 +108,7 @@
 ]]
 
 <OperatorAssociation> ::= <AssocType>                           [[ $r = $1; ]]
-<OperatorAssociation> ::= <OperatorAssociation> <ExprElement>   [[
+<OperatorAssociation> ::= <OperatorAssociation> <Terminal>   [[
     auto &c = $c;
     if (!c.testCond())
         return;
@@ -154,11 +153,11 @@
 ]]
 
 <Production> ::= $Nonterminal ::=           [[
-    auto const t =new C_ProductionLex;
+    auto const t = new C_ProductionLex;
     try
     {
         t->m_Lval = bux::unlex<std::string>($1);
-        $r =t;
+        $r = t;
     }
     catch (...)
     {
@@ -186,9 +185,9 @@
         throw;
     }
 ]]
-<Production> ::= <Production> <ExprElement> [[
+<Production> ::= <Production> <Terminal> [[
     $r = $1;
-    auto &dst =dynamic_cast<C_Production&>(*$r).m_Rval;
+    auto &dst = dynamic_cast<C_Production&>(*$r).m_Rval;
     C_LexPtr &src = $2;
     if (I_Terminal *t = src)
     {
@@ -235,28 +234,28 @@
     $r = $1;
 ]]
 
-<ExprElement> ::= $LexSymbol    [[
+<Terminal> ::= $LexSymbol    [[
     const auto &s = bux::unlex<std::string>($1);
     $c.addLexId(s);
     $r = new C_LexSymbol(s);
 ]]
-<ExprElement> ::= $String       [[
+<Terminal> ::= $String       [[
     $r = new C_StrLiteral(bux::unlex<std::string>($1), '\"');
 ]]
-<ExprElement> ::= $Num          [[ $r = $1; ]]
-<ExprElement> ::= $Key          [[
+<Terminal> ::= $Num          [[ $r = $1; ]]
+<Terminal> ::= $Key          [[
     const auto c = bux::unlex<T_Utf32>($1);
     $r = new C_StrLiteral{to_utf8(c), '\''};
 ]]
-<ExprElement> ::= $Operator     [[
+<Terminal> ::= $Operator     [[
     $r = new C_StrLiteral(bux::unlex<std::string>($1));
 ]]
-<ExprElement> ::= <@operator>   [[
+<Terminal> ::= <@operator>   [[
     $r = new C_StrLiteral(bux::unlex<std::string>($1));
 ]]
-<ExprElement> ::= $Id           [[
+<Terminal> ::= $Id           [[
     $r = new C_Id(bux::unlex<std::string>($1));
 ]]
-<ExprElement> ::= <@keyword>    [[
+<Terminal> ::= <@keyword>    [[
     $r = new C_Id(bux::unlex<std::string>($1));
 ]]

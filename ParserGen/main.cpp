@@ -42,7 +42,7 @@ enum
     //
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 5,
-    VERSION_RELEASE         = 1,
+    VERSION_RELEASE         = 2,
     //
     //      Error Codes
     //

@@ -3,6 +3,7 @@
 
 // User-defined %HEADERS_FOR_CPP begins
 #include "ParserIdDef.h"
+// %HEADERS_FOR_SCANNER_CPP undefined (expanded here otherwise)
 // User-defined %HEADERS_FOR_CPP ends
 
 #include "Scanner.h"

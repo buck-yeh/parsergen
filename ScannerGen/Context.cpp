@@ -63,16 +63,7 @@ C_Context::~C_Context()
 
 void C_Context::addOption(const std::string &name, C_StrList &value)
 {
-    if (name == "CPP_INCLUDE")
-        // Special treat
-    {
-        auto &dst = m_Options["HEADERS_FOR_CPP"];
-        dst.emplace_back("#include ");
-        dst.insert(dst.end(), value.begin(), value.end());
-        dst.emplace_back("\n");
-    }
-    else if (
-        name == "HEADERS_FOR_CPP" ||
+    if (name == "HEADERS_FOR_CPP" ||
         name == "HEADERS_FOR_HEADER" ||
         name == "LOCAL_ACTION_DEFS")
         // Append value
@@ -88,7 +79,7 @@ void C_Context::addOption(const std::string &name, C_StrList &value)
 void C_Context::addRE(const std::string &name, C_NfaLex &val)
 {
     m_PoolRE[name] = &val;
-    m_BuildName = name; // The lat ladded is assumed as the build root
+    m_BuildName = name; // The last added is always assumed as the build root
 }
 
 bool C_Context::eraseRE(const std::string &name)
@@ -109,15 +100,15 @@ std::string C_Context::expand_include(const std::string &org_path) const
 
 const C_LexNfa *C_Context::finalExpr() const
 {
-    if (auto found =m_PoolRE.find(m_BuildName); found != m_PoolRE.end())
-        return &found->second->m_NFA;
+    if (auto found = findRE(m_BuildName))
+        return &found->m_NFA;
 
     return 0;
 }
 
 const C_NfaLex *C_Context::findRE(const std::string &name) const
 {
-    if (auto found =m_PoolRE.find(name); found != m_PoolRE.end())
+    if (auto found = m_PoolRE.find(name); found != m_PoolRE.end())
         return found->second;
 
     return 0;

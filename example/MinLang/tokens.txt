@@ -3,4 +3,5 @@
 
 %HEADERS_FOR_CPP     [[
 #include "ParserIdDef.h"
+// %HEADERS_FOR_SCANNER_CPP undefined (expanded here otherwise)
 ]]

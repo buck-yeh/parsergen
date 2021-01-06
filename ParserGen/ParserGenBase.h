@@ -6,6 +6,7 @@
 #include <list>             // std::list<>
 #include <map>              // std::map<>
 #include <set>              // std::set<>
+#include <variant>          // std::variant<>
 #include <vector>           // std::vector<>
 
 #ifdef _WIN32
@@ -115,6 +116,9 @@ class C_ParserInfo
 {
 public:
 
+    // Types
+    typedef std::variant<T_LexID, std::string> C_LexOrError;
+
     // Nonvirtuals
     C_ParserInfo(): m_IdSet(false)
         {}
@@ -152,9 +156,9 @@ public:
         //
     const C_PriorityMap &priorityMap() const
         { return m_PriorityMap; }
-    bool prodTerm2id(const I_ProductionTerm *attr, T_LexID &id, std::string &errMsg) const;
+    [[nodiscard]] C_LexOrError prodTerm2idIfAny(const I_ProductionTerm *attr) const;
         // Return true on success
-    T_LexID prodTerm2id(const I_ProductionTerm *attr) const;
+    [[nodiscard]] T_LexID prodTerm2id(const I_ProductionTerm *attr) const;
         // RUNTIME_ERROR() on error
     const C_Productions &productions() const
         { return m_Productions; }

@@ -7,4 +7,4 @@ class   C_MinParser
 %ON_ERROR [[
     RUNTIME_ERROR("COL#{}: {}", $pos.m_Col, $message);
 ]]
-//%SHOW_UNDEFINED
+%SHOW_UNDEFINED

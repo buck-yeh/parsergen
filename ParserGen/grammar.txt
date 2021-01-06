@@ -18,7 +18,7 @@ Nonterminal     = '<' {'@'} identifier '>' | "<@>"  >>bux::createPlainString<TID
 %HEADERS_FOR_SCANNER_CPP    [[
 #include "BracketBalance.h"
 ]]
-%SHOW_UNDEFINED    // Massive includes and this line are for demonstration and selftest
+//%SHOW_UNDEFINED    // Massive includes and this line are for demonstration and selftest
 
 %EXTRA_TOKENS   [[dec_num|hex_num|identifier|c_char|c_str|spaces|bracketed|c_comment|line_comment]]
-%EXTRA_TOKENS   [[LexSymbol|Nonterminal|CompoundSymbol|win32_newline]]
+%EXTRA_TOKENS   [[LexSymbol|Nonterminal|CompoundSymbol]]

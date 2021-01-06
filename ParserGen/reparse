@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 TOOL_ROOT=..
-$TOOL_ROOT/ParserGen/parsergen grammar.txt Parser tokens.txt -I ginc || exit $?
+$TOOL_ROOT/ParserGen/parsergen grammar.txt Parser tokens.txt -I ginc && \
 $TOOL_ROOT/ScannerGen/scannergen Scanner tokens.txt -I "$TOOL_ROOT/ScannerGen"

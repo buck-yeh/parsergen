@@ -1,16 +1,6 @@
 #set(CMAKE_CXX_COMPILER "clang++")
 
-#include(FindPkgConfig)
-#pkg_check_modules(ncurses REQUIRED ncurses)
-
-#include(FindBoost)
-#set(Boost_USE_STATIC_LIBS       OFF)
-#set(Boost_USE_MULTITHREADED     ON)
-#set(Boost_USE_STATIC_RUNTIME    OFF)
-#find_package( Boost REQUIRED COMPONENTS system )
-
 include_directories("../../bux/include" "../../CBrackets")
-#link_directories("../../bux/src" "../CBrackets")
 string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Wno-parentheses -Wno-unknown-pragmas -Wno-maybe-uninitialized -Ofast -std=c++2a")
 
 add_executable(scannergen

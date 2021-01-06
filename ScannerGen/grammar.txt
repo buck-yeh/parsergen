@@ -1,6 +1,5 @@
 class   C_ScannerParser
 lexid   Spaces
-lexid   Epsilon         // used by FA.h
 
 //
 //      Operator Precedency

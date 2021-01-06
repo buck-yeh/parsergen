@@ -18,7 +18,7 @@ _literal_l_e_f_t_ 	= "left"	>>bux::createNothing<TID_KEYWORD_left,bux::C_LexUTF3
 _literal_l_e_x_i_d_ 	= "lexid"	>>bux::createNothing<TID_KEYWORD_lexid,bux::C_LexUTF32> @+1
 _literal_p_r_e_c_ 	= "prec"	>>bux::createNothing<TID_KEYWORD_prec,bux::C_LexUTF32> @+1
 _literal_r_i_g_h_t_ 	= "right"	>>bux::createNothing<TID_KEYWORD_right,bux::C_LexUTF32> @+1
-_the_very_last_ = _literal_3a3a|_literal_3a3a3d|_literal_c_l_a_s_s_|_literal_e_l_s_e_|_literal_e_n_d_i_f_|_literal_i_f_d_e_f_|_literal_i_f_n_d_e_f_|_literal_i_n_c_l_u_d_e_|_literal_l_e_f_t_|_literal_l_e_x_i_d_|_literal_p_r_e_c_|_literal_r_i_g_h_t_ | dec_num|hex_num|identifier|c_char|c_str|spaces|bracketed|c_comment|line_comment|LexSymbol|Nonterminal|CompoundSymbol|win32_newline
+_the_very_last_ = _literal_3a3a|_literal_3a3a3d|_literal_c_l_a_s_s_|_literal_e_l_s_e_|_literal_e_n_d_i_f_|_literal_i_f_d_e_f_|_literal_i_f_n_d_e_f_|_literal_i_n_c_l_u_d_e_|_literal_l_e_f_t_|_literal_l_e_x_i_d_|_literal_p_r_e_c_|_literal_r_i_g_h_t_ | dec_num|hex_num|identifier|c_char|c_str|spaces|bracketed|c_comment|line_comment|LexSymbol|Nonterminal|CompoundSymbol
 
 %HEADERS_FOR_CPP     [[
 #include "ParserIdDef.h"

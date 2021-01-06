@@ -60,12 +60,7 @@ bool C_BNFContext::addGenId(const std::string &id)
 
 bool C_BNFContext::addLexId(const std::string &id)
 {
-    if (m_Lex2ID.find(id) == m_Lex2ID.end())
-    {
-        m_Lex2ID[id];
-        return true;
-    }
-    return false;
+    return m_Lex2ID.try_emplace(id).second;
 }
 
 void C_BNFContext::addIdFromToken(I_LexAttr *attr)
@@ -142,15 +137,11 @@ void C_BNFContext::addPriority(E_Associativity assoc, bux::LR1::C_LexPtr &src)
     m_PriorRaws.emplace_back(p);
 }
 
-bool C_BNFContext::attr2id(I_LexAttr *attr, T_LexID &id, std::string &errMsg)
+auto C_BNFContext::attr2id(I_LexAttr *attr) -> C_LexOrError
 {
     if (auto const term = dynamic_cast<I_ProductionTerm*>(attr))
-    {
-        if (prodTerm2id(term, id, errMsg))
-            return true;
-        if (!errMsg.empty())
-            return false;
-    }
+        return prodTerm2idIfAny(term);
+
     if (auto const ilex = dynamic_cast<C_IntegerLex*>(attr))
     {
         std::string idstr;
@@ -158,22 +149,14 @@ bool C_BNFContext::attr2id(I_LexAttr *attr, T_LexID &id, std::string &errMsg)
         {
             auto found = m_GenLex2Id.find(idstr);
             if (found != m_GenLex2Id.end() && m_IdSet)
-            {
-                id = found->second;
-                return true;
-            }
-            errMsg.assign("User-defined id ").append(idstr).append(" not generated");
-            return false;
+                return found->second;
+
+            return "User-defined id "+idstr+" not generated";
         }
         else
-        {
-            id = ilex->str()[0];
-            return true;
-        }
+            return T_LexID(ilex->str()[0]);
     }
-
-    errMsg.assign("Unknown lex attr of type ").append(HRTN(*attr));
-    return false;
+    return "Unknown lex attr of type "+HRTN(attr);
 }
 
 bool C_BNFContext::checkSemanticlessProductions() const
@@ -287,7 +270,7 @@ void C_BNFContext::normalize(
         }
         else if (auto l =dynamic_cast<C_LexSymbol*>(i))
         {
-            if (m_Lex2ID.find(l->m_Var) == m_Lex2ID.end())
+            if (!m_Lex2ID.contains(l->m_Var))
                 RUNTIME_ERROR("Lex \"{}\" not found", l->m_Var);
 
             remains.append("TID_LEX_").append(l->m_Var);
@@ -297,46 +280,37 @@ void C_BNFContext::normalize(
     }
 }
 
-bool C_BNFContext::setClassName(
+std::optional<std::string> C_BNFContext::setClassName(
     C_StringList            &qualified,
 #ifdef __TEMPLATE_OUTPUT
-    C_TemplateArgs          &targs,
+    C_TemplateArgs          &targs
 #else
-    C_TemplateArgs          &,
+    C_TemplateArgs          &
 #endif // __TEMPLATE_OUTPUT
-    std::string             &errMsg )
+    )
 {
     // Preconditions
     if (!m_ClassName.empty())
-    {
-        errMsg ="Class name already defined";
-        return false;
-    }
+        return "Class name already defined";
 #ifdef __TEMPLATE_OUTPUT
     if (!m_TemplateArgs.empty())
-    {
-        errMsg ="Template args already defined";
-        return false;
-    }
+        return "Template args already defined";
 #endif // __TEMPLATE_OUTPUT
     if (qualified.empty())
-    {
-        errMsg ="Empty class name assigned";
-        return false;
-    }
+        return "Empty class name assigned";
 
     // Do it
-    m_ClassName =qualified.back();
+    m_ClassName = qualified.back();
     qualified.pop_back();
     m_Namespace.swap(qualified);
 #ifdef __TEMPLATE_OUTPUT
     for (auto j =targs.begin(); j != targs.end(); ++j)
     {
         m_TemplateArgs.emplace_back();
-        auto &t =m_TemplateArgs.back();
-        t.m_ArgDummy =j->back();
+        auto &t = m_TemplateArgs.back();
+        t.m_ArgDummy = j->back();
         j->pop_back();
-        std::string &s =t.m_TypeName;
+        auto &s = t.m_TypeName;
         for (auto k: *j)
         {
             if (!s.empty() && isalnum(s[s.size()-1]) && isalnum(k.front()))
@@ -348,7 +322,7 @@ bool C_BNFContext::setClassName(
             s += ' ';
     }
 #endif // __TEMPLATE_OUTPUT
-    return true;
+    return {};
 }
 
 size_t C_BNFContext::tempReductionIndex(const C_IndexedProd &prod) const
@@ -414,7 +388,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
                 if (!memcmp(s.data()+posName, "TID_LEX_", 8))
                 {
                     const auto off = posName + 8;
-                    m_Lex2ID[s.substr(off, posEndName-off)] = T_LexID(bux::TOKENGEN_LB + t);
+                    m_Lex2ID.insert_or_assign(s.substr(off, posEndName-off), T_LexID(bux::TOKENGEN_LB + t));
                 }
                 else
                     m_GenLex2Id[s.substr(posName, posEndName-posName)] = T_LexID(bux::TOKENGEN_LB + t);
@@ -432,7 +406,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
         tid_max += bux::TOKENGEN_LB;
         for (auto &i: m_GeneTokens)
             if (memcmp(i.data(), "TID_", 4))
-                m_Nonterm2Id[i] = T_LexID(++tid_max);
+                m_Nonterm2Id.insert_or_assign(i, T_LexID(++tid_max));
     }
     else
         // Assign from scratch
@@ -447,12 +421,12 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
         for (auto &i: m_GeneTokens)
         {
             if (!memcmp(i.data(), "TID_", 4))
-                m_GenLex2Id[i] = count++;
+                m_GenLex2Id.insert_or_assign(i, count++);
             else
                 nonterms.insert(i);
         }
         for (auto &i: nonterms)
-            m_Nonterm2Id[i] = count++;
+            m_Nonterm2Id.insert_or_assign(i, count++);
     }
     m_IdSet =true;
 
@@ -460,30 +434,24 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
     size_t count =0;
     for (auto i = m_PriorRaws.begin(); i != m_PriorRaws.end(); ++i, ++count)
     {
-        T_LexID id;
-        std::string errMsg;
-        if (attr2id(i->m_pAttr, id, errMsg))
+        const auto ret = attr2id(i->m_pAttr);
+        switch (ret.index())
         {
-            auto found = m_PriorityMap.find(id);
-            if (found == m_PriorityMap.end())
-            {
-                auto &dst = m_PriorityMap[id];
-                dst.m_Weight = i->m_Weight;
-                dst.m_Assoc = i->m_Assoc;
-            }
-            else
+        case 0:
+            if (const auto id = std::get<0>(ret);
+                !m_PriorityMap.try_emplace(id, C_Priority{.m_Weight=i->m_Weight, .m_Assoc=i->m_Assoc}).second)
             {
                 auto out = fmt::format("Duplicate priority assignments on id {}", id);
                 if (id < 127)
                     out += fmt::format("(\'{}\')", asciiLiteral(char(id)));
                 issueError(LL_ERROR, pos, out);
             }
-        }
-        else
-        {
-            issueError(LL_ERROR, pos, errMsg);
+            break;
+        case 1:
+            issueError(LL_ERROR, pos, std::get<1>(ret));
             issueError(LL_WARNING, pos,
                 fmt::format("Fail to get id from the {}th priority record with token type {}", count, HRTN(*i->m_pAttr)));
+            break;
         }
     }
 

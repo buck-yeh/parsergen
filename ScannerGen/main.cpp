@@ -8,6 +8,7 @@
 //      * Figure 7.7 (p247): Algorithm MinDFA
 //
 #include "Parser.h"         // C_ScannerParser
+#include "ParserIdDef.h"    // TID_LEX_Spaces
 #include "Scanner.h"        // C_ScannerScanner
 //------------------------------------------------------------------------------
 #include "bux/EZArgs.h"     // bux::C_EZArgs
@@ -40,7 +41,7 @@ enum
     //
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 4,
-    VERSION_RELEASE         = 1,
+    VERSION_RELEASE         = 2,
     //
     //      Error Codes
     //

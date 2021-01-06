@@ -44,7 +44,7 @@ public:
     void addOption(const std::string &key, C_Semantic *value);
     void addPriority(E_Associativity assoc, bux::LR1::C_LexPtr &src);
     bool addProduction(C_Production &prod, C_Semantic *semantic);
-    bool attr2id(bux::I_LexAttr *attr, bux::T_LexID &id, std::string &errMsg);
+    [[nodiscard]] C_LexOrError attr2id(bux::I_LexAttr *attr);
     bool checkSemanticlessProductions() const;
         // Return true if semanticless productions are found
     bool checkUnusedOptions() const;
@@ -54,8 +54,7 @@ public:
     void incWeight() { ++m_PriorWeight; }
     void issueError(bux::E_LogLevel level, const bux::C_SourcePos &pos,
         const std::string &message);
-    bool setClassName(C_StringList &qualified, C_TemplateArgs &targs,
-        std::string &errMsg);
+    [[nodiscard]] std::optional<std::string> setClassName(C_StringList &qualified, C_TemplateArgs &targs);
     size_t tempReductionIndex(const C_IndexedProd &prod) const;
     void wrapup(const bux::C_SourcePos &pos);
 
