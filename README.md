@@ -8,12 +8,10 @@
 
 # Installation
 ## in [ArchLinux](https://archlinux.org/)
-1. Make sure you have installed [`yay`](https://aur.archlinux.org/packages/yay/) or any other [pacman wrapper](https://wiki.archlinux.org/index.php/AUR_helpers)
-2. ~~~bash
-   yay -S parsergen
-   ~~~
+1. Make sure you have installed [`yay`](https://aur.archlinux.org/packages/yay/) or any other [pacman wrapper](https://wiki.archlinux.org/index.php/AUR_helpers).
+2. `yay -S parsergen` to install.
 3. `yay -Ql parsergen` to see the installed files:
-   ~~~bash
+   ~~~txt
    parsergen /usr/
    parsergen /usr/bin/
    parsergen /usr/bin/grammarstrip
