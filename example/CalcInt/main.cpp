@@ -17,8 +17,8 @@ int main()
 
         std::ostringstream                  err_out;
         C_Parser                            parser{err_out};
-        bux::C_ScreenerNo<TID_LEX_Spaces>   preparser{parser};
-        C_Scanner                           scanner{preparser};
+        bux::C_ScreenerNo<TID_LEX_Spaces>   screener{parser};
+        C_Scanner                           scanner{screener};
         bux::C_IMemStream                   in{line};
         bux::scanFile(">", in, scanner);
 

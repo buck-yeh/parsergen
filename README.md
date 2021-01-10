@@ -149,7 +149,7 @@ where
 | `Parser` | Output file base - generating __Parser__*.cpp* __Parser__*.h* __Parser__*IdDef.h*
 | `Scanner` | Output file base - generating __Scanner__*.cpp* __Scanner__*.h* 
 | `tokens.txt` | Output of `parsergen` & input of `scannergen`
-| `RE_Suite.txt` | Recurring token definitions provided with `scannergen` and used by `tokens.txt`
+| [`RE_Suite.txt`](ScannerGen/RE_Suite.txt) | Recurring token definitions provided with `scannergen` and used by `tokens.txt`
 
 ## Use the generated
 ℹ️ from [`example/CalcInt/main.cpp`](example/CalcInt/main.cpp)
