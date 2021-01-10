@@ -1,33 +1,17 @@
 // Taken from https://www.gnu.org/software/bison/manual/html_node/Simple-GLR-Parsers.html
 // Against ambiguous expression: type subrange = (a) .. b;
-class   C_GLRPOC
 lexid   Spaces
 
 //
 //      Output Options
 //
-%CHAR_TYPE  [[bux::C_LexUTF32]]
+%CONTEXT [[std::ostream]]
 
 %HEADERS_FOR_CPP [[
 #include "AST.h"        // All lex types for this parser
-#include <iostream>     // std::cerr
 ]]
-
-%PRECLASSDECL    [[
-extern int errors;
-]]
-
-%SCOPED_CPP_HEAD [[
-int errors =0;
-]]
-
 %ON_ERROR [[
-    std::cerr <<"COL#" <<$pos.m_Col <<": " <<$message <<'\n';
-]]
-
-%SCANNEROPTION  [[
-#include        "RE_Suite.txt"
-%NAMEPREFIX     GLR
+    $c <<"COL#" <<$pos.m_Col <<": " <<$message <<'\n';
 ]]
 
 %EXTRA_TOKENS   [[spaces|identifier]]

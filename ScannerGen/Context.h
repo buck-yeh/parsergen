@@ -100,6 +100,5 @@ private:
 //      Functions
 //
 std::string expand(const C_StrList &src, const C_Context &c);
-std::string getOptionString(const C_Context &c, const std::string &name, const std::string &defString);
 
 #endif // ContextH

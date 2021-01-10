@@ -1,89 +1,70 @@
 #include "AST.h"            // All lex types for this parser
-#include "Parser.h"         // C_GLRPOC
+#include "Parser.h"         // C_Parser
 #include "ParserIdDef.h"    // TID_LEX_Spaces
-#include "Scanner.h"        // C_GLRScanner
+#include "Scanner.h"        // C_Scanner
 //-------------------------------------------------------------
 #include "bux/LogStream.h"  // HRTN()
 #include "bux/MemIn.h"      // bux::C_IMemStream<>
 #include <iostream>         // std::cin, std::cerr
+#include <sstream>          // std::ostringstream
 
-enum
+int main()
 {
-    MAIN_SUCCESS        =0,
-    MAIN_CAUGHT
-};
-
-int main(int argc, char* argv[])
-{
-    try
+    std::string line;
+    while (std::cerr <<"Q: ", std::getline(std::cin, line))
     {
-        std::string line;
-        while (std::cerr <<"Q: ", std::getline(std::cin, line))
+        if (line.empty())
+            // Bye!
+            break;
+
+        std::ostringstream                  err_out;
+        C_Parser                            parser{err_out};
+        bux::C_ScreenerNo<TID_LEX_Spaces>   screener{parser};
+        C_Scanner                           scanner{screener};
+        bux::C_IMemStream                   in{line};
+        bux::scanFile(">", in, scanner);
+
+        // Check if parsing is ok
+        if (const auto err_str = err_out.str(); !err_str.empty())
         {
-            if (line.empty())
-                // Bye!
-                break;
+            std::cerr <<err_str <<"Fail to parse!\n";
+            continue;
+        }
 
-            C_GLRPOC                            parser;
-            bux::C_ScreenerNo<TID_LEX_Spaces>   preparser(parser);
-            C_GLRScanner                        scanner(preparser);
-            bux::C_IMemStream                   in{line};
-            bux::scanFile(">", in, scanner);
-
-            // Check if parsing is ok
-            if (errors)
-            {
-                errors =0;
-                std::cerr <<"Fail to parse!\n";
-                continue;
-            }
-
-            // Acceptance
-            bool accepted{};
-            parser.eachAccepted([&](auto &p){
-                if (!accepted)
-                {
-                    accepted = true;
-                    std::cerr <<"A:\n";
-                }
-                auto &decl = dynamic_cast<const C_TypeDecl&>(*p);
-                std::cerr <<decl.m_name <<" = ";
-                if (auto idList = bux::tryUnlex<C_IdList>(decl.m_type))
-                {
-                    const char *prepend = "(";
-                    for (auto &i: *idList)
-                    {
-                        std::cerr <<prepend <<i;
-                        prepend = ", ";
-                    }
-                    std::cerr <<")\n";
-                }
-                else if (auto expr = dynamic_cast<const C_BinaryOp*>(decl.m_type.get()))
-                    // (Nested) Expression
-                    std::cerr <<expr->toStr() <<'\n';
-                else if (decl.m_type)
-                    std::cerr <<"Unknown type: " <<HRTN(*decl.m_type) <<'\n';
-                else
-                    std::cerr <<"nullptr\n";
-            });
+        // Acceptance
+        bool accepted{};
+        parser.eachAccepted([&](auto &p){
             if (!accepted)
-                std::cerr <<"Incomplete expression!\n";
-       }
+            {
+                accepted = true;
+                std::cerr <<"A:\n";
+            }
+            auto &decl = dynamic_cast<const C_TypeDecl&>(*p);
+            std::cerr <<decl.m_name <<" = ";
+            if (auto idList = bux::tryUnlex<C_IdList>(decl.m_type))
+            {
+                const char *prepend = "(";
+                for (auto &i: *idList)
+                {
+                    std::cerr <<prepend <<i;
+                    prepend = ", ";
+                }
+                std::cerr <<")\n";
+            }
+            else if (auto expr = dynamic_cast<const C_BinaryOp*>(decl.m_type.get()))
+                // (Nested) Expression
+                std::cerr <<expr->toStr() <<'\n';
+            else if (decl.m_type)
+                std::cerr <<"Unknown type: " <<HRTN(*decl.m_type) <<'\n';
+            else
+                std::cerr <<"nullptr\n";
+        });
+        if (!accepted)
+            std::cerr <<"Incomplete expression!\n";
+   }
 
-        // Ok
-        std::cerr <<"Mission complete!\n";
-        return MAIN_SUCCESS;
-    }
-    catch (const std::exception &t)
-    {
-        std::cerr <<HRTN(t) <<": " <<t.what() <<" ... \r\n";
-        return MAIN_CAUGHT;
-    }
-    catch (...)
-    {
-        std::cerr <<"Unknown exception\r\n";
-        return MAIN_CAUGHT;
-    }
+    // Ok
+    std::cerr <<"Mission complete!\n";
 }
 
 std::string toStr(const bux::GLR::C_LexPtr &term)

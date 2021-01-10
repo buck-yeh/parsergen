@@ -1,23 +1,20 @@
-#include        "RE_Suite.txt"
 %NAMEPREFIX     Parser
 
 LexSymbol       = '$' identifier                    >>bux::createPlainString<TID_LEX_LexSymbol,CHAR_TYPE,1,0>
 Nonterminal     = '<' {'@'} identifier '>' | "<@>"  >>bux::createPlainString<TID_LEX_Nonterminal,CHAR_TYPE,1,1>
 
-%CHAR_TYPE	    bux::C_LexUTF32
-
-_literal_3a3a 	= "::"	>>bux::createNothing<TID_LITERAL_3a3a,bux::C_LexUTF32> @+1
-_literal_3a3a3d 	= "::="	>>bux::createNothing<TID_LITERAL_3a3a3d,bux::C_LexUTF32> @+1
-_literal_c_l_a_s_s_ 	= "class"	>>bux::createNothing<TID_KEYWORD_class,bux::C_LexUTF32> @+1
-_literal_e_l_s_e_ 	= "else"	>>bux::createNothing<TID_KEYWORD_else,bux::C_LexUTF32> @+1
-_literal_e_n_d_i_f_ 	= "endif"	>>bux::createNothing<TID_KEYWORD_endif,bux::C_LexUTF32> @+1
-_literal_i_f_d_e_f_ 	= "ifdef"	>>bux::createNothing<TID_KEYWORD_ifdef,bux::C_LexUTF32> @+1
-_literal_i_f_n_d_e_f_ 	= "ifndef"	>>bux::createNothing<TID_KEYWORD_ifndef,bux::C_LexUTF32> @+1
-_literal_i_n_c_l_u_d_e_ 	= "include"	>>bux::createNothing<TID_KEYWORD_include,bux::C_LexUTF32> @+1
-_literal_l_e_f_t_ 	= "left"	>>bux::createNothing<TID_KEYWORD_left,bux::C_LexUTF32> @+1
-_literal_l_e_x_i_d_ 	= "lexid"	>>bux::createNothing<TID_KEYWORD_lexid,bux::C_LexUTF32> @+1
-_literal_p_r_e_c_ 	= "prec"	>>bux::createNothing<TID_KEYWORD_prec,bux::C_LexUTF32> @+1
-_literal_r_i_g_h_t_ 	= "right"	>>bux::createNothing<TID_KEYWORD_right,bux::C_LexUTF32> @+1
+_literal_3a3a 	= "::"	>>bux::createNothing<TID_LITERAL_3a3a,CHAR_TYPE> @+1
+_literal_3a3a3d 	= "::="	>>bux::createNothing<TID_LITERAL_3a3a3d,CHAR_TYPE> @+1
+_literal_c_l_a_s_s_ 	= "class"	>>bux::createNothing<TID_KEYWORD_class,CHAR_TYPE> @+1
+_literal_e_l_s_e_ 	= "else"	>>bux::createNothing<TID_KEYWORD_else,CHAR_TYPE> @+1
+_literal_e_n_d_i_f_ 	= "endif"	>>bux::createNothing<TID_KEYWORD_endif,CHAR_TYPE> @+1
+_literal_i_f_d_e_f_ 	= "ifdef"	>>bux::createNothing<TID_KEYWORD_ifdef,CHAR_TYPE> @+1
+_literal_i_f_n_d_e_f_ 	= "ifndef"	>>bux::createNothing<TID_KEYWORD_ifndef,CHAR_TYPE> @+1
+_literal_i_n_c_l_u_d_e_ 	= "include"	>>bux::createNothing<TID_KEYWORD_include,CHAR_TYPE> @+1
+_literal_l_e_f_t_ 	= "left"	>>bux::createNothing<TID_KEYWORD_left,CHAR_TYPE> @+1
+_literal_l_e_x_i_d_ 	= "lexid"	>>bux::createNothing<TID_KEYWORD_lexid,CHAR_TYPE> @+1
+_literal_p_r_e_c_ 	= "prec"	>>bux::createNothing<TID_KEYWORD_prec,CHAR_TYPE> @+1
+_literal_r_i_g_h_t_ 	= "right"	>>bux::createNothing<TID_KEYWORD_right,CHAR_TYPE> @+1
 _the_very_last_ = _literal_3a3a|_literal_3a3a3d|_literal_c_l_a_s_s_|_literal_e_l_s_e_|_literal_e_n_d_i_f_|_literal_i_f_d_e_f_|_literal_i_f_n_d_e_f_|_literal_i_n_c_l_u_d_e_|_literal_l_e_f_t_|_literal_l_e_x_i_d_|_literal_p_r_e_c_|_literal_r_i_g_h_t_ | dec_num|hex_num|identifier|c_char|c_str|spaces|bracketed|c_comment|line_comment|LexSymbol|Nonterminal|CompoundSymbol
 
 %HEADERS_FOR_CPP     [[

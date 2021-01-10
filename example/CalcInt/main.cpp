@@ -1,66 +1,46 @@
-#include "Parser.h"         // C_CalcParser, errors
+#include "Parser.h"         // C_Parser, errors
 #include "ParserIdDef.h"    // TID_LEX_Spaces
-#include "Scanner.h"        // C_CalcScanner
+#include "Scanner.h"        // C_Scanner
 //-------------------------------------------------------------
-#include "bux/LogStream.h"  // HRTN()
 #include "bux/MemIn.h"      // bux::C_IMemStream<>
 #include <iostream>         // std::cin, std::cerr
-
-enum
-{
-    MAIN_SUCCESS        =0,
-    MAIN_CAUGHT
-};
+#include <sstream>          // std::ostringstream
 
 int main()
 {
-    try
+    std::string line;
+    while (std::getline(std::cin, line))
     {
-        std::string line;
-        while (std::getline(std::cin, line))
+        if (line.empty())
+            // Bye!
+            break;
+
+        std::ostringstream                  err_out;
+        C_Parser                            parser{err_out};
+        bux::C_ScreenerNo<TID_LEX_Spaces>   preparser{parser};
+        C_Scanner                           scanner{preparser};
+        bux::C_IMemStream                   in{line};
+        bux::scanFile(">", in, scanner);
+
+        // Check if parsing is ok
+        if (const auto err_str = err_out.str(); !err_str.empty())
         {
-            if (line.empty())
-                // Bye!
-                break;
-
-            C_CalcParser                        parser;
-            bux::C_ScreenerNo<TID_LEX_Spaces>   preparser(parser);
-            C_CalcScanner                       scanner(preparser);
-            bux::C_IMemStream                   in{line};
-            bux::scanFile(">", in, scanner);
-
-            // Check if parsing is ok
-            if (errors)
-            {
-                errors =0;
-                std::cerr <<"Fail to parse!\n";
-                continue;
-            }
-
-            // Acceptance
-            if (!parser.accepted())
-            {
-                std::cerr <<"Incomplete expression!\n";
-                continue;
-            }
-
-            // Output the result
-            auto ans = bux::unlex<int>(parser.getFinalLex());
-            std::cerr <<"= " <<ans <<" = 0x" <<std::hex <<ans <<" = 0" <<std::oct <<ans <<std::dec <<'\n';
+            std::cerr <<err_str <<"Fail to parse!\n";
+            continue;
         }
 
-        // Ok
-        std::cerr <<"Mission complete!\n";
-        return MAIN_SUCCESS;
+        // Acceptance
+        if (!parser.accepted())
+        {
+            std::cerr <<"Incomplete expression!\n";
+            continue;
+        }
+
+        // Output the result
+        auto ans = bux::unlex<int>(parser.getFinalLex());
+        std::cerr <<"= " <<ans <<" = 0x" <<std::hex <<ans <<" = 0" <<std::oct <<ans <<std::dec <<'\n';
     }
-    catch (const std::exception &t)
-    {
-        std::cerr <<HRTN(t) <<": " <<t.what() <<" ... \r\n";
-        return MAIN_CAUGHT;
-    }
-    catch (...)
-    {
-        std::cerr <<"Unknown exception\r\n";
-        return MAIN_CAUGHT;
-    }
+
+    // Ok
+    std::cerr <<"Mission complete!\n";
 }

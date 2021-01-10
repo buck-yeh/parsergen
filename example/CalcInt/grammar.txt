@@ -1,32 +1,12 @@
-class   C_CalcParser
 lexid   Spaces
 
 //
 //      Output Options
 //
-%CHAR_TYPE  [[bux::C_LexUTF32]]
-
-%HEADERS_FOR_CPP [[
-#include <iostream>     // std::cerr
-]]
-
-%PRECLASSDECL    [[
-extern int errors;
-]]
-
-%SCOPED_CPP_HEAD [[
-int errors =0;
-]]
+%CONTEXT [[std::ostream &]]
 
 %ON_ERROR [[
-    std::cerr <<"COL#" <<$pos.m_Col <<": " <<$message <<'\n';
-    if (++errors > 10)
-        RUNTIME_ERROR("Too many errors !");
-]]
-
-%SCANNEROPTION  [[
-#include        "RE_Suite.txt"
-%NAMEPREFIX     Calc
+    $c <<"COL#" <<$pos.m_Col <<": " <<$message <<'\n';
 ]]
 
 %EXTRA_TOKENS   [[dec_num|oct_num|hex_num|spaces]]

@@ -38,12 +38,6 @@ using namespace bux;
 enum
 {
     //
-    //      Version Macros
-    //
-    VERSION_MAJOR           = 1,
-    VERSION_MINOR           = 5,
-    VERSION_RELEASE         = 2,
-    //
     //      Error Codes
     //
     MAIN_SUCCESS            = 0,

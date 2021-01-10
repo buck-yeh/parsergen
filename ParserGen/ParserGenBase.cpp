@@ -67,7 +67,7 @@ std::string ensureNoConcat(std::string s)
     }
 
     // Strip trailing spaces
-    const auto stripPos =s.find_last_not_of(" \t\r\n");
+    const auto stripPos = s.find_last_not_of(" \t\r\n");
     if (stripPos != std::string::npos)
         s.erase(stripPos+1);
 
@@ -175,13 +175,13 @@ std::string C_ParserInfo::fullNamespace() const
 {
     std::string t;
     bool first =true;
-    for (auto i =m_Namespace.begin(); i != m_Namespace.end(); ++i)
+    for (auto &i: m_Namespace)
     {
         if (first)
             first =false;
         else
             t.append("::");
-        t.append(*i);
+        t.append(i);
     }
     return t;
 }

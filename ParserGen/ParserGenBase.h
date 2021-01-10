@@ -146,6 +146,8 @@ public:
         { return m_IdSet; }
     bool ignoreKeywordCase() const
         { return getOption("IGNORE_KEYWORD_CASE") != nullptr; }
+    bool isGlobalNamespace() const
+        { return m_Namespace.empty(); }
     void leaveNamespaces(std::ostream &out) const;
         //
     const C_Str2Id &lex2ID() const

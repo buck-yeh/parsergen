@@ -1,10 +1,1 @@
-class   C_MinParser
-
-%SCANNEROPTION  [[
-%NAMEPREFIX     Min
-]]
-
-%ON_ERROR [[
-    RUNTIME_ERROR("COL#{}: {}", $pos.m_Col, $message);
-]]
 %SHOW_UNDEFINED

@@ -1,8 +1,3 @@
-#include        "RE_Suite.txt"
-%NAMEPREFIX     Calc
-
-%CHAR_TYPE	    bux::C_LexUTF32
-
 _the_very_last_ = dec_num|oct_num|hex_num|spaces
 
 %HEADERS_FOR_CPP     [[

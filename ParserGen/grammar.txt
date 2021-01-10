@@ -7,9 +7,7 @@ lexid Spaces
 #include "grammar.cpp"
 #include "impl.cpp"
 
-%CHAR_TYPE          [[bux::C_LexUTF32]]
-%SCANNEROPTION      [[
-#include        "RE_Suite.txt"
+%SCANNEROPTION  [[
 %NAMEPREFIX     Parser
 
 LexSymbol       = '$' identifier                    >>bux::createPlainString<TID_LEX_LexSymbol,CHAR_TYPE,1,0>

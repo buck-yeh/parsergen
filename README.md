@@ -2,9 +2,24 @@
 - `parsergen`/`scannergen` combo generates source code files of LR1/GLR parser & scanner from a set of annotated production rules, aka grammar.
 - Both `parsergen` & `scannergen` use the combo to regenerate their own parser & scanner, respectively, to evolve themselves.
 - The generated code will contain C++20 keywords, e.g. **constinit**. IOW, building the code with `-std=c++2a` is required.
-- You might not always need both:
+- However you might not always need both:
   - Sometimes you might reuse an existing scanner with another parser. *(to be explained)*
   - Sometimes all you need is just scanner. (see [`CBrackets`](https://github.com/buck-yeh/CBrackets)) 
+
+# Table of Contents
+   * [Installation](#installation)
+      * [in ArchLinux](#in-archlinux)
+      * [from github in any of Linux distros](#from-github-in-any-of-linux-distros)
+   * [A quick guide to parsergen/scannergen combo](#a-quick-guide-to-parsergenscannergen-combo)
+      * [Write grammar](#write-grammar)
+      * [Generate C++ code of parser &amp; scanner](#generate-c-code-of-parser--scanner)
+         * [When package parsergen is installed in ArchLinux](#when-package-parsergen-is-installed-in-archlinux)
+         * [When parsergen is built from github](#when-parsergen-is-built-from-github)
+      * [Use the generated](#use-the-generated)
+         * [Includes](#includes)
+         * [Scanner|screener|parser piped to parse](#scannerscreenerparser-piped-to-parse)
+
+   *(Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc))*
 
 # Installation
 ## in [ArchLinux](https://archlinux.org/)
@@ -39,9 +54,10 @@
    - `$PSGEN_DIR/ParserGen/grammarstrip` 
    - `$PSGEN_DIR/ParserGen/parsergen` 
    - `$PSGEN_DIR/ScannerGen/scannergen`
-5. But is it possible to just type `grammarstrip` `parsergen` `scannergen` to run them? 🤔 Append the following lines to `~/.bashrc`:
+5. 🤔 But is it possible to just type `grammarstrip` `parsergen` `scannergen` to run them?  
+   💡 Append the following lines to `~/.bashrc`:
    ~~~bash
-   PSGEN_DIR="/full/path/to/current/dir"
+   PSGEN_DIR="/full/path/to/parsergen/dir"
    alias grammarstrip="$PSGEN_DIR/ParserGen/grammarstrip"
    alias parsergen="$PSGEN_DIR/ParserGen/parsergen"
    alias scannergen="$PSGEN_DIR/ScannerGen/scannergen"
@@ -50,4 +66,132 @@
    ~~~bash
    . ~/.bashrc
    ~~~ 
-   There you go! It will take effect in subsequently opened console windows and will last after reboot.
+   There you go! It will also take effect in subsequently opened console windows and will last after reboot.
+
+# A quick guide to `parsergen`/`scannergen` combo
+When you need to quickly implement a parser for an improvised or deliberately designed [DSL](https://en.wikipedia.org/wiki/Domain-specific_language), prepare a grammar file in simple [BNF](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form#Example) rules with semantic annotations and then let the combo generate C++ code of parser & scanner. 
+
+## Write grammar
+[`example/CalcInt/grammar.txt`](example/CalcInt/grammar.txt) defines a calculator for basic arithmetics `+ - * / %` of integral constants in *decimal*, *octal*, or *hexadecimal*.
+~~~c++
+lexid   Spaces
+
+//
+//      Output Options
+//
+%CONTEXT [[std::ostream &]]
+
+%ON_ERROR [[
+    $c <<"COL#" <<$pos.m_Col <<": " <<$message <<'\n';
+]]
+
+%EXTRA_TOKENS   [[dec_num|oct_num|hex_num|spaces]]
+//%SHOW_UNDEFINED
+
+//
+//      Operator Precedency
+//
+left   + -
+left   * / %
+right  ( )
+
+//
+//      Grammar with Reduction Code
+//
+<@> ::= <Expr>  [[
+    $r = $1;
+]]
+
+<Expr> ::= <Expr> + <Expr>  [[
+    bux::unlex<int>($1) += bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= <Expr> - <Expr>  [[
+    bux::unlex<int>($1) -= bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= <Expr> * <Expr>  [[
+    bux::unlex<int>($1) *= bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= <Expr> / <Expr>  [[
+    bux::unlex<int>($1) /= bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= <Expr> % <Expr>  [[
+    bux::unlex<int>($1) %= bux::unlex<int>($3);
+    $r = $1;
+]]
+<Expr> ::= ( <Expr> )       [[
+    $r = $2;
+]]
+<Expr> ::= $Num             [[
+    $r = bux::createLex(dynamic_cast<bux::C_IntegerLex&>(*$1).value<int>());
+]]
+~~~ 
+
+## Generate C++ code of parser & scanner
+### When package `parsergen` is installed [in ArchLinux](#in-archlinux)
+~~~bash
+parsergen grammar.txt Parser tokens.txt && \
+scannergen Scanner /usr/share/parsergen/RE_Suite.txt tokens.txt
+~~~
+### When `parsergen` is [built from github](#from-github-in-any-of-linux-distros)
+~~~bash
+parsergen grammar.txt Parser tokens.txt && \
+scannergen Scanner "$PSGEN_DIR/ScannerGen/RE_Suite.txt" tokens.txt
+~~~
+
+where
+| Parameter | Description
+|:----------:|----------- 
+| `grammar.txt` | Annotated BNF rules and other types of options.
+| `Parser` | Output file base - generating __Parser__*.cpp* __Parser__*.h* __Parser__*IdDef.h*
+| `Scanner` | Output file base - generating __Scanner__*.cpp* __Scanner__*.h* 
+| `tokens.txt` | Output of `parsergen` & input of `scannergen`
+| `RE_Suite.txt` | Recurring token definitions provided with `scannergen` and used by `tokens.txt`
+
+## Use the generated
+ℹ️ from [`example/CalcInt/main.cpp`](example/CalcInt/main.cpp)
+### Includes
+~~~c++
+#include "Parser.h"         // C_Parser, errors
+#include "ParserIdDef.h"    // TID_LEX_Spaces
+#include "Scanner.h"        // C_Scanner
+~~~
+💡 Including `ParserIdDef.h` may not be necessary when spaces can't be ignored. 
+
+### Scanner|screener|parser piped to parse
+~~~c++
+C_Parser                            parser{/*args of context ctor*/};
+bux::C_ScreenerNo<TID_LEX_Spaces>   screener{parser}; // (1)
+C_Scanner                           scanner{screener};
+bux::C_IMemStream                   in{line}; // or other std::istream derived
+bux::scanFile(">", in, scanner);
+
+// Check if parsing is ok
+// ... (2)
+
+// Acceptance
+if (!parser.accepted())
+{
+   std::cerr <<"Incomplete expression!\n";
+   continue; // or break or return
+}
+
+// Apply the result 
+// parser.getFinalLex() ... (3)
+~~~
+* *(1)* Screener is filter of scanner and can filter out, change, aggregate selected tokens. Don't use it if you don't need it:
+   ~~~c++
+   C_Parser                            parser{/*args of context ctor*/};
+   C_Scanner                           scanner{parser};
+   bux::C_IMemStream                   in{line}; // or other std::istream derived
+   bux::scanFile(">", in, scanner);
+   ~~~
+* *(2)* Time to check integrity of your context status.
+* *(3)* `parser.getFinalLex()` returns reference to the merged result of type `bux::LR1::C_LexInfo`, defined in [`LR1.h`](https://github.com/buck-yeh/bux/blob/main/include/bux/LR1.h). In this example, the expected result is integral value of type `int` and can be conveniently obtained by expression 
+   ~~~c++
+   bux::unlex<int>(parser.getFinalLex())
+   ~~~
+   An alternative way is to reap the result from the user context instance instead of calling `parser.getFinalLex()`. The difference is the former resides on stack whereas the latter resides on heap. 

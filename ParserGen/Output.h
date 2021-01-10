@@ -7,11 +7,18 @@
 #include "bux/XException.h" // RUNTIME_ERROR()
 #include <optional>         // std::optional<>
 
+enum
+{
+    //
+    //      Version Macros
+    //
+    VERSION_MAJOR           = 1,
+    VERSION_MINOR           = 6,
+    VERSION_RELEASE         = 0
+};
+
 namespace bux { // reusability to be assessed
 
-//
-//
-//
 template<class T>
 class C_PrimeBelts
 {
@@ -173,6 +180,7 @@ private:
 
     // Data
     const C_ParserInfo      &m_Parsed;
+    const std::string       m_ContextType;
     const std::string       m_Banner;
 
     // Deduced from actionMap
@@ -206,6 +214,7 @@ private:
 
     // Nonvirtuals
     void addParserMap(C_RenderReduction &rr, const std::string &className, size_t argInd) const;
+    bool hasContext() const { return !m_ContextType.empty(); }
     std::string outputFindKey(const C_Alphabet &alphabet);
     std::string outputIsKey(bux::T_LexID key) const;
     void outputTokens(std::ostream &out, const std::string &headerBase) const;

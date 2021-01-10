@@ -5,24 +5,7 @@
 #include <fmt/core.h>       // fmt::print()
 #include <limits>           // std::numeric_limits<>
 
-namespace {
-
 namespace fs = std::filesystem;
-
-//
-//      In-Module Types
-//
-struct FC_AddStr
-{
-    // Data
-    std::string         &m_Value;
-
-    // Nonvirtuals
-    FC_AddStr(std::string &value): m_Value(value) {}
-    void operator()(const std::string &term) { m_Value +=term; }
-};
-
-} // namespace
 
 //
 //      Functions
@@ -146,8 +129,7 @@ bool C_Context::forEachOptionTerm_(const std::string &name, C_StrList &fifo, FH_
 
 bool C_Context::getOptionString(const std::string &name, std::string &value) const
 {
-    const FC_AddStr apply(value);
-    return forEachOptionTerm(name, apply);
+    return forEachOptionTerm(name, [&](auto &t){ value += t; });
 }
 
 void C_Context::issueError  (

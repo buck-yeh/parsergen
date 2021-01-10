@@ -305,7 +305,6 @@ right  ( ) { }
 //      Output Options
 //
 %CONTEXT    [[C_Context]]
-%CHAR_TYPE  [[bux::C_LexUTF32]]
 
 %HEADERS_FOR_HEADER [[
 #include "Context.h"    // C_Context, C_StrList, C_WeightedStrList
