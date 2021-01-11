@@ -74,7 +74,7 @@ When you need to quickly implement a parser for an improvised or deliberately de
 
 ## Write grammar
 [`example/CalcInt/grammar.txt`](example/CalcInt/grammar.txt) defines a calculator for basic arithmetics `+ - * / %` of integral constants in *decimal*, *octal*, or *hexadecimal*.
-~~~c++
+~~~php
 lexid   Spaces
 
 //
