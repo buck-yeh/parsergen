@@ -1,8 +1,8 @@
 # Brief
 - `parsergen`/`scannergen` combo generates source code files of LR1/GLR parser & scanner from a set of annotated production rules, aka grammar.
 - Both `parsergen` & `scannergen` use the combo to regenerate their own parser & scanner, respectively, to evolve themselves.
-- The generated code will contain C++20 keywords, e.g. **constinit**. IOW, building the code with `-std=c++2a` is required.
-- However you might not always need both:
+- Building the generated code with [`-std=c++2a`](https://gcc.gnu.org/projects/cxx-status.html#cxx20) is required.
+- Most often you need the combo, but not always:
   - Sometimes you might reuse an existing scanner with another parser. *(to be explained)*
   - Sometimes all you need is just scanner. (see [`CBrackets`](https://github.com/buck-yeh/CBrackets)) 
 
@@ -179,7 +179,7 @@ Scanner.cpp already exists. Overwrite it ?(y/n)y
 ℹ️ from [`example/CalcInt/main.cpp`](example/CalcInt/main.cpp)
 ### Includes
 ~~~c++
-#include "Parser.h"         // C_Parser, errors
+#include "Parser.h"         // C_Parser
 #include "ParserIdDef.h"    // TID_LEX_Spaces
 #include "Scanner.h"        // C_Scanner
 ~~~

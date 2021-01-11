@@ -1,4 +1,4 @@
-#include "Parser.h"         // C_Parser, errors
+#include "Parser.h"         // C_Parser
 #include "ParserIdDef.h"    // TID_LEX_Spaces
 #include "Scanner.h"        // C_Scanner
 //-------------------------------------------------------------
