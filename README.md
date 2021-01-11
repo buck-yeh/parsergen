@@ -151,6 +151,29 @@ where
 | `tokens.txt` | Output of `parsergen` & input of `scannergen`
 | [`RE_Suite.txt`](ScannerGen/RE_Suite.txt) | Recurring token definitions provided with `scannergen` and used by `tokens.txt`
 
+### If target source files already exist
+💡 Put the commands in a script called [`reparse`](test/archlinux/aur_poc/reparse) for recurring uses.
+ 
+ℹ️ `parsergen` will prompt `(y/n)` questions three times and `scannergen` will ask twice.
+~~~bash
+> ./reparse 
+About to parse 'grammar.txt' ...
+Total 1 lex-symbols 1 nonterms 9 literals
+states = 30	shifts = 106
+Spent 0.005232879"
+38 out of 106 goto keys erased for redundancy.
+ParserIdDef.h already exists. Overwrite it ?(y/n)y
+Parser.h already exists. Overwrite it ?(y/n)y
+Parser.cpp already exists. Overwrite it ?(y/n)y
+Parser created
+#pos_args = 4
+About to parse '/usr/share/parsergen/RE_Suite.txt' ...
+About to parse 'tokens.txt' ...
+Scanner.h already exists. Overwrite it ?(y/n)y
+Scanner.cpp already exists. Overwrite it ?(y/n)y
+> _ 
+~~~
+
 ## Use the generated
 ℹ️ from [`example/CalcInt/main.cpp`](example/CalcInt/main.cpp)
 ### Includes
