@@ -15,6 +15,7 @@
       * [Generate C++ code of parser &amp; scanner](#generate-c-code-of-parser--scanner)
          * [When package parsergen is installed in ArchLinux](#when-package-parsergen-is-installed-in-archlinux)
          * [When parsergen is built from github](#when-parsergen-is-built-from-github)
+         * [If target source files already exist](#if-target-source-files-already-exist)
       * [Use the generated](#use-the-generated)
          * [Includes](#includes)
          * [Scanner|screener|parser piped to parse](#scannerscreenerparser-piped-to-parse)
@@ -153,7 +154,7 @@ where
 
 ### If target source files already exist
 💡 Put the commands in a script called [`reparse`](test/archlinux/aur_poc/reparse) for recurring uses.
- 
+
 ℹ️ `parsergen` will prompt `(y/n)` questions three times and `scannergen` will ask twice.
 ~~~bash
 > ./reparse 
