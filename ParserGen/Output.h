@@ -14,7 +14,7 @@ enum
     //
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 6,
-    VERSION_RELEASE         = 0
+    VERSION_RELEASE         = 1
 };
 
 namespace bux { // reusability to be assessed

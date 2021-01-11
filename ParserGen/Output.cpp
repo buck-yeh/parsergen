@@ -365,7 +365,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
         }
         return ret;
     }();
-    const auto headClassName = m_Parsed.isGlobalNamespace()? "::"+className: className;
+    const auto      headClassName = m_Parsed.fullNamespace()+"::"+className;
     C_Strings       tokenStrs;
     size_t          maxWidth;
     bux::T_LexID    tid_ub = bux::TOKENGEN_LB;  // initialized as

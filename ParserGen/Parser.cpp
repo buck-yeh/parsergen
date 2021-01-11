@@ -560,7 +560,7 @@ constinit const struct C_MapGoto {
 void _reduce_1(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <Line> ::= class <QualifiedName> <OptionalTemplateArgs>
 {
-    auto &c = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    auto &c = dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context;
     if (!c.testCond())
         return;
 
@@ -585,7 +585,7 @@ void _reduce_1(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
 void _reduce_2(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <Line> ::= <OperatorAssociation>
 {
-    auto &c = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    auto &c = dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context;
     if (!c.testCond())
         return;
 
@@ -596,7 +596,7 @@ void _reduce_2(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
 void _reduce_3(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <Line> ::= % $Id <Semantics>
 {
-    auto &c = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    auto &c = dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context;
     if (!c.testCond())
         return;
 
@@ -606,7 +606,7 @@ void _reduce_3(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
 void _reduce_4(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <Line> ::= <Production> <Semantics>
 {
-    auto &c = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    auto &c = dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context;
     if (!c.testCond())
         return;
 
@@ -619,39 +619,39 @@ void _reduce_4(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
 void _reduce_5(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <PreProcLine> ::= ifdef $Id
 {
-    auto &c = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    auto &c = dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context;
     c.ifCond(c.getOption(bux::unlex<std::string>(_geT_(1))), _geT_(0));
 }
 
 void _reduce_6(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <PreProcLine> ::= ifndef $Id
 {
-    auto &c = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    auto &c = dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context;
     c.ifCond(!c.getOption(bux::unlex<std::string>(_geT_(1))), _geT_(0));
 }
 
 void _reduce_7(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <PreProcLine> ::= else
 {
-    dynamic_cast<C_BNFParser&>(_paRSeR_).m_context.elseCond(_geT_(0));
+    dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context.elseCond(_geT_(0));
 }
 
 void _reduce_8(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <PreProcLine> ::= endif
 {
-    dynamic_cast<C_BNFParser&>(_paRSeR_).m_context.endifCond(_geT_(0));
+    dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context.endifCond(_geT_(0));
 }
 
 void _reduce_9(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <PreProcLine> ::= include $String
 {
-    auto &C = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    auto &C = dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context;
     if (!C.testCond())
         return;
 
     const auto filename = C.expand_include(bux::unlex<std::string>(_geT_(1)));
     _paRSeR_.reservePostShift([&,filename]{
-            parseFile(filename, dynamic_cast<C_BNFParser&>(_paRSeR_), '\n');
+            parseFile(filename, dynamic_cast<Main::C_BNFParser&>(_paRSeR_), '\n');
         }, 1);
 }
 
@@ -670,7 +670,7 @@ void _reduce_11(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT
 void _reduce_12(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <NewLexIds> ::= <NewLexIds> $Id
 {
-    auto &c = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    auto &c = dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context;
     if (!c.testCond())
         return;
 
@@ -691,7 +691,7 @@ void _reduce_13(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT
 void _reduce_14(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval _reT_)
 //  <OperatorAssociation> ::= <OperatorAssociation> <Terminal>
 {
-    auto &c = dynamic_cast<C_BNFParser&>(_paRSeR_).m_context;
+    auto &c = dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context;
     if (!c.testCond())
         return;
 
@@ -782,7 +782,7 @@ void _reduce_24(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetL
     if (s.size() > 1 && s[0] == '@')
         // Builtin nonterminal which triggers extra productions
     {
-        if (!dynamic_cast<C_BNFParser&>(_paRSeR_).m_context.activateBuiltinNonterminal(s.substr(1)))
+        if (!dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context.activateBuiltinNonterminal(s.substr(1)))
             _paRSeR_.onError(_geT_(1), "Unrecognized as a builtin nonterminal");
     }
     auto t = new C_Nonterminal(s);
@@ -863,7 +863,7 @@ void _reduce_32(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetL
 //  <Terminal> ::= $LexSymbol
 {
     const auto &s = bux::unlex<std::string>(_geT_(0));
-    dynamic_cast<C_BNFParser&>(_paRSeR_).m_context.addLexId(s);
+    dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context.addLexId(s);
     _reT_ = new C_LexSymbol(s);
 }
 
@@ -1177,7 +1177,7 @@ void C_ParserPolicy::getReduceInfo(size_t id, C_ReduceInfo &info) const
 void C_ParserPolicy::onError(bux::LR1::C_Parser &_paRSeR_, const bux::C_SourcePos &pos, const std::string &message) const
 {
     // User-defined %ON_ERROR begins
-    dynamic_cast<C_BNFParser&>(_paRSeR_).m_context.issueError(LL_ERROR, pos, message);
+    dynamic_cast<Main::C_BNFParser&>(_paRSeR_).m_context.issueError(LL_ERROR, pos, message);
     // User-defined %ON_ERROR ends
 }
 
@@ -1185,6 +1185,6 @@ void C_ParserPolicy::onError(bux::LR1::C_Parser &_paRSeR_, const bux::C_SourcePo
 
 namespace Main {
 
-const bux::LR1::I_ParserPolicy &C_BNFParser::policy() { return g_policy; }
+const bux::LR1::I_ParserPolicy &Main::C_BNFParser::policy() { return g_policy; }
 
 } // namespace Main
