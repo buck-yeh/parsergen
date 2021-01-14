@@ -2,9 +2,9 @@
 - `parsergen`/`scannergen` combo generates source code files of LR1/GLR parser & scanner from a set of annotated production rules, aka grammar.
 - Both `parsergen` & `scannergen` use the combo to regenerate their own parser & scanner, respectively, to evolve themselves.
 - Building the generated code with [`-std=c++2a`](https://gcc.gnu.org/projects/cxx-status.html#cxx20) is required.
-- Most often you need the combo, but not always:
-  - Sometimes you might reuse an existing scanner with another parser. *(to be explained)*
-  - Sometimes all you need is just scanner. (see [`CBrackets`](https://github.com/buck-yeh/CBrackets)) 
+- 🧘 Most often you need *the combo*, but not always:
+  - Sometimes reusing an existing scanner with another parser is feasible and cheaper. *(to be explained)*
+  - Sometimes a standalone scanner suffices. (see [`CBrackets`](https://github.com/buck-yeh/CBrackets)) 
 
 # Table of Contents
    * [Installation](#installation)

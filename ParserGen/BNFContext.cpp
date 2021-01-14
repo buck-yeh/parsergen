@@ -111,13 +111,11 @@ bool C_BNFContext::addProduction(C_Production &prod, C_Semantic *semantic)
         if (i == prod)
             return false;
 
-    m_Productions.emplace_back();
-    auto &key = m_Productions.back();
+    auto &key = m_Productions.emplace_back();
     key.m_Lval.swap(prod.m_Lval);
     key.m_Rval.swap(prod.m_Rval);
     key.m_Index = m_OntoJumps.size();
-    m_OntoPool.emplace_back();
-    auto &value = m_OntoPool.back();
+    auto &value = m_OntoPool.emplace_back();
     value.m_Productions.emplace_back(&key);
     m_OntoJumps.emplace_back(&value);
     if (semantic)
@@ -280,14 +278,7 @@ void C_BNFContext::normalize(
     }
 }
 
-std::optional<std::string> C_BNFContext::setClassName(
-    C_StringList            &qualified,
-#ifdef __TEMPLATE_OUTPUT
-    C_TemplateArgs          &targs
-#else
-    C_TemplateArgs          &
-#endif // __TEMPLATE_OUTPUT
-    )
+std::optional<std::string> C_BNFContext::setClassName(C_StringList &qualified, C_TemplateArgs &targs)
 {
     // Preconditions
     if (!m_ClassName.empty())
@@ -304,10 +295,9 @@ std::optional<std::string> C_BNFContext::setClassName(
     qualified.pop_back();
     m_Namespace.swap(qualified);
 #ifdef __TEMPLATE_OUTPUT
-    for (auto j =targs.begin(); j != targs.end(); ++j)
+    for (auto j = targs.begin(); j != targs.end(); ++j)
     {
-        m_TemplateArgs.emplace_back();
-        auto &t = m_TemplateArgs.back();
+        auto &t = m_TemplateArgs.emplace_back();
         t.m_ArgDummy = j->back();
         j->pop_back();
         auto &s = t.m_TypeName;
@@ -321,6 +311,9 @@ std::optional<std::string> C_BNFContext::setClassName(
         if (!s.empty() && isalnum(s[s.size()-1]))
             s += ' ';
     }
+#else
+    if (!targs.empty())
+        return "Template args not allowed";
 #endif // __TEMPLATE_OUTPUT
     return {};
 }
@@ -538,11 +531,12 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
     bool changed;
     do
     {
-        changed =false;
-        count =0;
-        C_OntoPool::iterator i;
-        for (i =m_OntoPool.begin(); i != m_OntoPool.end(); (i++)->m_Index =count++);
-        for (i =m_OntoPool.begin(); i != m_OntoPool.end();)
+        changed = false;
+        count = 0;
+        for (auto &i: m_OntoPool)
+            i.m_Index = count++;
+
+        for (auto i = m_OntoPool.begin(); i != m_OntoPool.end();)
         {
             for (auto j =m_OntoPool.begin(); j != i; ++j)
                 if (equal(i->m_Reduction,j->m_Reduction))

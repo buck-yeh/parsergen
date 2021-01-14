@@ -27,10 +27,8 @@
     {
         C_TemplateArgs t;
         if (auto sarg = bux::tryUnlex<std::string>($3))
-        {
-            t.emplace_back();
-            t.back().emplace_back(*sarg);
-        }
+            t.emplace_back().emplace_back(*sarg);
+
         if (auto err = c.setClassName(bux::unlex<C_StringList>($2), t))
             $p.onError($1, *err);
     }
