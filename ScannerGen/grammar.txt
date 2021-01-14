@@ -127,7 +127,7 @@ right  ( ) { }
     $r = $2;
 ]]
 
-<BW_List> ::=                           [[
+<BW_List> ::=                   [[
     bux::C_NewNode<C_NfaLex> ret;
     C_LexSet t;
     t.complement();
@@ -135,64 +135,55 @@ right  ( ) { }
     ret->m_1stFit = true;
     $r = ret;
 ]]
-<BW_List> ::= <SubCharSet>              [[
+<BW_List> ::= ^                 [[
+    bux::C_NewNode<C_NfaLex> ret;
+    C_LexSet t;
+    t.complement();
+    ret->m_NFA.append(t);
+    ret->m_1stFit = true;
+    $r = ret;
+]]
+<BW_List> ::= <SubCharSet>      [[
     bux::C_NewNode<C_NfaLex> ret;
     ret->m_NFA.append(bux::unlex<C_LexSet>($1));
     $r = ret;
 ]]
-<BW_List> ::= ^ <OptionalSubCharSet>    [[
+<BW_List> ::= ^ <SubCharSet>    [[
     bux::C_NewNode<C_NfaLex> ret;
-    if (auto src = bux::tryUnlex<C_LexSet>($2))
-    {
-        src->complement();
-        ret->m_NFA.append(*src);
-    }
-    else
-    {
-        C_LexSet t;
-        t.complement();
-        ret->m_NFA.append(t);
-        ret->m_1stFit = true;
-    }
+    auto &src = bux::unlex<C_LexSet>($2);
+    src.complement();
+    ret->m_NFA.append(src);
     $r = ret;
-]]
-
-<OptionalSubCharSet> ::=                [[]]
-<OptionalSubCharSet> ::= <SubCharSet>   [[
-    $r = $1;
 ]]
 
 <SubCharSet> ::= <SubCharSet> , <SubCharSet>    [[
     bux::unlex<C_LexSet>($1) |= bux::unlex<C_LexSet>($3);
     $r = $1;
 ]]
-<SubCharSet> ::= $String                        [[
+<SubCharSet> ::= $String        [[
     const auto t = bux::unlex<std::string>($1);
     $r = bux::createLex<C_LexSet>(t.begin(), t.end());
 ]]
-<SubCharSet> ::= $Id                            [[
+<SubCharSet> ::= $Id            [[
     const auto t = bux::unlex<std::string>($1);
     $r = bux::createLex<C_LexSet>(t.begin(), t.end());
 ]]
-<SubCharSet> ::= $Num                           [[
+<SubCharSet> ::= $Num           [[
     const auto t = dynamic_cast<bux::C_IntegerLex&>(*$1).str();
     $r = bux::createLex<C_LexSet>(t.begin(), t.end());
 ]]
-<SubCharSet> ::= $Key <OptionalUBKey>           [[
+<SubCharSet> ::= $Key           [[
+    $r = bux::createLex<C_LexSet>(bux::unlex<uint32_t>($1));
+]]
+<SubCharSet> ::= $Key - $Key    [[
     auto c1 = bux::unlex<uint32_t>($1);
-    if (auto c2 = bux::tryUnlex<uint32_t>($2))
+    auto c2 = bux::unlex<uint32_t>($3);
+    if (c1 > c2)
     {
-        if (c1 > *c2)
-        {
-            $p.onError($1, "Lower bound key is greater than upper bound key");
-            const auto t = c1;
-            c1 = *c2;
-            *c2 = t;
-        }
-        $r = bux::createLex<C_LexSet>(c1, *c2);
+        $p.onError($1, "Lower bound key is greater than upper bound key");
+        std::swap(c1, c2);
     }
-    else
-        $r = bux::createLex<C_LexSet>(c1);
+    $r = bux::createLex<C_LexSet>(c1, c2);
 ]]
 <SubCharSet> ::= $Charset                       [[
     std::string s;
@@ -215,11 +206,6 @@ right  ( ) { }
     else
         // On success
         $r = bux::createLex<C_LexSet>(s.begin(), s.end());
-]]
-
-<OptionalUBKey> ::=         [[]]
-<OptionalUBKey> ::= - $Key  [[
-    $r = $2;
 ]]
 
 <LexResult> ::=                                 [[]]

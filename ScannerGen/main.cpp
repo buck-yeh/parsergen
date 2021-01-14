@@ -41,7 +41,7 @@ enum
     //
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 5,
-    VERSION_RELEASE         = 0,
+    VERSION_RELEASE         = 1,
     //
     //      Error Codes
     //
@@ -390,7 +390,7 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
     if (!firstFits.empty())
     {
         out <<"\n"
-              "const " <<m_Limits.stateType() <<" FIRST_FITS[" <<firstFits.size() <<"] = {\n";
+              "constinit const " <<m_Limits.stateType() <<" FIRST_FITS[" <<firstFits.size() <<"] = {\n";
         first = true;
         for (auto &i: firstFits)
         {
@@ -403,7 +403,7 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
         }
         out <<"};\n"
               "\n"
-              "C_" <<m_Prefix <<"Scanner::F_IsFinal *const IS_FINALS[" <<firstFits.size() <<"] = {\n";
+              "constinit C_" <<m_Prefix <<"Scanner::F_IsFinal *const IS_FINALS[" <<firstFits.size() <<"] = {\n";
         first = true;
         for (auto &i: firstFits)
         {

@@ -54,28 +54,26 @@ std::string literalSuffix(const std::string &s)
 
 std::string ensureNoConcat(std::string s)
 {
-    if (s.empty())
-        // Empty is empty
-        return s;
-
-    // Count lines
-    size_t lines =0;
-    for (size_t i =0; (i =s.find('\n',i)) != std::string::npos; ++lines)
-    {
-        if (++i == s.size())
-            return s;
-    }
-
-    // Strip trailing spaces
-    const auto stripPos = s.find_last_not_of(" \t\r\n");
+    auto stripPos = s.find_last_not_of(" \t\r");
     if (stripPos != std::string::npos)
+        // Trim trailing spaces
         s.erase(stripPos+1);
+    else
+        // Empty (Or only spaces)
+        return {};
 
     // Special treatment to one-liner
-    if (!lines)
-        s ="    " +s;
+    if (s.find('\n',0) == std::string::npos)
+    {
+        stripPos = s.find_first_not_of(" \t\r");
+        if (stripPos)
+            s.replace(0, stripPos, "    ");
+        else
+            s = "    " + s;
 
-    return s += '\n';
+        s += '\n';
+    }
+    return s;
 }
 
 std::string ensureNoConcat(const C_Semantic &src)
@@ -103,15 +101,11 @@ std::string C_Semantic::expand() const
         if (auto blex = dynamic_cast<C_BracketedLex*>(i))
         {
             for (auto j: blex->m_Str)
-                if (j != '\r')
+                if (j != '\r' && (j != '\n' || !ret.empty()))
                     ret += j;
         }
         else
             RUNTIME_ERROR("Unknown semantic lex type ", HRTN(i));
-
-    // Post process
-    if (!ret.empty() && ret.front() == '\n')
-        ret.erase(0, 1);
 
     return ret;
 }
@@ -148,7 +142,7 @@ std::string C_Production::inputName(size_t pos, const std::string &mark) const
         ret += i->displayStr();
     }
     if (ipos <= pos)
-        ret +=mark;
+        ret += mark;
     return ret;
 }
 

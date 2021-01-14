@@ -866,7 +866,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     {
         out <<(first? '{': ',') <<restOfLine <<"\n";
         const size_t reduceInd = m_Parsed.getReductionIndex(i);
-        if (nullReducers.find(reduceInd) != nullReducers.end())
+        if (nullReducers.contains(reduceInd))
             out <<"{nullptr,    \t";
         else
             out <<"{_reduce_" <<reduceInd <<(reduceInd < 10? ", \t": ",\t");
@@ -1177,19 +1177,18 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
 void FC_Output::addParserMap(C_RenderReduction &rr, const std::string &className, size_t argInd) const
 {
     rr.addMap("p", ARG_NAME_PARSER, 1<<argInd);
-    if (m_needGLR)
+    rr.addMap("P", ARG_NAME_PARSER_DOWNCAST(className), 1<<argInd);
+    if (!m_needGLR)
+        // LR1
+        rr.addMap("c", ARG_NAME_PARSER_DOWNCAST(className) ".m_context", 1<<argInd);
+    else
+        // GLR
     {
         std::string c = ARG_NAME_PARSER ".userData()";
         if (hasContext())
             c = fmt::format("*static_cast<{}::C_Context*>({})", className, c);
 
-        rr.addMap("P", ARG_NAME_PARSER, 1<<argInd);
         rr.addMap("c", c, 1<<argInd);
-    }
-    else
-    {
-        rr.addMap("P", ARG_NAME_PARSER_DOWNCAST(className), 1<<argInd);
-        rr.addMap("c", ARG_NAME_PARSER_DOWNCAST(className) ".m_context", 1<<argInd);
     }
 }
 

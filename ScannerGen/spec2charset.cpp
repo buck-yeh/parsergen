@@ -48,9 +48,6 @@ std::optional<C_S2C_Error> spec2charset(const std::string &spec, std::string &re
         else
             charset.insert(start);
     }
-    result.clear();
-    for (auto c: charset)
-        result += c;
-
+    result.assign(charset.cbegin(), charset.cend());
     return {};
 }
