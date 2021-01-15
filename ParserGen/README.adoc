@@ -1,0 +1,36 @@
+= `parsergen` User's Guide
+:toc:
+:toclevels: 4 
+//:toc-title: 
+:source-highlighter: pygments
+:pygments-style: colorful
+:pygments-linenums-mode: inline
+:icons: font
+:docinfo: private
+
+== Command line
+.Output of `parsergen -h`
+[source,bash]
+----
+USAGE: ./parsergen <Grammar> <Filename> <TokensOutput> [-I ARG] [-h]
+DESCRIPTION:
+  LR(1)/GLR-Parser Generator command line tool v1.6.1
+
+  Where:
+  1. <Grammar> is a grammar definition file.
+  2. Generated C++ source files are named as:
+     <Filename>IdDef.h - Lexical token enumerations
+     <Filename>.h      - Header of parser class
+     <Filename>.cpp    - Implementation of parser class
+  3. Generated token definitions are written to <TokensOutput> to feed scannergen 
+
+VALID FLAGS:
+  -I, --include_dir ARG
+	Search path of #include directive within <Grammar>
+  -h, --help
+	Display this help and exit
+----
+
+== Grammar
+
+== Generated files

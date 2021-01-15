@@ -55,14 +55,16 @@ int main(int argc, const char* argv[])
         "LR(1)/GLR-Parser Generator command line tool v{}.{}.{}\n"
         "\n"
         "  Where:\n"
-        "  1. <Grammar> refers to a grammar definition file.\n"
-        "  2. The resulting C++ source files are named as <Filename>IdDef.h <Filename>.h\n"
-        "     and <Filename>.cpp\n"
-        "  3. Token definitions for compound literals are written to <TokensOutput>.\n"
+        "  1. <Grammar> is a grammar definition file.\n"
+        "  2. Generated C++ source files are named as:\n"
+        "     <Filename>IdDef.h - Lexical token enumerations\n"
+        "     <Filename>.h      - Header of parser class\n"
+        "     <Filename>.cpp    - Implementation of parser class\n"
+        "  3. Generated token definitions are written to <TokensOutput> to feed scannergen\n"
         , VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
     C_Paths         inc_dirs;
     ezargs.position_args({"Grammar","Filename","TokensOutput"})
-          .add_flag("include_dir", 'I', "Search path of #include derivatives within tokens.txt",
+          .add_flag("include_dir", 'I', "Search path of #include directive within <Grammar>",
                     [&](auto s){
                         bux::C_IMemStream in{s};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));

@@ -36,10 +36,10 @@ int main(int argc, const char* argv[])
 {
     bux::C_EZArgs   ezargs{
         "\t1. <Grammar> is a grammar definition file.\n"
-        "\t2. The stripped grammar items will be printed to standard output.\n"};
+        "\t2. Print raw production rules to standard output.\n"};
     C_Paths         inc_dirs;
     ezargs.position_args({"Grammar"})
-          .add_flag("include_dir", 'I', "Search path of #include derivatives within tokens.txt",
+          .add_flag("include_dir", 'I', "Search path of #include directive within <Grammar>",
                     [&](auto s){
                         bux::C_IMemStream in{s};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));

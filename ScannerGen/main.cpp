@@ -564,13 +564,15 @@ int main(int argc, const char *argv[])
         "Scanner Generator command line tool v{}.{}.{}\n"
         "\n"
         "  Where:\n"
-        "  1. The resulting C++ source files are <ScannerBase>.h and <ScannerBase>.cpp\n"
-        "  2. <REn> is definition file with reqular expressions productions.\n"
-        "  3. If no <REn> file is assigned, standard input will be read.\n",
+        "  1. Generated C++ source files are named as:\n"
+        "     <ScannerBase>.h   - Header of scanner class\n"
+        "     <ScannerBase>.cpp - Implementation of scanner class\n"
+        "  2. <RE1> <RE2> ... are lexical token definition files.\n"
+        "  3. If no <REn> file is given, standard input is assumed.\n",
         VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
     C_Paths         inc_dirs;
     ezargs.position_args({"ScannerBase", "RE1", "RE2"}, {1,2}, true)
-          .add_flag("include_dir", 'I', "Search path of #include derivatives within tokens.txt",
+          .add_flag("include_dir", 'I', "Search path of #include directive within <REn>",
                     [&](auto s){
                         bux::C_IMemStream in{s};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
