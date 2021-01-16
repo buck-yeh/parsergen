@@ -86,7 +86,7 @@ Empty line means nothing else but enhancing readability. Put as many as you like
 . A reduced non-terminal operand combines with zero or more terminal/ non-terminal neighbors, reduces again into 'upper' non-terminal, ... and eventually reduces into <@>, the root non-terminal _aka_ the https://en.wikipedia.org/wiki/Context-free_grammar#Formal_definitions[start symbol]. Thus the whole input string parsed is deemed _accepted_.  
 . When no production rule is present, the grammar defined a language only accepting empty string, demonstrated by link:../example/MinLang/[MinLang]
 
-CAUTION: 💣 `parsergen` has to know which non-terminal is _start symbol_. If there is a production like `<@> ::= ...`, then *<@>* is the start symbol. Otherwise, the left side of ::= in the first parsed production, say *<All>*, becomes the _defacto_ start symbol, and an extra production `<@> ::= <All>` is added implicitly.    
+CAUTION: 💣 `parsergen` has to know the start symbol before calculation. If there is a production like `<@> ::= ...`, then *<@>* is the start symbol. Otherwise, the left side of ::= in the _first parsed production_, say *<All>*, becomes the _defacto_ start symbol, and an extra production `<@> ::= <All>` is added implicitly.    
 
 === 3. % Option definition
 _(To be explained)_
@@ -96,7 +96,7 @@ _(To be explained)_
 
 === 5. # Directives
 Seriously, these are not preprocessor directives but processed in the same pass as other type of lines. They just happen to use same old syntaxes:
-[cols="<.^15m,<.^~a"]
+[cols="<.^3m,<.^17a"]
 |===
 ^.^h| Directive ^.^h| Meaning
 | #include _"Foo"_ | Replace this line with lines within file _"Foo"_
