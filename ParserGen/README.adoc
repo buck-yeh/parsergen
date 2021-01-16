@@ -1,4 +1,3 @@
-= `parsergen` User's Guide
 :table-caption!:
 :toc:
 :toc-placement!:
