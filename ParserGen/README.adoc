@@ -96,7 +96,7 @@ _(To be explained)_
 
 === 5. # Directives
 Seriously, these are not preprocessor directives but processed in the same pass as other type of lines. They just happen to use same old syntaxes:
-[cols="<.^3a,<.^17a"]
+[%autowidth,cols="<.^a,<.^1a"]
 |===
 ^.^h| Directive ^.^h| Meaning
 | [source%nowrap,c++]
