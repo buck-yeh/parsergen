@@ -66,8 +66,8 @@ All mean nothing else but enhancing readability. Put as many as you like where y
 
 === 2. Production rule
 .Syntax
-. _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)*
-. _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)* [[ +
+> _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)* +
+  _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)* [[ +
 　   Multi-lined reduction code in C++ +
 ]]
 
