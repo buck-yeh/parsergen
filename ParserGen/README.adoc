@@ -96,6 +96,7 @@ _(To be explained)_
 
 === 5. # Directives
 Seriously, these are not preprocessor directives but processed in the same pass as other type of lines. They just happen to use same old syntaxes:
+[cols="3m,17a"]
 |===
 ^.^h| Directive ^.^h| Meaning
 | #include _"Foo"_ | Replace this line with lines within file _"Foo"_
