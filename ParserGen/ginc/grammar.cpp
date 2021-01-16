@@ -20,7 +20,7 @@
 
     if (auto targs = bux::tryUnlex<C_TemplateArgs>($3))
     {
-        if (auto err = c.setClassName(bux::unlex<C_StringList>($2), *targs))
+        if (auto err = c.setClassName(bux::unlex<C_StringList>($2), *targs)) [[unlikely]]
             $p.onError($1, *err);
     }
     else
@@ -55,7 +55,7 @@
         return;
 
     auto &prod = dynamic_cast<C_Production&>(*$1);
-    if (!c.addProduction(prod, bux::tryUnlex<C_Semantic>($2)))
+    if (!c.addProduction(prod, bux::tryUnlex<C_Semantic>($2))) [[unlikely]]
         $p.onError($1, "Production re-defined:\n"
                              "\t" + prod.str());
 ]]

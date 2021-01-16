@@ -566,7 +566,7 @@ void _reduce_1(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
 
     if (auto targs = bux::tryUnlex<C_TemplateArgs>(_geT_(2)))
     {
-        if (auto err = c.setClassName(bux::unlex<C_StringList>(_geT_(1)), *targs))
+        if (auto err = c.setClassName(bux::unlex<C_StringList>(_geT_(1)), *targs)) [[unlikely]]
             _paRSeR_.onError(_geT_(0), *err);
     }
     else
@@ -609,7 +609,7 @@ void _reduce_4(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
         return;
 
     auto &prod = dynamic_cast<C_Production&>(*_geT_(0));
-    if (!c.addProduction(prod, bux::tryUnlex<C_Semantic>(_geT_(1))))
+    if (!c.addProduction(prod, bux::tryUnlex<C_Semantic>(_geT_(1)))) [[unlikely]]
         _paRSeR_.onError(_geT_(0), "Production re-defined:\n"
                              "\t" + prod.str());
 }

@@ -1,4 +1,3 @@
-# Brief
 - The `parsergen`/`scannergen` combo generates source code files of LR1/GLR parser & scanner from a set of annotated production rules, aka grammar.
 - Both `parsergen` & `scannergen` use the same combo to re-generate their own parser & scanner, respectively, to evolve themselves.
 - Building the generated code with [`-std=c++2a`](https://gcc.gnu.org/projects/cxx-status.html#cxx20) is required.

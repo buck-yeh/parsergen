@@ -1,12 +1,24 @@
 = `parsergen` User's Guide
+:table-caption!:
 :toc:
-:toclevels: 4 
+:toc-placement!:
+//:toclevels: 4 
 //:toc-title: 
 :source-highlighter: pygments
 :pygments-style: colorful
 :pygments-linenums-mode: inline
 :icons: font
-:docinfo: private
+//:docinfo: private
+:hide-uri-scheme:
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+toc::[]
 
 == Command line
 .Output of `parsergen -h`
@@ -32,5 +44,84 @@ VALID FLAGS:
 ----
 
 == Grammar
+Grammar definition file consists of lines. There are 7 types of lines which can be mixed up *almost* in no particular order, but none of them is mandatory. Those rare cases where line order does matter will be highlighted by 💣
+
+=== 1. Empty line
+Empty line means nothing else but enhancing readability. Put as many as you like where you like.
+
+=== 2. Production rule
+.Syntax
+. _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)*
+. _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)* [[ +
+　   Multi-lined reduction code in C++ +
+]]
+
+.Example
+[source,c++]
+----
+<All> ::= <Line>                        // <1>
+<All> ::= <All> "\n" <Line>
+<Line> ::= <Production> <Semantics> [[  // <2>
+    auto &c = $c;
+    if (!c.testCond())
+        return;
+
+    auto &prod = dynamic_cast<C_Production&>(*$1);
+    if (!c.addProduction(prod, bux::tryUnlex<C_Semantic>($2))) [[unlikely]] // <3>
+        $p.onError($1, "Production re-defined:\n"
+                             "\t" + prod.str());
+]]
+----
+<1> No annotation, no reduction.
+<2> Doubly-bracketed [[reduction code]] may contain the following mnemonics:
+    - `$p` - Reference to the base parser class, _e.g._ of type `bux::LR1::C_Parser &`
+    - `$P` - Reference to the generated parser class
+    - `$c` - Reference to the context instance of the generated parser class if context type is defined by option `%CONTEXT`
+    - `$r` - The result token buffer which can be freely assigned
+    - `$1` `$2` `$3` ... denote the 1st, 2nd, 3rd, .. operand respectively to the right of ::= , terminal or non-terminal.
+<3> https://en.cppreference.com/w/cpp/language/attributes[C++ Attributes] can still be used in an reduction block 
+
+.Notes
+. Main role of a grammar.
+. `parsergen` deals only context-free grammars. Therefore exactly one non-terminal is allowed to the left of ::= per production.
+. A reduced non-terminal operand combines with zero or more terminal/ non-terminal neighbors, reduces again into 'upper' non-terminal, ... and eventually reduces into <@>, the root non-terminal _aka_ the https://en.wikipedia.org/wiki/Context-free_grammar#Formal_definitions[start symbol]. Thus the whole input string parsed is deemed _accepted_.  
+. When no production rule is present, the grammar defined a language only accepting empty string, demonstrated by link:../example/MinLang/[MinLang]  
+
+=== 3. % Option definition
+_(To be explained)_
+
+=== 4. $ New lexid
+_(To be explained)_
+
+=== 5. # Directives
+Seriously, these are not preprocessor directives but processed in the same pass as other type of lines. They just happen to use same old syntaxes:
+[cols="<.^15m,<.^~a"]
+|===
+^.^h| Directive ^.^h| Meaning
+| #include _"Foo"_ | Replace this line with lines within file _"Foo"_
+| #ifdef _Bar_ | If option `%Bar` is defined, include subsequent lines until whichever the **paired** `#else` or `#endif` is encountered first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
+| #ifndef _Bar_ | If option `%Bar` is undefined, include subsequent lines until whichever the **paired** `#else` or `#endif` is encountered first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
+| #else | 
+| #endif | 
+|===
+ℹ️ Pairing rules of `#ifdef`, `#ifndef`, `#else`, `#endif` comply with https://en.cppreference.com/w/cpp/preprocessor/conditional)[C++ preprocessor counterparts] +
+💡 No `#if _(expr)_` and `#elif _(expr)_` because relevant scenarios are yet to be seen and the implementing effort is estimated high.
+
+=== 6. Parser class naming
+.Syntax
+*class* (`<namespace>` ::)* `<class_name>`
+
+.Example
+*class* `Main::C_BNFParser`
+
+.Notes
+. At most one such line is allowed. 
+. When absent, the parser class has the default name `::C_Parser`
+. This will become a problem only when an application uses multiple `parsergen`-generated parsers.   
+. Use of namespace(s) is encouraged when the generated parser is part of a library.
+
+=== 7. Operator precedence
+_(To be explained)_
 
 == Generated files
+_(To be explained)_
