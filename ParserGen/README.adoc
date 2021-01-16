@@ -43,7 +43,7 @@ VALID FLAGS:
 ----
 
 == Grammar
-Grammar definition file consists of lines. There are 7 types of lines which can be mixed up *almost* in no particular order, but none of them is mandatory. Those rare cases where line order does matter will be highlighted by 💣
+Grammar definition file consists of lines. There are 7 types of lines which can be mixed up *almost* in no particular order. No line type is mandatory. Those rare cases where line order does matter will be highlighted by 💣
 
 === 1. Empty line
 Empty line means nothing else but enhancing readability. Put as many as you like where you like.
@@ -84,7 +84,9 @@ Empty line means nothing else but enhancing readability. Put as many as you like
 . Main role of a grammar.
 . `parsergen` deals only context-free grammars. Therefore exactly one non-terminal is allowed to the left of ::= per production.
 . A reduced non-terminal operand combines with zero or more terminal/ non-terminal neighbors, reduces again into 'upper' non-terminal, ... and eventually reduces into <@>, the root non-terminal _aka_ the https://en.wikipedia.org/wiki/Context-free_grammar#Formal_definitions[start symbol]. Thus the whole input string parsed is deemed _accepted_.  
-. When no production rule is present, the grammar defined a language only accepting empty string, demonstrated by link:../example/MinLang/[MinLang]  
+. When no production rule is present, the grammar defined a language only accepting empty string, demonstrated by link:../example/MinLang/[MinLang]
+
+CAUTION: 💣 `parsergen` has to know which non-terminal is _start symbol_. If there is a production like `<@> ::= ...`, then *<@>* is the start symbol. Otherwise, the left side of ::= in the first parsed production, say *<All>*, becomes the _defacto_ start symbol, and an extra production `<@> ::= <All>` is added implicitly.    
 
 === 3. % Option definition
 _(To be explained)_
