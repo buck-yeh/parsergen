@@ -96,9 +96,9 @@ _(To be explained)_
 
 === 5. # Directives
 Seriously, these are not preprocessor directives but processed in the same pass as other type of lines. They just happen to use same old syntaxes:
-[cols="3m,17a"]
+[cols="<.^3m,<.^17a"]
 |===
-^.^h| Directive ^.^h| Meaning
+^.^h| 　 Directive 　 ^.^h| Meaning
 | #include _"Foo"_ | Replace this line with lines within file _"Foo"_
 | #ifdef _Bar_ | If option `%Bar` is defined, include subsequent lines until whichever the **paired** `#else` or `#endif` is encountered first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
 | #ifndef _Bar_ | If option `%Bar` is undefined, include subsequent lines until whichever the **paired** `#else` or `#endif` is encountered first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
