@@ -125,8 +125,10 @@ Seriously, these are not preprocessor directives but processed in the same pass 
 | [source%nowrap,c++]
 #endif | 
 |===
-ℹ️ Pairing rules of `#ifdef`, `#ifndef`, `#else`, `#endif` comply with https://en.cppreference.com/w/cpp/preprocessor/conditional)[C++ preprocessor counterparts] +
-💡 No `#if _(expr)_` and `#elif _(expr)_` because relevant scenarios are yet to be seen and the implementing effort is estimated high.
+
+IMPORTANT: Pairing rules of `#ifdef`, `#ifndef`, `#else`, `#endif` comply with https://en.cppreference.com/w/cpp/preprocessor/conditional)[C++ preprocessor counterparts]
+
+TIP: No `#if _(expr)_` and `#elif _(expr)_` because relevant scenarios are yet to be seen and the implementing effort is estimated high.
 
 === 6. Parser class naming
 .Syntax
