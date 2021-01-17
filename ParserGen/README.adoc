@@ -4,6 +4,7 @@
 //:toclevels: 4 
 //:toc-title: 
 :source-highlighter: pygments
+:source-language: c++
 :pygments-style: colorful
 :pygments-linenums-mode: inline
 :icons: font
@@ -62,7 +63,7 @@ Empty line together with
 // Grammar with Semantic Rules
 ----
 
-All mean nothing else but enhancing readability. Put as many as you like where you like.
+All three above mean nothing else but enhancing readability. Put as many as you like where you like.
 
 === 2. Production rule
 .Syntax
@@ -137,17 +138,17 @@ void C_ParserPolicy::onError(bux::LR1::C_Parser&, const bux::C_SourcePos &pos, c
 // %FOO undefined (expanded here otherwise)
 ----
 
-| %CONTEXT 
-| %IGNORE_KEYWORD_CASE
+| %CONTEXT | |
+| %IGNORE_KEYWORD_CASE | |
 //--------------------------
-| %HEADERS_FOR_HEADER
-| %PRECLASSDECL
-| %INCLASSDECL
+| %HEADERS_FOR_HEADER | |
+| %PRECLASSDECL | |
+| %INCLASSDECL | |
 //--------------------------
-| %HEADERS_FOR_CPP
-| %LOCAL_CPP
-| %SCOPED_CPP_HEAD
-| %SCOPED_CPP_TAIL
+| %HEADERS_FOR_CPP | |
+| %LOCAL_CPP | |
+| %SCOPED_CPP_HEAD | |
+| %SCOPED_CPP_TAIL | |
 //--------------------------
 | %SCANNEROPTION | *tokens.txt* | The first part of *tokens.txt*
 | %EXTRA_TOKENS | *tokens.txt* | 
