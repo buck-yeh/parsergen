@@ -173,7 +173,9 @@ Seriously, these are not preprocessor directives but processed in the same pass 
 | [source%nowrap,c++]
 #else | 
 | [source%nowrap,c++]
-#endif | 
+#endif 
+
+| 
 |===
 
 IMPORTANT: Pairing rules of `#ifdef`, `#ifndef`, `#else`, `#endif` comply with https://en.cppreference.com/w/cpp/preprocessor/conditional)[C++ preprocessor counterparts]
