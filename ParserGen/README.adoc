@@ -88,7 +88,7 @@ All three above mean nothing else but enhancing readability. Put as many as you 
                              "\t" + prod.str());
 ]]
 ----
-<1> No annotation, no reduction.
+<1> No [[ ]], no reduction.
 <2> [[reduction_mnemonics]]Doubly-bracketed [[reduction code]] may contain the following mnemonics:
     - `$p` - Reference to the base parser class, _e.g._ of type `bux::LR1::C_Parser &`
     - `$P` - Reference to the generated parser class
@@ -135,7 +135,7 @@ void C_ParserPolicy::onError(
 *tokens.txt* | When defined, for every other known option not defined, say `%FOO`, and where output should be skipped, output 
 [source,c++]
 ----
-// %FOO undefined (expanded here otherwise)
+ // %FOO undefined (expanded here otherwise)
 ----
 
 | %CONTEXT | |
@@ -165,16 +165,23 @@ Seriously, these are not preprocessor directives but processed in the same pass 
 |===
 ^.^h| Directive ^.^h| Meaning
 | [source%nowrap,c++]
-#include "Foo" | Replace this line with lines within file _"Foo"_
-| [source%nowrap,c++]
-#ifdef _Bar_ | If option `%Bar` is defined, include subsequent lines until whichever the **paired** `#else` or `#endif` is encountered first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
-| [source%nowrap,c++]
-#ifndef _Bar_ | If option `%Bar` is undefined, include subsequent lines until whichever the **paired** `#else` or `#endif` is encountered first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
-| [source%nowrap,c++]
-#else | 
-| [source%nowrap,c++]
-#endif 
+#include "Foo" 
+| Replace this line with lines within file _"Foo"_
 
+| [source%nowrap,c++]
+#ifdef _Bar_ 
+| If option `%Bar` is defined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
+
+| [source%nowrap,c++]
+#ifndef _Bar_ 
+| If option `%Bar` is undefined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
+
+| [source,c++]
+#else 
+|
+
+| [source,c++]
+#endif 
 | 
 |===
 
