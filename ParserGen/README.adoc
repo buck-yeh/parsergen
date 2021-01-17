@@ -94,7 +94,7 @@ All three above mean nothing else but enhancing readability. Put as many as you 
     - `$P` - Reference to the generated parser class
     - `$c` - Reference to the context instance of the generated parser class if context type is defined by option `%CONTEXT`
     - `$r` - The result token buffer which can be freely assigned
-    - `$1` `$2` `$3` ... denote the 1st, 2nd, 3rd, .. operand respectively to the right of ::= , terminal or non-terminal.
+    - `$1` `$2` `$3` ... denote the 1st, 2nd, 3rd, .. operand to the right of `::=` respectively, terminal or non-terminal.
 <3> https://en.cppreference.com/w/cpp/language/attributes[C++ Attributes] can still be used in an reduction block 
 
 .Notes
@@ -105,8 +105,6 @@ All three above mean nothing else but enhancing readability. Put as many as you 
 CAUTION: 💣 `parsergen` has to know the start symbol before calculation. If there is a production like `<@> ::= ...`, then *<@>* is the start symbol. Otherwise, the left side of ::= in the _first parsed production_, say *<All>*, becomes the _defacto_ start symbol, and an extra production `<@> ::= <All>` is added implicitly.    
 
 === 3. % Option definition
-[%autowidth,cols="<.^m,<.^a"]
-
 [%autowidth,cols="<.^m,^.^a,<.^a"]
 |===
 ^.^h| Known Option ^.^h| Output To ^.^h| Action
@@ -116,8 +114,7 @@ Output
 [source,c++]
 #include "Path/To/IdDef.h"
 
-| %ERROR_TOKEN | **Parser**_.cpp_ | Let either _""_ or _"Error"_ be value of `%ERROR_TOKEN` and `$Error` is used in productions. +
-Enable *error recovery* mechanism of the base parser class by telling `I_ParserPolicy` error token id is `TID_LEX_Error`, which will be defined in **Parser**_IdDef.h_ 
+| %ERROR_TOKEN | **Parser**_.cpp_ | If `%ERROR_TOKEN` is defined valuelessly or with value \[[Error]] and `$Error` is found in productions, *error recovery* mechanism of the base parser class will be enabled by telling `I_ParserPolicy` error token id is `TID_LEX_Error`, which will be defined in **Parser**_IdDef.h_ 
 
 | %UPCAST_TOKEN | **Parser**_.cpp_ | Implement the following policy method with valid mnemonics `$token` `$attr`
 [source,c++]
