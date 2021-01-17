@@ -1,7 +1,7 @@
 :table-caption!:
 :toc:
 :toc-placement!:
-//:toclevels: 4 
+:toclevels: 4 
 //:toc-title: 
 :source-highlighter: pygments
 :source-language: c++
@@ -44,7 +44,7 @@ VALID FLAGS:
 ----
 
 == Grammar
-Grammar definition file consists of lines. There are 7 types of lines which can be mixed up *almost* in no particular order. No line type is mandatory. Those rare cases where line order does matter will be highlighted by 💣
+Grammar definition file consists of _lines_. There are 7 types of lines which can be mixed up _almost_ in no particular order. No line type is mandatory. The cases where line order does matter will be highlighted by 💣
 
 === 1. Empty line & Comment
 Empty line together with
@@ -65,14 +65,18 @@ Empty line together with
 
 All three above mean nothing else but enhancing readability. Put as many as you like where you like.
 
+TIP: Comments can be used to disable other types of lines (and later re-enable them just as quickly): +
+`//%SHOW_UNDEFINED`
+
+
 === 2. Production rule
-.Syntax
+==== Syntax
 > _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)* +
   _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)* [[ +
 　   Multi-lined reduction code in C++ +
 ]]
 
-.Example
+==== Example
 [source,c++]
 ----
 <All> ::= <Line>                        // <1>
@@ -97,24 +101,29 @@ All three above mean nothing else but enhancing readability. Put as many as you 
     - `$1` `$2` `$3` ... denote the 1st, 2nd, 3rd, .. operand to the right of `::=` respectively, terminal or non-terminal.
 <3> https://en.cppreference.com/w/cpp/language/attributes[C++ Attributes] can still be used in an reduction block 
 
-.Notes
+==== Notes
 . `parsergen` deals only context-free grammars. Therefore exactly one non-terminal is allowed to the left of ::= per production.
 . A reduced non-terminal operand combines with zero or more terminal/ non-terminal neighbors, reduces again into 'upper' non-terminal, ... and eventually reduces into <@>, the root non-terminal _aka_ the https://en.wikipedia.org/wiki/Context-free_grammar#Formal_definitions[start symbol]. Thus the whole input string parsed is deemed _accepted_.  
 . When there is no production rule at all, the grammar defined a language only accepting empty string, demonstrated by link:../example/MinLang/[MinLang]
 
-CAUTION: 💣 `parsergen` has to know the start symbol before calculation. If there is a production like `<@> ::= ...`, then *<@>* is the start symbol. Otherwise, the left side of ::= in the _first parsed production_, say *<All>*, becomes the _defacto_ start symbol, and an extra production `<@> ::= <All>` is added implicitly.    
+CAUTION: 💣 `parsergen` has to know the start symbol before calculation. If there is a production like `<@> ::= ...`, then `<@>` is the start symbol. Otherwise, the left side of ::= in the *first parsed production*, say `<All>`, becomes the start symbol, and an extra production `<@> ::= <All>` is added implicitly.    
 
 === 3. % Option definition
+==== Syntax
+
+==== Example
+
+==== Known Options
 [%autowidth,cols="<.^m,^.^a,<.^a"]
 |===
-^.^h| Known Option ^.^h| Output To ^.^h| Action
+^.^h| Known Option ^.^h| Output To ^.^h| Action / Meaning
 
 | %IDDEF_SOURCE | **Parser**_IdDef.h_ | Let "Path/To/IdDef.h" be value of `%IDDEF_SOURCE` +
 Output
 [source,c++]
 #include "Path/To/IdDef.h"
 
-| %ERROR_TOKEN | **Parser**_.cpp_ | If `%ERROR_TOKEN` is defined valuelessly or with value \[[Error]] and `$Error` is found in productions, *error recovery* mechanism of the base parser class will be enabled by telling `I_ParserPolicy` error token id is `TID_LEX_Error`, which will be defined in **Parser**_IdDef.h_ 
+| %ERROR_TOKEN | **Parser**_.cpp_ | If `%ERROR_TOKEN` is defined valuelessly or with value \[[Error]] and `$Error` is found in productions, the underlying *error recovery* mechanism of the base parser class will be enabled by telling `I_ParserPolicy` error token id is `TID_LEX_Error`, which will be defined in **Parser**_IdDef.h_ _(to be explained)_
 
 | %UPCAST_TOKEN | **Parser**_.cpp_ | Implement the following policy method with valid mnemonics `$token` `$attr`
 [source,c++]
@@ -131,29 +140,91 @@ void C_ParserPolicy::onError(
 
 | %SHOW_UNDEFINED | **Parser**_.cpp_ +
 **Parser**_.h_ +
-**Parser**_IdDef.h_ +
-*tokens.txt* | When defined, for every other known option not defined, say `%FOO`, and where output should be skipped, output 
+*tokens.txt* | When defined, for every other known option _not defined_, say `%FOO`, and where output should be spared, output 
 [source,c++]
 ----
  // %FOO undefined (expanded here otherwise)
 ----
+Read all 3 output files of link:../example/MinLang/[MinLang] to find exact locations of such comment lines for various known options.
 
-| %CONTEXT | |
-| %IGNORE_KEYWORD_CASE | |
+| %CONTEXT | **Parser**_.cpp_ +
+**Parser**_.h_ | Type of public member data `m_context` of the generated parser class. This becomes necessary when user needs more tailored controls within code blocks either for reduction or defined by some of these known options thru mnemonic link:#reduction_mnemonics[`$c`] 
+
+| %IGNORE_KEYWORD_CASE | **Parser**_IdDef.h_ +
+*tokens.txt* | This option tells `parsergen` to treat keywords case-insensitively. Convenient when you define a case-insensitive language, e.g. `SQL`
+
 //--------------------------
-| %HEADERS_FOR_HEADER | |
-| %PRECLASSDECL | |
-| %INCLASSDECL | |
-//--------------------------
-| %HEADERS_FOR_CPP | |
-| %LOCAL_CPP | |
-| %SCOPED_CPP_HEAD | |
-| %SCOPED_CPP_TAIL | |
-//--------------------------
-| %SCANNEROPTION | *tokens.txt* | The first part of *tokens.txt*
-| %EXTRA_TOKENS | *tokens.txt* | 
-| HEADERS_FOR_SCANNER_CPP
-| %LOCALS_FOR_SCANNER_CPP
+| %HEADERS_FOR_HEADER | **Parser**_.h_ | Output right _before_ where namespace scope of user's parser class begins:
+[source,c++]
+----
+ // %HEADERS_FOR_HEADER expanded BEGIN
+...(your code)...
+ // %HEADERS_FOR_HEADER expanded END
+----
+
+| %PRECLASSDECL | **Parser**_.h_ | Output _within_ namespace scope of user's parser class and _before_ the class is defined:
+[source,c++]
+----
+ // %PRECLASSDECL expanded BEGIN
+...(your code)...
+ // %PRECLASSDECL expanded END
+----
+
+| %INCLASSDECL | **Parser**_.h_ | Output _within_ the definition of user's parser class and right _after_ the common members are declared:
+[source,c++]
+----
+ // %INCLASSDECL expanded BEGIN
+...(your code)...
+ // %INCLASSDECL expanded END
+----
+
+| %HEADERS_FOR_CPP | **Parser**_.cpp_ | Output _after_ the banner comment and _before_ any non-comment code:
+[source,c++]
+----
+ // %HEADERS_FOR_CPP expanded BEGIN
+...(your code)...
+ // %HEADERS_FOR_CPP expanded END
+----
+
+| %LOCAL_CPP | **Parser**_.cpp_ | Output _within_ anonymous namespace scope and _between_ common `using namespace` declarations and in-module constant definitions:
+[source,c++]
+----
+ // %LOCAL_CPP expanded BEGIN
+...(your code)...
+ // %LOCAL_CPP expanded END
+----
+
+| %SCOPED_CPP_HEAD | **Parser**_.cpp_ | Output _within_ namespace scope of user's parser class and _before_ ctor/method bodies of the class:
+[source,c++]
+----
+ // %SCOPED_CPP_HEAD expanded BEGIN
+...(your code)...
+ // %SCOPED_CPP_HEAD expanded END
+----
+
+| %SCOPED_CPP_TAIL | **Parser**_.cpp_ | Output _within_ namespace scope of user's parser class and _after_ ctor/method bodies of the class:
+[source,c++]
+----
+ // %SCOPED_CPP_TAIL expanded BEGIN
+...(your code)...
+ // %SCOPED_CPP_TAIL expanded END
+----
+
+| %SCANNEROPTION | *tokens.txt* | Output as the first part of *tokens.txt*
+| %EXTRA_TOKENS | *tokens.txt* | \|-separated token identifiers which again \| with `parsergen`-genarated keywords & compound operators to for the final token definition for `scannergen`. The very last token is the mandated _initial state_ of the underlying https://en.wikipedia.org/wiki/Finite-state_machine[finite state machine]. +
+ +
+Multiple `%EXTRA_TOKENS` definitions are allowed. The result token will \|-concatenate all of them.
+[source,c++]
+----
+%EXTRA_TOKENS   [[dec_num\|hex_num\|identifier\|c_char\|c_str\|spaces]]
+%EXTRA_TOKENS   [[bracketed\|c_comment\|line_comment]]
+%EXTRA_TOKENS   [[LexSymbol\|Nonterminal\|CompoundSymbol]]
+----
+Output:
+_the_very_last_ = ...(generated keywords & compound operators)... \| dec_num\|hex_num\|identifier\|c_char\|c_str\|spaces\|bracketed\|c_comment\|line_comment\|LexSymbol\|Nonterminal\|CompoundSymbol
+
+| HEADERS_FOR_SCANNER_CPP | *tokens.txt* |
+| %LOCALS_FOR_SCANNER_CPP | *tokens.txt* |
 |===
 
 === 4. $ New lexid
@@ -170,22 +241,22 @@ Seriously, these are not preprocessor directives but processed in the same pass 
 
 | [source%nowrap,c++]
 #ifdef _Bar_ 
-| If option `%Bar` is defined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
+| 💣 If option `%Bar` is defined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
 
 | [source%nowrap,c++]
 #ifndef _Bar_ 
-| If option `%Bar` is undefined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
+| 💣 If option `%Bar` is undefined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
 
 | [source,c++]
 #else 
-|
+| 💣
 
 | [source,c++]
 #endif 
-| 
+| 💣
 |===
 
-IMPORTANT: Pairing rules of `#ifdef`, `#ifndef`, `#else`, `#endif` comply with https://en.cppreference.com/w/cpp/preprocessor/conditional)[C++ preprocessor counterparts]
+IMPORTANT: 💣 Pairing rules of `#ifdef`, `#ifndef`, `#else`, `#endif` comply with https://en.cppreference.com/w/cpp/preprocessor/conditional)[C++ preprocessor counterparts]
 
 TIP: No `#if _(expr)_` and `#elif _(expr)_` because relevant scenarios are yet to be seen and the implementing effort is estimated high.
 

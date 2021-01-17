@@ -1282,7 +1282,7 @@ void FC_Output::outputTokens(std::ostream &out, const std::string &headerBase) c
             out <<(first?" = ":"|") <<"_literal_" <<literalSuffix(i.first);
             first =false;
         }
-        found =m_Parsed.getOption("EXTRA_TOKENS");
+        found = m_Parsed.getOption("EXTRA_TOKENS");
         if (found && !found->empty())
             out <<" | " <<found->expand();
 
@@ -1290,7 +1290,7 @@ void FC_Output::outputTokens(std::ostream &out, const std::string &headerBase) c
     }
     else
     {
-        found =m_Parsed.getOption("EXTRA_TOKENS");
+        found = m_Parsed.getOption("EXTRA_TOKENS");
         if (found && !found->empty())
             out <<"_the_very_last_ = " <<found->expand() <<'\n';
     }
