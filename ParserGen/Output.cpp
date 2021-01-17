@@ -1,19 +1,16 @@
 #include "Output.h"
-#include "Cfa.h"            // C_GotoMap
+#include "Cfa.h"                // C_GotoMap
 //---------------------------------------------------------------------------
-#include "bux/GLR.h"        // bux::GLR::ACTION_REDUCE_MIN
-#include "bux/LR1.h"        // bux::LR1::ACTION_REDUCE_MIN
-#include "bux/Range2Type.h" // bux::fittestType()
-#include "bux/XConsole.h"   // bux::testWritability()
-#include <cctype>           // isascii(), isalnum()
-#include <fstream>          // std::ofstream
-#include <fmt/ostream.h>    // fmt::print() for std::ostream
-#include <filesystem>       // std::filesystem::*
-#include <iostream>         // std::cout
-
-/* TODO :
-1. %COMMENT_IMPLEMENT
-2. Option value can be nested. */
+#include "bux/GLR.h"            // bux::GLR::ACTION_REDUCE_MIN
+#include "bux/LR1.h"            // bux::LR1::ACTION_REDUCE_MIN
+#include "bux/Range2Type.h"     // bux::fittestType()
+#include "bux/ScannerBase.h"    // bux::isIdentifier()
+#include "bux/XConsole.h"       // bux::testWritability()
+#include <cctype>               // isascii(), isalnum()
+#include <fstream>              // std::ofstream
+#include <fmt/ostream.h>        // fmt::print() for std::ostream
+#include <filesystem>           // std::filesystem::*
+#include <iostream>             // std::cout
 
 using namespace Main;
 namespace fs = std::filesystem;
@@ -85,6 +82,19 @@ void onUnmappedReduction(const std::set<std::string> &unmap, std::function<std::
         }
         RUNTIME_ERROR(out);
     }
+}
+
+std::string trim(std::string s)
+{
+    auto pos = s.find_first_not_of(" \t\r\n");
+    if (pos)
+        s.erase(0, pos);
+
+    pos = s.find_last_not_of(" \t\r\n");
+    if (pos < s.size())
+        s.erase(pos);
+
+    return s;
 }
 
 } // namespace
@@ -924,17 +934,20 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
           "class C_ParserPolicy: public I_ParserPolicy\n"
           "{\n"
           "public:\n";
+
     if (!m_needGLR)
     {
         out <<"\n"
               "    // Ctor\n"
               "    C_ParserPolicy(): I_ParserPolicy(";
         std::string errId;
-        if (const auto found =m_Parsed.getOption("ERROR_TOKEN"))
+        if (const auto found = m_Parsed.getOption("ERROR_TOKEN"))
         {
-            errId = found->expand();
+            errId = trim(found->expand());
             if (errId.empty())
                 errId = "Error";
+            else if (!bux::isIdentifier(errId))
+                RUNTIME_ERROR("Value of %ERROR_TOKEN is not identifier: {}", errId);
 
             if (m_Parsed.lex2ID().find(errId) != m_Parsed.lex2ID().end())
                 // Found
@@ -1228,10 +1241,6 @@ void FC_Output::outputTokens(std::ostream &out, const std::string &headerBase) c
     auto found = m_Parsed.getOption("SCANNEROPTION");
     if (found)
         out <<ensureNoConcat(*found) <<'\n';
-
-    found = m_Parsed.getOption("CHAR_TYPE");
-    if (found)
-        out <<"%CHAR_TYPE\t" <<ensureNoConcat(*found) <<'\n';
 
     const auto &literals = m_Parsed.literalMap();
     const auto ns = m_Parsed.fullNamespace();
