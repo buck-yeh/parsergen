@@ -271,7 +271,7 @@ using namespace Main;
 > *lexid* Spaces
 
 .Notes
-. If you *lexid* an identify, say _foo_, and you also use _$foo_ in production rules, then the *lexid* line is completely redundant.
+. If you *lexid* an identifier, say _foo_, and you also use _$foo_ in production rules, then the *lexid* line is completely redundant.
 . Currently the only recurring use case is the example above where the ready-made link:../ScannerGen/RE_Suite.txt["RE_Suite.txt"] defines continuous space chars, C_style comment, and C++-style comment to be created into a _Spaces_ token (specifically a lexical token with id `TID_LEX_Spaces`), and the target language(parser) tries to ignore all spaces. This is when the _screener_ comes in handy.
 [source,c++]
 ----
@@ -323,10 +323,10 @@ TIP: No `#if _(expr)_` and `#elif _(expr)_` because relevant scenarios are yet t
 
 === 6. Parser class naming
 .Syntax
-*class* (`<namespace>` ::)* `<class_name>`
+> *class* (`<namespace>` ::)* `<class_name>`
 
 .Example
-*class* `Main::C_BNFParser`
+> *class* `Main::C_BNFParser`
 
 .Notes
 . At most one such line is allowed. 
@@ -335,7 +335,21 @@ TIP: No `#if _(expr)_` and `#elif _(expr)_` because relevant scenarios are yet t
 . Use of namespace(s) is encouraged when the generated parser is part of a library.
 
 === 7. Operator precedence
-_(To be explained)_
+.Syntax
+> (*left*|*right*|*prec*) op1 op2 op3 ...
+
+NOTE: *left*: Left-associative, left operator first +
+*right*: Right-associative, right operator first +
+*prec*: No associativity, conflict leads error directly.
+
+.Example
+> *left*   + - +
+*left*   * / % +
+*right*  ( )
+
+NOTE: Operator list parsed later gets higher precedence.
+
+.Notes
 
 == Generated files
 _(To be explained)_

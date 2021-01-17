@@ -105,8 +105,8 @@
         $p.onError(lex, "Duplicate lex id: "+key);
 ]]
 
-<OperatorAssociation> ::= <AssocType>                           [[ $r = $1; ]]
-<OperatorAssociation> ::= <OperatorAssociation> <Terminal>   [[
+<OperatorAssociation> ::= <AssocType>                       [[ $r = $1; ]]
+<OperatorAssociation> ::= <OperatorAssociation> <Terminal>  [[
     auto &c = $c;
     if (!c.testCond())
         return;
