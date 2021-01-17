@@ -70,7 +70,7 @@ TIP: Comments can be used to disable other types of lines (and later re-enable t
 
 
 === 2. Production rule
-==== Syntax
+.Syntax
 > _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)* +
   _<NonTerminal>_ ::= (_<NonTerminal>_|_<Terminal>_)* [[ +
 　   Multi-lined reduction code in C++ +
@@ -109,9 +109,18 @@ TIP: Comments can be used to disable other types of lines (and later re-enable t
 CAUTION: 💣 `parsergen` has to know the start symbol before calculation. If there is a production like `<@> ::= ...`, then `<@>` is the start symbol. Otherwise, the left side of ::= in the *first parsed production*, say `<All>`, becomes the start symbol, and an extra production `<@> ::= <All>` is added implicitly.    
 
 === 3. % Option definition
-==== Syntax
+.Syntax
+> % $Id <Semantics>
 
-==== Example
+.Example
+[source,c++]
+----
+%HEADERS_FOR_HEADER [[
+#include "BNFContext.h"     // C_BNFContext
+]]
+%CONTEXT            [[C_BNFContext]]
+%SHOW_UNDEFINED 
+----
 
 ==== Known Options
 [%autowidth,cols="<.^m,^.^a,<.^a"]
@@ -223,8 +232,29 @@ Multiple `%EXTRA_TOKENS` definitions are allowed. The result token will \|-conca
 .Output
 _the_very_last_ = ...(generated keywords & compound operators)... \| dec_num\|hex_num\|identifier\|c_char\|c_str\|spaces\|bracketed\| ...(the rest)...
 
-| HEADERS_FOR_SCANNER_CPP | *tokens.txt* |
-| %LOCALS_FOR_SCANNER_CPP | *tokens.txt* |
+| HEADERS_FOR_SCANNER_CPP | *tokens.txt* | Output as _part of_ `%HEADERS_FOR_CPP` option value for `scannergen` like
+[source,c++]
+----
+%HEADERS_FOR_CPP     [[
+#include "ParserIdDef.h"
+
+ // %HEADERS_FOR_SCANNER_CPP expanded BEGIN
+#include "BracketBalance.h"
+ // %HEADERS_FOR_SCANNER_CPP expanded END
+using namespace Main;
+]]
+----
+
+| %LOCALS_FOR_SCANNER_CPP | *tokens.txt* | Output as `%LOCAL_ACTION_DEFS` option value for `scannergen` like
+[source,c++]
+----
+%LOCAL_ACTION_DEFS     [[
+ // %LOCALS_FOR_SCANNER_CPP expanded BEGIN
+#include "BracketBalance.h"
+ // %LOCALS_FOR_SCANNER_CPP expanded END
+]]
+----
+
 |===
 
 === 4. $ New lexid
