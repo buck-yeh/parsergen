@@ -220,8 +220,8 @@ Multiple `%EXTRA_TOKENS` definitions are allowed. The result token will \|-conca
 %EXTRA_TOKENS   [[bracketed\|c_comment\|line_comment]]
 %EXTRA_TOKENS   [[LexSymbol\|Nonterminal\|CompoundSymbol]]
 ----
-Output:
-_the_very_last_ = ...(generated keywords & compound operators)... \| dec_num\|hex_num\|identifier\|c_char\|c_str\|spaces\|bracketed\|c_comment\|line_comment\|LexSymbol\|Nonterminal\|CompoundSymbol
+.Output
+_the_very_last_ = ...(generated keywords & compound operators)... \| dec_num\|hex_num\|identifier\|c_char\|c_str\|spaces\|bracketed\| ...(the rest)...
 
 | HEADERS_FOR_SCANNER_CPP | *tokens.txt* |
 | %LOCALS_FOR_SCANNER_CPP | *tokens.txt* |
