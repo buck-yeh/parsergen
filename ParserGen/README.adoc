@@ -151,15 +151,6 @@ A try to break down a scanned token input and take its first char as new input t
 .Example
 [source,c++]
 ----
-%UPCAST_TOKEN [[
-    if (isascii($token) && !iscntrl($token) && !isalnum($token) && !isspace($token))
-    {
-        $attr.assign(bux::createLex<std::string>(1,char($token)), true);
-        $token = TID_LEX_Operator;
-        return true;
-    }
-    return false;
-]]
 ----
 
 | %ON_ERROR | **Parser**_.cpp_ | Implement the following policy method with valid mnemonics link:#reduction_mnemonics[`$p` `$P` `$c`] `$pos` `$message`
