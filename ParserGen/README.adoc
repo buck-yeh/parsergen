@@ -147,11 +147,6 @@ _User is on his own to ensure this._
 ^.^h| Known Option ^.^h| Output To ^.^h| Action / Meaning
 | %ERROR_TOKEN | **Parser**_.cpp_ | If `%ERROR_TOKEN` is defined valuelessly or with value \[[Error]] and `$Error` is found in productions, the underlying *error recovery* mechanism of the base parser class will be wakened by telling `I_ParserPolicy` error token id is `TID_LEX_Error`, which will be defined in **Parser**_IdDef.h_ _(to be explained)_
 
-|===
-
-[%autowidth,cols="<.^m,^.^a,<.^a"]
-|===
-^.^h| Known Option ^.^h| Output To ^.^h| Action / Meaning
 | %UPCAST_TOKEN | **Parser**_.cpp_ | Implement the following policy method with valid mnemonics `$token` `$attr`
 [source,c++]
 bool C_ParserPolicy::changeToken(T_LexID &token, C_LexPtr &attr) const
@@ -172,10 +167,7 @@ A try to break down a scanned token input and take its first char as new input t
     }
     return false;
 ]]
-|===
 
-[%autowidth,cols="<.^m,^.^a,<.^a"]
-|===
 | %ON_ERROR | **Parser**_.cpp_ | Implement the following policy method with valid mnemonics link:#reduction_mnemonics[`$p` `$P` `$c`] `$pos` `$message`
 [source,c++]
 void C_ParserPolicy::onError(
@@ -197,10 +189,6 @@ void C_ParserPolicy::onError(
     $c <<'(' <<$pos.m_Line <<',' <<$pos.m_Col <<"): " <<$message <<'\n';
 ]]
 
-|===
-
-[%autowidth,cols="<.^m,^.^a,<.^a"]
-|===
 | %SHOW_UNDEFINED | **Parser**_.cpp_ +
 **Parser**_.h_ +
 *tokens.txt* | When defined, for every other known option _not defined_, say `%FOO`, and where output should be spared, output 
@@ -272,11 +260,6 @@ Read all 3 output files of link:../example/MinLang/[MinLang] to find exact locat
 ----
 
 | %SCANNEROPTION | *tokens.txt* | Output as the first part of *tokens.txt*
-|===
-
-[%autowidth,cols="<.^m,^.^a,<.^a"]
-|===
-^.^h| Known Option ^.^h| Output To ^.^h| Action / Meaning
 | %EXTRA_TOKENS | *tokens.txt* | *\|*-separated token identifiers which again *\|* with `parsergen`-generated keywords & compound operators to for the final token definition for `scannergen`. The very last token is the mandated _initial state_ of the underlying https://en.wikipedia.org/wiki/Finite-state_machine[finite state machine].
 
 NOTE: Multiple `%EXTRA_TOKENS` are allowed. The result token will *\|*-concatenate all of them.
@@ -289,11 +272,6 @@ NOTE: Multiple `%EXTRA_TOKENS` are allowed. The result token will *\|*-concatena
 .Output
 _the_very_last_ = ...(generated keywords & compound operators)... \| dec_num\|hex_num\|identifier\|c_char\|c_str\|spaces\|bracketed\| ...(the rest)...
 
-|===
-
-[%autowidth,cols="<.^m,^.^a,<.^a"]
-|===
-^.^h| Known Option ^.^h| Output To ^.^h| Action / Meaning
 | %HEADERS_FOR_SCANNER_CPP | *tokens.txt* | Output as _part of_ `%HEADERS_FOR_CPP` option value for `scannergen` like
 [source,c++]
 ----
