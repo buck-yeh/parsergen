@@ -150,7 +150,6 @@ A try to break down a scanned token input and take its first char as new input t
 
 .Example
 [source,c++]
-----
 %UPCAST_TOKEN [[
     if (isascii($token) && 
        !iscntrl($token) && 
@@ -163,7 +162,6 @@ A try to break down a scanned token input and take its first char as new input t
     }
     return false;
 ]]
-----
 
 | %ON_ERROR | **Parser**_.cpp_ | Implement the following policy method with valid mnemonics link:#reduction_mnemonics[`$p` `$P` `$c`] `$pos` `$message`
 [source,c++]
@@ -174,29 +172,24 @@ void C_ParserPolicy::onError(
 
 .Example 1
 [source,c++]
-----
 %CONTEXT  [[C_Context]]
 %ON_ERROR [[
     $c.issueError(LL_ERROR, $pos, $message);
 ]]
-----
 
 .Example 2
 [source,c++]
-----
 %CONTEXT  [[std::ostream &]]
 %ON_ERROR [[
     $c <<'(' <<$pos.m_Line <<',' <<$pos.m_Col <<"): " <<$message <<'\n';
 ]]
-----
 
 | %SHOW_UNDEFINED | **Parser**_.cpp_ +
 **Parser**_.h_ +
 *tokens.txt* | When defined, for every other known option _not defined_, say `%FOO`, and where output should be spared, output 
 [source,c++]
-----
  // %FOO undefined (expanded here otherwise)
-----
+
 Read all 3 output files of link:../example/MinLang/[MinLang] to find exact locations of such comment lines for various known options.
 
 | %CONTEXT | **Parser**_.cpp_ +
@@ -205,7 +198,6 @@ Read all 3 output files of link:../example/MinLang/[MinLang] to find exact locat
 | %IGNORE_KEYWORD_CASE | **Parser**_IdDef.h_ +
 *tokens.txt* | This option tells `parsergen` to treat keywords case-insensitively. Convenient when you define a case-insensitive language, e.g. `SQL`
 
-//--------------------------
 | %HEADERS_FOR_HEADER | **Parser**_.h_ | Output _before_ entering namespace scope of the target parser class:
 [source,c++]
 ----
