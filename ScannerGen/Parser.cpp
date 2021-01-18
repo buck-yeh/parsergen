@@ -44,24 +44,21 @@ struct C_LexListLex: bux::I_LexAttr
 //
 enum
 {
-    NID_All             = TID_UB_+0,	// <All>
-    NID_BW_List         = TID_UB_+1,	// <BW_List>
-    NID_FinalCond       = TID_UB_+2,	// <FinalCond>
-    NID_IfFinal         = TID_UB_+3,	// <IfFinal>
-    NID_Integer         = TID_UB_+4,	// <Integer>
-    NID_LexExpr         = TID_UB_+5,	// <LexExpr>
-    NID_LexResult       = TID_UB_+6,	// <LexResult>
-    NID_LexTerm         = TID_UB_+7,	// <LexTerm>
-    NID_Line            = TID_UB_+8,	// <Line>
-    NID_OptionValue     = TID_UB_+9,	// <OptionValue>
-    NID_OptionalIfFinal = TID_UB_+10,	// <OptionalIfFinal>
-    NID_RegExpr         = TID_UB_+11,	// <RegExpr>
-    NID_RegExprSeq      = TID_UB_+12,	// <RegExprSeq>
-    NID_RegExprTerm     = TID_UB_+13,	// <RegExprTerm>
-    NID_SubCharSet      = TID_UB_+14,	// <SubCharSet>
-    NID_WithFinalCond   = TID_UB_+15,	// <WithFinalCond>
-    NIDa_keyword        = TID_UB_+16,	// <@keyword>
-    NIDa_operator       = TID_UB_+17,	// <@operator>
+    NID_All           = TID_UB_+0,	// <All>
+    NID_BW_List       = TID_UB_+1,	// <BW_List>
+    NID_Integer       = TID_UB_+2,	// <Integer>
+    NID_LexExpr       = TID_UB_+3,	// <LexExpr>
+    NID_LexResult     = TID_UB_+4,	// <LexResult>
+    NID_LexTerm       = TID_UB_+5,	// <LexTerm>
+    NID_Line          = TID_UB_+6,	// <Line>
+    NID_OptionValue   = TID_UB_+7,	// <OptionValue>
+    NID_RegExpr       = TID_UB_+8,	// <RegExpr>
+    NID_RegExprSeq    = TID_UB_+9,	// <RegExprSeq>
+    NID_RegExprTerm   = TID_UB_+10,	// <RegExprTerm>
+    NID_SubCharSet    = TID_UB_+11,	// <SubCharSet>
+    NID_WithFinalCond = TID_UB_+12,	// <WithFinalCond>
+    NIDa_keyword      = TID_UB_+13,	// <@keyword>
+    NIDa_operator     = TID_UB_+14,	// <@operator>
     TOKENGEN_UB,
     //---------------------------------------------------
     ENCODED_TOKEN_LB	 = 126
@@ -155,13 +152,11 @@ alphaPrime9[3] = {
     '*',
     '+',
     ZIP_TOKEN(TID_LEX_Num)},
-alphaPrime10[7] = {
+alphaPrime10[5] = {
     '+',
     '-',
     ZIP_TOKEN(TID_LEX_Num),
     ZIP_TOKEN(TID_KEYWORD_if),
-    ZIP_TOKEN(NID_FinalCond),
-    ZIP_TOKEN(NID_IfFinal),
     ZIP_TOKEN(NID_Integer)},
 alphaPrime11[2] = {
     ',',
@@ -221,7 +216,7 @@ int findKey(const uint8_t *klist, int n, uint8_t key)
 
 int findPrime0_0_13	(uint8_t key)	{ return findKey(alphaPrime0,13,key); }
 int findPrime10_0_4	(uint8_t key)	{ return findKey(alphaPrime10,4,key); }
-int findPrime10_0_7	(uint8_t key)	{ return findKey(alphaPrime10,7,key); }
+int findPrime10_0_5	(uint8_t key)	{ return findKey(alphaPrime10,5,key); }
 int findPrime11_0_2	(uint8_t key)	{ return findKey(alphaPrime11,2,key); }
 int findPrime12_0_8	(uint8_t key)	{ return findKey(alphaPrime12,8,key); }
 int findPrime12_1_5	(uint8_t key)	{ return findKey(alphaPrime12+1,5,key); }
@@ -327,12 +322,12 @@ L2A_Table7[] ={
     {ZIP_TOKEN(TID_KEYWORD_include),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LITERAL_3e3e),	ACTION_SHIFT}},
 L2A_Table8[] ={
-    {'\n',	ACTION_REDUCE_MIN + 38},
-    {ZIP_TOKEN(bux::TID_EOF),	ACTION_REDUCE_MIN + 38},
+    {'\n',	ACTION_REDUCE_MIN + 35},
+    {ZIP_TOKEN(bux::TID_EOF),	ACTION_REDUCE_MIN + 35},
     {ZIP_TOKEN(TID_KEYWORD_if),	ACTION_SHIFT}},
 L2A_Table9[] ={
-    {'\n',	ACTION_REDUCE_MIN + 40},
-    {ZIP_TOKEN(bux::TID_EOF),	ACTION_REDUCE_MIN + 40},
+    {'\n',	ACTION_REDUCE_MIN + 36},
+    {ZIP_TOKEN(bux::TID_EOF),	ACTION_REDUCE_MIN + 36},
     {ZIP_TOKEN(TID_LEX_Id),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Num),	ACTION_SHIFT},
@@ -341,9 +336,19 @@ L2A_Table9[] ={
     {ZIP_TOKEN(TID_KEYWORD_include),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LITERAL_3e3e),	ACTION_SHIFT}},
 L2A_Table10[] ={
+    {'\n',	ACTION_REDUCE_MIN + 37},
+    {ZIP_TOKEN(bux::TID_EOF),	ACTION_REDUCE_MIN + 37},
+    {ZIP_TOKEN(TID_LEX_Id),	ACTION_SHIFT},
+    {ZIP_TOKEN(TID_LEX_Key),	ACTION_SHIFT},
+    {ZIP_TOKEN(TID_LEX_Num),	ACTION_SHIFT},
+    {ZIP_TOKEN(TID_LEX_Operator),	ACTION_SHIFT},
+    {ZIP_TOKEN(TID_KEYWORD_if),	ACTION_SHIFT},
+    {ZIP_TOKEN(TID_KEYWORD_include),	ACTION_SHIFT},
+    {ZIP_TOKEN(TID_LITERAL_3e3e),	ACTION_SHIFT}},
+L2A_Table11[] ={
     {'\n',	ACTION_SHIFT},
     {ZIP_TOKEN(bux::TID_EOF),	ACTION_ACCEPT}},
-L2A_Table11[] ={
+L2A_Table12[] ={
     {'(',	ACTION_REDUCE_MIN + 10},
     {')',	ACTION_REDUCE_MIN + 10},
     {'*',	ACTION_SHIFT},
@@ -355,7 +360,7 @@ L2A_Table11[] ={
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_REDUCE_MIN + 10},
     {ZIP_TOKEN(TID_LEX_Num),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_REDUCE_MIN + 10}},
-L2A_Table12[] ={
+L2A_Table13[] ={
     {'(',	ACTION_REDUCE_MIN + 10},
     {'*',	ACTION_SHIFT},
     {'+',	ACTION_SHIFT},
@@ -367,7 +372,7 @@ L2A_Table12[] ={
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_REDUCE_MIN + 10},
     {ZIP_TOKEN(TID_LEX_Num),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_REDUCE_MIN + 10}},
-L2A_Table13[] ={
+L2A_Table14[] ={
     {'(',	ACTION_REDUCE_MIN + 11},
     {')',	ACTION_REDUCE_MIN + 11},
     {'*',	ACTION_SHIFT},
@@ -379,7 +384,7 @@ L2A_Table13[] ={
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_REDUCE_MIN + 11},
     {ZIP_TOKEN(TID_LEX_Num),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_REDUCE_MIN + 11}},
-L2A_Table14[] ={
+L2A_Table15[] ={
     {'(',	ACTION_REDUCE_MIN + 11},
     {'*',	ACTION_SHIFT},
     {'+',	ACTION_SHIFT},
@@ -391,7 +396,7 @@ L2A_Table14[] ={
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_REDUCE_MIN + 11},
     {ZIP_TOKEN(TID_LEX_Num),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_REDUCE_MIN + 11}},
-L2A_Table15[] ={
+L2A_Table16[] ={
     {'(',	ACTION_SHIFT},
     {')',	ACTION_REDUCE_MIN + 8},
     {'[',	ACTION_SHIFT},
@@ -400,7 +405,7 @@ L2A_Table15[] ={
     {ZIP_TOKEN(TID_LEX_Id),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_SHIFT}},
-L2A_Table16[] ={
+L2A_Table17[] ={
     {'(',	ACTION_SHIFT},
     {')',	ACTION_REDUCE_MIN + 9},
     {'[',	ACTION_SHIFT},
@@ -409,7 +414,7 @@ L2A_Table16[] ={
     {ZIP_TOKEN(TID_LEX_Id),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_SHIFT}},
-L2A_Table17[] ={
+L2A_Table18[] ={
     {'(',	ACTION_SHIFT},
     {'[',	ACTION_SHIFT},
     {'{',	ACTION_SHIFT},
@@ -418,7 +423,7 @@ L2A_Table17[] ={
     {ZIP_TOKEN(TID_LEX_Id),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_SHIFT}},
-L2A_Table18[] ={
+L2A_Table19[] ={
     {'(',	ACTION_SHIFT},
     {'[',	ACTION_SHIFT},
     {'{',	ACTION_SHIFT},
@@ -427,7 +432,7 @@ L2A_Table18[] ={
     {ZIP_TOKEN(TID_LEX_Id),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_SHIFT}},
-L2A_Table19[] ={
+L2A_Table20[] ={
     {']',	ACTION_REDUCE_MIN + 21},
     {'^',	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Charset),	ACTION_SHIFT},
@@ -435,30 +440,30 @@ L2A_Table19[] ={
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Num),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_SHIFT}},
-L2A_Table20[] ={
+L2A_Table21[] ={
     {']',	ACTION_REDUCE_MIN + 22},
     {ZIP_TOKEN(TID_LEX_Charset),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Id),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Key),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_Num),	ACTION_SHIFT},
     {ZIP_TOKEN(TID_LEX_String),	ACTION_SHIFT}},
-L2A_Table21[] ={
+L2A_Table22[] ={
     {',',	ACTION_REDUCE_MIN + 29},
     {'-',	ACTION_SHIFT},
     {']',	ACTION_REDUCE_MIN + 29}},
-L2A_Table22[] ={
+L2A_Table23[] ={
     {',',	ACTION_SHIFT},
     {']',	ACTION_REDUCE_MIN + 23}},
-L2A_Table23[] ={
+L2A_Table24[] ={
     {',',	ACTION_SHIFT},
     {']',	ACTION_REDUCE_MIN + 24}};
 
-constinit const bux::U_K2V<uint8_t,uint8_t> mapActionPtr[127] ={
+constinit const bux::U_K2V<uint8_t,uint8_t> mapActionPtr[125] ={
     L2A_Table0,	// 0
     isKey<ZIP_TOKEN(TID_KEYWORD_include)>,	// 1
     isKey<ZIP_TOKEN(TID_LEX_Id)>,	// 2
     isKey<'='>,	// 3
-    L2A_Table10,	// 4
+    L2A_Table11,	// 4
     findPrime2_0_2,	// 5
     isKey<ZIP_TOKEN(TID_LEX_String)>,	// 6
     findPrime14_0_8,	// 7
@@ -479,7 +484,7 @@ constinit const bux::U_K2V<uint8_t,uint8_t> mapActionPtr[127] ={
     findPrime2_0_9,	// 22
     findPrime2_0_9,	// 23
     findPrime7_0_6,	// 24
-    L2A_Table19,	// 25
+    L2A_Table20,	// 25
     findPrime7_0_6,	// 26
     findPrime0_0_13,	// 27
     findPrime0_0_13,	// 28
@@ -490,31 +495,31 @@ constinit const bux::U_K2V<uint8_t,uint8_t> mapActionPtr[127] ={
     findPrime2_0_2,	// 33
     findPrime2_0_9,	// 34
     findPrime7_0_6,	// 35
-    L2A_Table19,	// 36
+    L2A_Table20,	// 36
     findPrime7_0_6,	// 37
     findPrime5_0_11,	// 38
     findPrime5_0_11,	// 39
     findPrime5_0_11,	// 40
     findPrime8_0_2,	// 41
-    L2A_Table15,	// 42
-    L2A_Table11,	// 43
-    L2A_Table20,	// 44
+    L2A_Table16,	// 42
+    L2A_Table12,	// 43
+    L2A_Table21,	// 44
     findPrime11_0_2,	// 45
     findPrime11_0_2,	// 46
-    L2A_Table21,	// 47
+    L2A_Table22,	// 47
     findPrime11_0_2,	// 48
     findPrime11_0_2,	// 49
     isKey<']'>,	// 50
-    L2A_Table22,	// 51
+    L2A_Table23,	// 51
     findPrime7_0_6,	// 52
-    L2A_Table19,	// 53
+    L2A_Table20,	// 53
     findPrime7_0_6,	// 54
     findPrime6_0_11,	// 55
     findPrime6_0_11,	// 56
     findPrime6_0_11,	// 57
     findPrime6_5_2,	// 58
-    L2A_Table17,	// 59
-    L2A_Table12,	// 60
+    L2A_Table18,	// 59
+    L2A_Table13,	// 60
     findPrime7_0_6,	// 61
     findPrime1_3_7,	// 62
     findPrime2_0_2,	// 63
@@ -527,11 +532,11 @@ constinit const bux::U_K2V<uint8_t,uint8_t> mapActionPtr[127] ={
     findPrime6_5_2,	// 70
     findPrime0_0_13,	// 71
     findPrime7_0_6,	// 72
-    L2A_Table13,	// 73
+    L2A_Table14,	// 73
     findPrime5_0_11,	// 74
     findPrime5_0_11,	// 75
     findPrime5_0_11,	// 76
-    L2A_Table23,	// 77
+    L2A_Table24,	// 77
     isKey<ZIP_TOKEN(TID_LEX_Key)>,	// 78
     findPrime0_0_13,	// 79
     findPrime12_1_5,	// 80
@@ -540,7 +545,7 @@ constinit const bux::U_K2V<uint8_t,uint8_t> mapActionPtr[127] ={
     findPrime6_5_2,	// 83
     findPrime7_0_6,	// 84
     findPrime0_0_13,	// 85
-    L2A_Table14,	// 86
+    L2A_Table15,	// 86
     findPrime6_0_11,	// 87
     findPrime6_0_11,	// 88
     findPrime6_0_11,	// 89
@@ -559,13 +564,13 @@ constinit const bux::U_K2V<uint8_t,uint8_t> mapActionPtr[127] ={
     findPrime5_0_11,	// 102
     findPrime5_0_11,	// 103
     findPrime5_0_11,	// 104
-    L2A_Table16,	// 105
+    L2A_Table17,	// 105
     findPrime11_0_2,	// 106
     findPrime11_0_2,	// 107
     findPrime6_0_11,	// 108
     findPrime6_0_11,	// 109
     findPrime6_0_11,	// 110
-    L2A_Table18,	// 111
+    L2A_Table19,	// 111
     findPrime10_0_4,	// 112
     findPrime1_0_10,	// 113
     findPrime2_0_2,	// 114
@@ -573,16 +578,14 @@ constinit const bux::U_K2V<uint8_t,uint8_t> mapActionPtr[127] ={
     isKey<ZIP_TOKEN(TID_LEX_Num)>,	// 116
     findPrime3_0_3,	// 117
     findPrime1_3_7,	// 118
-    findPrime2_0_2,	// 119
-    findPrime2_0_2,	// 120
-    L2A_Table8,	// 121
-    findPrime3_0_3,	// 122
-    findPrime3_0_3,	// 123
-    L2A_Table9,	// 124
-    findPrime2_0_2,	// 125
-    findPrime2_0_2};	// 126
+    L2A_Table8,	// 119
+    findPrime3_0_3,	// 120
+    findPrime3_0_3,	// 121
+    L2A_Table9,	// 122
+    findPrime1_3_7,	// 123
+    L2A_Table10};	// 124
 
-constinit const int8_t mapActionSizeEx[127] ={
+constinit const int8_t mapActionSizeEx[125] ={
     -5,	// 0
     ACTION_SHIFT,	// 1
     ACTION_SHIFT,	// 2
@@ -595,18 +598,18 @@ constinit const int8_t mapActionSizeEx[127] ={
     -5,	// 9
     ACTION_REDUCE_MIN + 3,	// 10
     ACTION_REDUCE_MIN + 6,	// 11
-    ACTION_REDUCE_MIN + 48,	// 12
-    ACTION_REDUCE_MIN + 51,	// 13
-    ACTION_REDUCE_MIN + 50,	// 14
-    ACTION_REDUCE_MIN + 46,	// 15
-    ACTION_REDUCE_MIN + 54,	// 16
-    ACTION_REDUCE_MIN + 55,	// 17
-    ACTION_REDUCE_MIN + 53,	// 18
+    ACTION_REDUCE_MIN + 45,	// 12
+    ACTION_REDUCE_MIN + 48,	// 13
+    ACTION_REDUCE_MIN + 47,	// 14
+    ACTION_REDUCE_MIN + 43,	// 15
+    ACTION_REDUCE_MIN + 51,	// 16
+    ACTION_REDUCE_MIN + 52,	// 17
+    ACTION_REDUCE_MIN + 50,	// 18
     -9,	// 19
-    ACTION_REDUCE_MIN + 44,	// 20
+    ACTION_REDUCE_MIN + 41,	// 20
     ACTION_REDUCE_MIN + 4,	// 21
-    ACTION_REDUCE_MIN + 49,	// 22
-    ACTION_REDUCE_MIN + 47,	// 23
+    ACTION_REDUCE_MIN + 46,	// 22
+    ACTION_REDUCE_MIN + 44,	// 23
     ACTION_SHIFT,	// 24
     -7,	// 25
     ACTION_SHIFT,	// 26
@@ -617,7 +620,7 @@ constinit const int8_t mapActionSizeEx[127] ={
     -10,	// 31
     -13,	// 32
     ACTION_REDUCE_MIN + 1,	// 33
-    ACTION_REDUCE_MIN + 45,	// 34
+    ACTION_REDUCE_MIN + 42,	// 34
     ACTION_SHIFT,	// 35
     -7,	// 36
     ACTION_SHIFT,	// 37
@@ -674,17 +677,17 @@ constinit const int8_t mapActionSizeEx[127] ={
     ACTION_REDUCE_MIN + 18,	// 88
     ACTION_REDUCE_MIN + 19,	// 89
     -10,	// 90
-    ACTION_REDUCE_MIN + 48,	// 91
-    ACTION_REDUCE_MIN + 51,	// 92
-    ACTION_REDUCE_MIN + 50,	// 93
-    ACTION_REDUCE_MIN + 46,	// 94
-    ACTION_REDUCE_MIN + 54,	// 95
-    ACTION_REDUCE_MIN + 55,	// 96
-    ACTION_REDUCE_MIN + 53,	// 97
+    ACTION_REDUCE_MIN + 45,	// 91
+    ACTION_REDUCE_MIN + 48,	// 92
+    ACTION_REDUCE_MIN + 47,	// 93
+    ACTION_REDUCE_MIN + 43,	// 94
+    ACTION_REDUCE_MIN + 51,	// 95
+    ACTION_REDUCE_MIN + 52,	// 96
+    ACTION_REDUCE_MIN + 50,	// 97
     -10,	// 98
-    ACTION_REDUCE_MIN + 44,	// 99
-    ACTION_REDUCE_MIN + 49,	// 100
-    ACTION_REDUCE_MIN + 47,	// 101
+    ACTION_REDUCE_MIN + 41,	// 99
+    ACTION_REDUCE_MIN + 46,	// 100
+    ACTION_REDUCE_MIN + 44,	// 101
     ACTION_REDUCE_MIN + 12,	// 102
     ACTION_REDUCE_MIN + 20,	// 103
     ACTION_REDUCE_MIN + 13,	// 104
@@ -696,20 +699,18 @@ constinit const int8_t mapActionSizeEx[127] ={
     ACTION_REDUCE_MIN + 13,	// 110
     -8,	// 111
     ACTION_SHIFT,	// 112
-    ACTION_REDUCE_MIN + 45,	// 113
+    ACTION_REDUCE_MIN + 42,	// 113
     ACTION_REDUCE_MIN + 33,	// 114
     ACTION_SHIFT,	// 115
     ACTION_SHIFT,	// 116
-    ACTION_REDUCE_MIN + 41,	// 117
+    ACTION_REDUCE_MIN + 38,	// 117
     ACTION_SHIFT,	// 118
-    ACTION_REDUCE_MIN + 35,	// 119
-    ACTION_REDUCE_MIN + 37,	// 120
-    -3,	// 121
-    ACTION_REDUCE_MIN + 42,	// 122
-    ACTION_REDUCE_MIN + 43,	// 123
-    -9,	// 124
-    ACTION_REDUCE_MIN + 39,	// 125
-    ACTION_REDUCE_MIN + 36};	// 126
+    -3,	// 119
+    ACTION_REDUCE_MIN + 39,	// 120
+    ACTION_REDUCE_MIN + 40,	// 121
+    -9,	// 122
+    ACTION_SHIFT,	// 123
+    -9};	// 124
 
 constinit const bux::C_KVPair<uint8_t,uint8_t>
 L2S_Table0[] ={
@@ -873,7 +874,7 @@ L2S_Table20[] ={
     {ZIP_TOKEN(TID_KEYWORD_if),	16},
     {ZIP_TOKEN(TID_KEYWORD_include),	17},
     {ZIP_TOKEN(TID_LITERAL_3e3e),	18},
-    {ZIP_TOKEN(NID_LexExpr),	124},
+    {ZIP_TOKEN(NID_LexExpr),	122},
     {ZIP_TOKEN(NID_LexTerm),	20},
     {ZIP_TOKEN(NIDa_keyword),	22},
     {ZIP_TOKEN(NIDa_operator),	23}},
@@ -885,19 +886,27 @@ L2S_Table21[] ={
     {ZIP_TOKEN(TID_KEYWORD_if),	16},
     {ZIP_TOKEN(TID_KEYWORD_include),	17},
     {ZIP_TOKEN(TID_LITERAL_3e3e),	18},
-    {ZIP_TOKEN(NID_LexTerm),	34},
+    {ZIP_TOKEN(NID_LexExpr),	124},
+    {ZIP_TOKEN(NID_LexTerm),	20},
     {ZIP_TOKEN(NIDa_keyword),	22},
     {ZIP_TOKEN(NIDa_operator),	23}},
 L2S_Table22[] ={
-    {ZIP_TOKEN(TID_KEYWORD_if),	118},
-    {ZIP_TOKEN(NID_IfFinal),	125},
-    {ZIP_TOKEN(NID_OptionalIfFinal),	126}};
+    {ZIP_TOKEN(TID_LEX_Id),	12},
+    {ZIP_TOKEN(TID_LEX_Key),	13},
+    {ZIP_TOKEN(TID_LEX_Num),	14},
+    {ZIP_TOKEN(TID_LEX_Operator),	15},
+    {ZIP_TOKEN(TID_KEYWORD_if),	16},
+    {ZIP_TOKEN(TID_KEYWORD_include),	17},
+    {ZIP_TOKEN(TID_LITERAL_3e3e),	18},
+    {ZIP_TOKEN(NID_LexTerm),	34},
+    {ZIP_TOKEN(NIDa_keyword),	22},
+    {ZIP_TOKEN(NIDa_operator),	23}};
 
 constinit const struct C_MapGoto {
     bux::U_K2V<uint8_t,uint8_t> m_k2v;
     uint8_t	m_curState;
     int8_t	m_nextStateEx;
-}   mapGoto[58] ={
+}   mapGoto[60] ={
     {findPrime4_0_5,	0,	1},
     {isKey<ZIP_TOKEN(TID_KEYWORD_include)>,	1,	6},
     {isKey<ZIP_TOKEN(TID_LEX_Id)>,	2,	7},
@@ -907,7 +916,7 @@ constinit const struct C_MapGoto {
     {findPrime14_0_13,	7,	11},
     {findPrime7_0_9,	8,	24},
     {L2S_Table0,	9,	-4},
-    {L2S_Table21,	19,	-10},
+    {L2S_Table22,	19,	-10},
     {findPrime7_0_9,	24,	35},
     {findPrime12_0_8,	25,	44},
     {findPrime7_0_9,	26,	52},
@@ -950,12 +959,14 @@ constinit const struct C_MapGoto {
     {L2S_Table13,	98,	-12},
     {L2S_Table6,	105,	-7},
     {L2S_Table10,	111,	-7},
-    {findPrime10_0_7,	112,	115},
-    {isKey<ZIP_TOKEN(TID_LEX_Num)>,	115,	122},
-    {isKey<ZIP_TOKEN(TID_LEX_Num)>,	116,	123},
+    {findPrime10_0_5,	112,	115},
+    {isKey<ZIP_TOKEN(TID_LEX_Num)>,	115,	120},
+    {isKey<ZIP_TOKEN(TID_LEX_Num)>,	116,	121},
     {L2S_Table20,	118,	-11},
-    {L2S_Table22,	121,	-3},
-    {L2S_Table21,	124,	-10}};
+    {isKey<ZIP_TOKEN(TID_KEYWORD_if)>,	119,	123},
+    {L2S_Table22,	122,	-10},
+    {L2S_Table21,	123,	-11},
+    {L2S_Table22,	124,	-10}};
 
 void _reduce_1(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval )
 //  <Line> ::= # include $String
@@ -1005,8 +1016,6 @@ void _reduce_5(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_
 //  <OptionValue> ::= <LexExpr>
 //  <RegExpr> ::= <RegExprSeq>
 //  <RegExprSeq> ::= <RegExprTerm>
-//  <FinalCond> ::= <IfFinal>
-//  <OptionalIfFinal> ::= <IfFinal>
 //  <Integer> ::= $Num
 //  <LexTerm> ::= $Operator
 //  <LexTerm> ::= <@operator>
@@ -1039,8 +1048,7 @@ void _reduce_7(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_
 void _reduce_8(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
 //  <RegExprTerm> ::= ( <RegExpr> )
 //  <RegExprTerm> ::= [ <BW_List> ]
-//  <WithFinalCond> ::= @ <FinalCond>
-//  <IfFinal> ::= if <LexExpr>
+//  <WithFinalCond> ::= @ <Integer>
 {
     _reT_ = _geT_(1);
 }
@@ -1237,62 +1245,65 @@ void _reduce_25(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetL
 }
 
 void _reduce_26(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
-//  <FinalCond> ::= <Integer> <OptionalIfFinal>
+//  <WithFinalCond> ::= @ if <LexExpr>
 {
-    if (!_geT_(1))
-        _reT_ = _geT_(0);
-    else
-        _reT_ = bux::createLex<std::pair<int,C_StrList>>(
-                dynamic_cast<bux::C_IntegerLex&>(*_geT_(0)).value<int>(),
-                std::move(bux::unlex<C_StrList>(_geT_(1))));
+    _reT_ = _geT_(2);
 }
 
 void _reduce_27(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
+//  <WithFinalCond> ::= @ <Integer> if <LexExpr>
+{
+    _reT_ = bux::createLex<std::pair<int,C_StrList>>(
+            dynamic_cast<bux::C_IntegerLex&>(*_geT_(1)).value<int>(),
+            std::move(bux::unlex<C_StrList>(_geT_(3))));
+}
+
+void _reduce_28(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
 //  <Integer> ::= + $Num
 {
     dynamic_cast<bux::C_IntegerLex&>(*_geT_(1)).prependPlus();
     _reT_ =_geT_(1);
 }
 
-void _reduce_28(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
+void _reduce_29(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
 //  <Integer> ::= - $Num
 {
     dynamic_cast<bux::C_IntegerLex&>(*_geT_(1)).negate();
     _reT_ =_geT_(1);
 }
 
-void _reduce_29(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
+void _reduce_30(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
 //  <LexExpr> ::= <LexExpr> <LexTerm>
 {
     bux::unlex<C_StrList>(_geT_(0)).emplace_back(bux::unlex<std::string>(_geT_(1)));
     _reT_ = _geT_(0);
 }
 
-void _reduce_30(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
+void _reduce_31(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
 //  <LexTerm> ::= $Num
 {
     _reT_ = bux::createLex(' ' + dynamic_cast<bux::C_IntegerLex&>(*_geT_(0)).str());
 }
 
-void _reduce_31(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
+void _reduce_32(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT_)
 //  <LexTerm> ::= $Key
 {
     _reT_ = bux::createLex('\'' + asciiLiteral(bux::unlex<uint32_t>(_geT_(0))) + '\'');
 }
 
-void _reduce_32(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
+void _reduce_33(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@operator> ::= >>
 {
     _reT_ = createLex<std::string>(">>");
 }
 
-void _reduce_33(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
+void _reduce_34(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= if
 {
     _reT_ = createLex<std::string>("if");
 }
 
-void _reduce_34(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
+void _reduce_35(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= include
 {
     _reT_ = createLex<std::string>("include");
@@ -1303,13 +1314,13 @@ struct C_ProductionInfo
     void            (*m_pAction)(bux::LR1::C_Parser&,const F_GetProduced&,C_RetLval);
     uint8_t         m_ReducedID;
     uint8_t         m_PopLength;
-} constinit const prodInfo[56] ={
-{nullptr,    	ZIP_TOKEN(NID_All),     1},	// 0: <All> ::= <Line>
-{nullptr,    	ZIP_TOKEN(NID_All),     3},	// 1: <All> ::= <All> "\n" <Line>
-{nullptr,    	ZIP_TOKEN(NID_Line),    0},	// 2: <Line> ::=
-{_reduce_1, 	ZIP_TOKEN(NID_Line),    3},	// 3: <Line> ::= # include $String
-{_reduce_2, 	ZIP_TOKEN(NID_Line),    3},	// 4: <Line> ::= % $Id <OptionValue>
-{_reduce_3, 	ZIP_TOKEN(NID_Line),    4},	// 5: <Line> ::= $Id = <RegExpr> <LexResult>
+} constinit const prodInfo[53] ={
+{nullptr,    	ZIP_TOKEN(NID_All), 1},	// 0: <All> ::= <Line>
+{nullptr,    	ZIP_TOKEN(NID_All), 3},	// 1: <All> ::= <All> "\n" <Line>
+{nullptr,    	ZIP_TOKEN(NID_Line), 0},	// 2: <Line> ::=
+{_reduce_1, 	ZIP_TOKEN(NID_Line), 3},	// 3: <Line> ::= # include $String
+{_reduce_2, 	ZIP_TOKEN(NID_Line), 3},	// 4: <Line> ::= % $Id <OptionValue>
+{_reduce_3, 	ZIP_TOKEN(NID_Line), 4},	// 5: <Line> ::= $Id = <RegExpr> <LexResult>
 {_reduce_4, 	ZIP_TOKEN(NID_OptionValue), 1},	// 6: <OptionValue> ::= $Bracketed
 {_reduce_5, 	ZIP_TOKEN(NID_OptionValue), 1},	// 7: <OptionValue> ::= <LexExpr>
 {_reduce_5, 	ZIP_TOKEN(NID_RegExpr), 1},	// 8: <RegExpr> ::= <RegExprSeq>
@@ -1339,27 +1350,24 @@ struct C_ProductionInfo
 {nullptr,    	ZIP_TOKEN(NID_LexResult), 0},	// 32: <LexResult> ::=
 {_reduce_25,	ZIP_TOKEN(NID_LexResult), 3},	// 33: <LexResult> ::= >> <LexExpr> <WithFinalCond>
 {nullptr,    	ZIP_TOKEN(NID_WithFinalCond), 0},	// 34: <WithFinalCond> ::=
-{_reduce_8, 	ZIP_TOKEN(NID_WithFinalCond), 2},	// 35: <WithFinalCond> ::= @ <FinalCond>
-{_reduce_26,	ZIP_TOKEN(NID_FinalCond), 2},	// 36: <FinalCond> ::= <Integer> <OptionalIfFinal>
-{_reduce_5, 	ZIP_TOKEN(NID_FinalCond), 1},	// 37: <FinalCond> ::= <IfFinal>
-{nullptr,    	ZIP_TOKEN(NID_OptionalIfFinal), 0},	// 38: <OptionalIfFinal> ::=
-{_reduce_5, 	ZIP_TOKEN(NID_OptionalIfFinal), 1},	// 39: <OptionalIfFinal> ::= <IfFinal>
-{_reduce_8, 	ZIP_TOKEN(NID_IfFinal), 2},	// 40: <IfFinal> ::= if <LexExpr>
-{_reduce_5, 	ZIP_TOKEN(NID_Integer), 1},	// 41: <Integer> ::= $Num
-{_reduce_27,	ZIP_TOKEN(NID_Integer), 2},	// 42: <Integer> ::= + $Num
-{_reduce_28,	ZIP_TOKEN(NID_Integer), 2},	// 43: <Integer> ::= - $Num
-{_reduce_4, 	ZIP_TOKEN(NID_LexExpr), 1},	// 44: <LexExpr> ::= <LexTerm>
-{_reduce_29,	ZIP_TOKEN(NID_LexExpr), 2},	// 45: <LexExpr> ::= <LexExpr> <LexTerm>
-{_reduce_5, 	ZIP_TOKEN(NID_LexTerm), 1},	// 46: <LexTerm> ::= $Operator
-{_reduce_5, 	ZIP_TOKEN(NID_LexTerm), 1},	// 47: <LexTerm> ::= <@operator>
-{_reduce_5, 	ZIP_TOKEN(NID_LexTerm), 1},	// 48: <LexTerm> ::= $Id
-{_reduce_5, 	ZIP_TOKEN(NID_LexTerm), 1},	// 49: <LexTerm> ::= <@keyword>
-{_reduce_30,	ZIP_TOKEN(NID_LexTerm), 1},	// 50: <LexTerm> ::= $Num
-{_reduce_31,	ZIP_TOKEN(NID_LexTerm), 1},	// 51: <LexTerm> ::= $Key
-{nullptr,    	ZIP_TOKEN(bux::ROOT_NID), 1},	// 52: <@> ::= <All>
-{_reduce_32,	ZIP_TOKEN(NIDa_operator), 1},	// 53: <@operator> ::= >>
-{_reduce_33,	ZIP_TOKEN(NIDa_keyword), 1},	// 54: <@keyword> ::= if
-{_reduce_34,	ZIP_TOKEN(NIDa_keyword), 1} 	// 55: <@keyword> ::= include
+{_reduce_8, 	ZIP_TOKEN(NID_WithFinalCond), 2},	// 35: <WithFinalCond> ::= @ <Integer>
+{_reduce_26,	ZIP_TOKEN(NID_WithFinalCond), 3},	// 36: <WithFinalCond> ::= @ if <LexExpr>
+{_reduce_27,	ZIP_TOKEN(NID_WithFinalCond), 4},	// 37: <WithFinalCond> ::= @ <Integer> if <LexExpr>
+{_reduce_5, 	ZIP_TOKEN(NID_Integer), 1},	// 38: <Integer> ::= $Num
+{_reduce_28,	ZIP_TOKEN(NID_Integer), 2},	// 39: <Integer> ::= + $Num
+{_reduce_29,	ZIP_TOKEN(NID_Integer), 2},	// 40: <Integer> ::= - $Num
+{_reduce_4, 	ZIP_TOKEN(NID_LexExpr), 1},	// 41: <LexExpr> ::= <LexTerm>
+{_reduce_30,	ZIP_TOKEN(NID_LexExpr), 2},	// 42: <LexExpr> ::= <LexExpr> <LexTerm>
+{_reduce_5, 	ZIP_TOKEN(NID_LexTerm), 1},	// 43: <LexTerm> ::= $Operator
+{_reduce_5, 	ZIP_TOKEN(NID_LexTerm), 1},	// 44: <LexTerm> ::= <@operator>
+{_reduce_5, 	ZIP_TOKEN(NID_LexTerm), 1},	// 45: <LexTerm> ::= $Id
+{_reduce_5, 	ZIP_TOKEN(NID_LexTerm), 1},	// 46: <LexTerm> ::= <@keyword>
+{_reduce_31,	ZIP_TOKEN(NID_LexTerm), 1},	// 47: <LexTerm> ::= $Num
+{_reduce_32,	ZIP_TOKEN(NID_LexTerm), 1},	// 48: <LexTerm> ::= $Key
+{nullptr,    	ZIP_TOKEN(bux::ROOT_NID), 1},	// 49: <@> ::= <All>
+{_reduce_33,	ZIP_TOKEN(NIDa_operator), 1},	// 50: <@operator> ::= >>
+{_reduce_34,	ZIP_TOKEN(NIDa_keyword), 1},	// 51: <@keyword> ::= if
+{_reduce_35,	ZIP_TOKEN(NIDa_keyword), 1} 	// 52: <@keyword> ::= include
 };
 
 struct C_ActionTraits
@@ -1408,12 +1416,12 @@ size_t C_ParserPolicy::action(bux::T_StateID state, bux::T_LexID input) const
 
 size_t C_ParserPolicy::getAcceptId() const
 {
-    return 52;
+    return 49;
 }
 
 bool C_ParserPolicy::getTokenName(bux::T_LexID token, std::string &name) const
 {
-    static constinit char const *const NAMES[29] = {
+    static constinit char const *const NAMES[26] = {
         "$Bracketed",
         "$Charset",
         "$Id",
@@ -1427,15 +1435,12 @@ bool C_ParserPolicy::getTokenName(bux::T_LexID token, std::string &name) const
         "\">>\"",
         "<All>",
         "<BW_List>",
-        "<FinalCond>",
-        "<IfFinal>",
         "<Integer>",
         "<LexExpr>",
         "<LexResult>",
         "<LexTerm>",
         "<Line>",
         "<OptionValue>",
-        "<OptionalIfFinal>",
         "<RegExpr>",
         "<RegExprSeq>",
         "<RegExprTerm>",
@@ -1443,7 +1448,7 @@ bool C_ParserPolicy::getTokenName(bux::T_LexID token, std::string &name) const
         "<WithFinalCond>",
         "<@keyword>",
         "<@operator>"};
-    if (bux::TOKENGEN_LB <= token && token < bux::TOKENGEN_LB + 29)
+    if (bux::TOKENGEN_LB <= token && token < bux::TOKENGEN_LB + 26)
     {
         name = NAMES[token - bux::TOKENGEN_LB];
         return true;
@@ -1458,7 +1463,7 @@ bux::T_StateID C_ParserPolicy::nextState(bux::T_StateID state, bux::T_LexID inpu
     else if (input >= ENCODED_TOKEN_LB)
         LOGIC_ERROR("Invalid input: state={} input={}", (int)state, printToken(input));
 
-    auto end = mapGoto + 58;
+    auto end = mapGoto + 60;
     auto found = std::lower_bound(mapGoto, end, state, [](const C_MapGoto &i, bux::T_StateID state_) {
         return i.m_curState < state_;
     });

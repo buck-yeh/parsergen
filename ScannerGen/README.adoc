@@ -1,0 +1,216 @@
+:table-caption!:
+:toc:
+:toc-placement!:
+:toclevels: 4 
+//:toc-title: 
+:source-highlighter: pygments
+:source-language: c++
+:pygments-style: colorful
+:pygments-linenums-mode: inline
+:icons: font
+//:docinfo: private
+:hide-uri-scheme:
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+
+toc::[]
+
+== Command line
+.Output of `scannergen -h`
+[source,bash]
+----
+USAGE: ./scannergen <ScannerBase> [<RE1> <RE2> ...] [-I ARG] [-h]
+DESCRIPTION:
+  Scanner Generator command line tool v1.5.1
+
+  Where:
+  1. Generated C++ source files are named as:
+     <ScannerBase>.h   - Header of scanner class
+     <ScannerBase>.cpp - Implementation of scanner class
+  2. <RE1> <RE2> ... are lexical token definition files.
+  3. If no <REn> file is given, standard input is assumed.
+
+VALID FLAGS:
+  -I, --include_dir ARG
+	Search path of #include directive
+  -h, --help
+	Display this help and exit
+----
+
+== Lexical token definition file
+The file consists of _lines_. There are 4 types of lines as explained below.
+
+=== 1. Empty line & Comment
+Empty line together with
+
+.https://en.wikipedia.org/wiki/Comment_(computer_programming)#C[C-style Comment]
+[source,c]
+----
+/*
+ *      Multi-lined Comment
+ */
+----
+
+.C++-style Comment
+[source,c++]
+----
+// Single-lined Comment
+----
+
+They are all helpful to enhance readability. Put as many as you like where you like.
+
+TIP: Comments can also disable other types of lines (and later re-enable them just as quickly): +
+`//%NAMEPREFIX Scanner`
+
+=== 2. Lexical token definition
+.Syntax
+> $Id = <RegExpr> <LexResult> +
+  where
+
+[source,php]
+----
+<RegExpr> ::= <RegExprSeq>
+<RegExpr> ::= <RegExpr> | <RegExprSeq>
+<RegExprSeq> ::= <RegExprTerm>
+<RegExprSeq> ::= <RegExprSeq> <RegExprTerm>
+<RegExprTerm> ::= ( <RegExpr> )
+<RegExprTerm> ::= { <RegExpr> }
+<RegExprTerm> ::= $Id
+<RegExprTerm> ::= $String
+<RegExprTerm> ::= $Key
+<RegExprTerm> ::= <RegExprTerm> *
+<RegExprTerm> ::= <RegExprTerm> +
+<RegExprTerm> ::= <RegExprTerm> $Num
+<RegExprTerm> ::= [ <BW_List> ]
+<BW_List> ::=
+<BW_List> ::= ^
+<BW_List> ::= <SubCharSet>
+<BW_List> ::= ^ <SubCharSet>
+<SubCharSet> ::= <SubCharSet> , <SubCharSet>
+<SubCharSet> ::= $String
+<SubCharSet> ::= $Id
+<SubCharSet> ::= $Num
+<SubCharSet> ::= $Key
+<SubCharSet> ::= $Key - $Key
+<SubCharSet> ::= $Charset
+<LexResult> ::=
+<LexResult> ::= >> <LexExpr> <WithFinalCond>
+<WithFinalCond> ::=
+<WithFinalCond> ::= @ <Integer>
+<WithFinalCond> ::= @ if <LexExpr>
+<WithFinalCond> ::= @ <Integer> if <LexExpr>
+<Integer> ::= $Num
+<Integer> ::= + $Num
+<Integer> ::= - $Num
+<LexExpr> ::= <LexTerm>
+<LexExpr> ::= <LexExpr> <LexTerm>
+<LexTerm> ::= $Operator
+<LexTerm> ::= <@operator>
+<LexTerm> ::= $Id
+<LexTerm> ::= <@keyword>
+<LexTerm> ::= $Num
+<LexTerm> ::= $Key
+----
+.plus one token definition for *$Charset*
+[source,php]
+EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec_digit)+  >>bux::createPlainString<TID_LEX_Charset,CHAR_TYPE> @-1
+
+.Example
+> Please read link:../ScannerGen/RE_Suite.txt[RE_Suite.txt] 
+
+=== 3. % Option definition
+.Syntax
+> %Id arbitrary lex terms ... +
+> %Id [[arbitrary lex terms ...]] +
+> %Id [[ +
+    arbitrary lex terms ... +
+  ]]
+
+.Example
+[source,c++]
+----
+%NAMEPREFIX     StrLiteral
+
+%LOCAL_ACTION_DEFS  [[
+enum
+{
+    TID_LEX_Key         = bux::TOKENGEN_LB+0,   // $Key
+    TID_LEX_Spaces      = bux::TOKENGEN_LB+1,   // $Spaces
+    TID_LEX_String      = bux::TOKENGEN_LB+2    // $String
+};
+]]
+----
+
+==== Known Options
+[%autowidth,cols="<.^m,^.^a,<.^a"]
+|===
+^.^h| Known Option ^.^h| Output To ^.^h| Action / Meaning
+| %NAMESPACE | *Scanner*_.h_ +
+*Scanner*_.cpp_ | Namespace of scanner class. By default, the class name resides in global namespace (::) 
+
+| %NAMEPREFIX | *Scanner*_.h_ +
+*Scanner*_.cpp_ | Prefix of scanner class name. +
+
+.Example
+[source,c++]
+%NAMEPREFIX     Foo
+
+The prefix is set to "Foo" and the scanner class is named _C_FooScanner_ +
+By default, the prefix is "" and hence the scanner class is named _C_Scanner_
+
+| %CHAR_TYPE | *Scanner*_.h_ +
+*Scanner*_.cpp_ | The default value `bux::C_LexUTF32`, which means utf-32, works for all examples so far. Even if your input charset is different from Unicode, `bux::scanFile()` will guess it right and convert the raw input stream into utf-32 stream internally before handing it over to scanner. Changing it should be the least of your worries.
+
+| %CHAR_TRAITS_TYPE | *Scanner*_.h_ +
+*Scanner*_.cpp_ | Only if you assign `%CHAR_TYPE` to a type other than `bux::C_LexUTF32`, you don't need to assign this option. Otherwise, you need to implement a traits class mimicking class template `bux::C_LexTraits<>` declared in https://github.com/buck-yeh/bux/blob/main/include/bux/ScannerBase.h[ScannerBase.h] and then set `%CHAR_TRAITS_TYPE` to this fully qualified traits type.
+
+| %HEADERS_FOR_CPP | *Scanner*_.cpp_ | Output _after_ the banner comment and _before_ any non-comment code:
+[source,c++]
+----
+ // User-defined %HEADERS_FOR_CPP begins
+...(your code)...
+ // User-defined %HEADERS_FOR_CPP ends
+----
+NOTE: Multiple `%HEADERS_FOR_CPP` will be merged into one along the parsing order.
+
+| %LOCAL_ACTION_DEFS | *Scanner*_.cpp_ | Output _within_ anonymous namespace scope and right _before_ constant array `STATES[]`(the target 'user'):
+[source,c++]
+----
+ // User-defined %LOCAL_ACTION_DEFS begins
+...(your code)...
+ // User-defined %LOCAL_ACTION_DEFS ends
+----
+NOTE: Multiple `%LOCAL_ACTION_DEFS` will be merged into one along the parsing order.
+
+| %HEADERS_FOR_HEADER | *Scanner*_.h_ | Output _before_ entering namespace scope of the target scanner class and _after_ the common include directive `#include <bux/ImplScanner.h>`:
+[source,c++]
+----
+ // User-defined %HEADERS_FOR_HEADER begins
+...(your code)...
+ // User-defined %HEADERS_FOR_HEADER ends
+----
+NOTE: Multiple `%HEADERS_FOR_CPP` will be merged into one along the parsing order.
+
+|===
+
+=== 4. _#include_
+.Example
+[source,c++]
+#include "Foo.txt"
+
+.Notes
+. The example line replaces itself with lines read from file _"Foo.txt"_ +
+. `#include` along with `-I` command line flag are discouraged. Try using _multiple_ token definition files on command line instead. 
+[source,c++]
+scannergen Scanner /usr/share/parsergen/RE_Suite.txt tokens.txt
+
+== link:../ScannerGen/RE_Suite.txt[RE_Suite.txt]
+_(To be explained)_
+
+== Generated files
+_(To be explained)_

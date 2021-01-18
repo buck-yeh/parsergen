@@ -166,17 +166,22 @@ void FC_CollectNS::operator()(const std::string &term)
     if (m_ShouldBeId)
     {
         if (!bux::isIdentifier(term))
-            RUNTIME_ERROR("Namespace contains non-identifier term \"{}\"", term);
+        {
+            if (term == "::" && m_NS.empty())
+                // Accept heading ::
+                return;
 
+            RUNTIME_ERROR("Namespace contains non-identifier term \"{}\"", term);
+        }
         m_NS.emplace_back(term);
-        m_ShouldBeId =false;
+        m_ShouldBeId = false;
     }
     else
     {
         if (term != "::")
             RUNTIME_ERROR("Namespace should separate identifiers only by \"::\"");
 
-        m_ShouldBeId =true;
+        m_ShouldBeId = true;
     }
 }
 
@@ -572,7 +577,7 @@ int main(int argc, const char *argv[])
         VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
     C_Paths         inc_dirs;
     ezargs.position_args({"ScannerBase", "RE1", "RE2"}, {1,2}, true)
-          .add_flag("include_dir", 'I', "Search path of #include directive within <REn>",
+          .add_flag("include_dir", 'I', "Search path of #include directive",
                     [&](auto s){
                         bux::C_IMemStream in{s};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));

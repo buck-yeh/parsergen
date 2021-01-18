@@ -53,21 +53,20 @@ Empty line together with
 [source,c]
 ----
 /*
- *      Grammar with Semantic Rules
+ *      Multi-lined Comment
  */
 ----
 
 .C++-style Comment
 [source,c++]
 ----
-// Grammar with Semantic Rules
+// Single-lined Comment
 ----
 
-All three above mean nothing else but enhancing readability. Put as many as you like where you like.
+They are all helpful to enhance readability. Put as many as you like where you like.
 
-TIP: Comments can be used to disable other types of lines (and later re-enable them just as quickly): +
+TIP: Comments can also disable other types of lines (and later re-enable them just as quickly): +
 `//%SHOW_UNDEFINED`
-
 
 === 2. Production rule
 .Syntax
@@ -134,9 +133,12 @@ CAUTION: 💣 `parsergen` has to know the start symbol before calculation. If th
 ^.^h| Known Option ^.^h| Output To ^.^h| Action / Meaning
 
 | %IDDEF_SOURCE | **Parser**_IdDef.h_ | Let "Path/To/IdDef.h" be value of `%IDDEF_SOURCE` +
-Output
+**Parser**_IdDef.h_ will have one line:
 [source,c++]
 #include "Path/To/IdDef.h"
+
+NOTE: Defining this option means the parser will work with an existing scanner. "Path/To/IdDef.h" should have all token ids of the scanner and also happens to have all token ids needed by the target parser. +
+_User is on his own to ensure this._
 
 | %ERROR_TOKEN | **Parser**_.cpp_ | If `%ERROR_TOKEN` is defined valuelessly or with value \[[Error]] and `$Error` is found in productions, the underlying *error recovery* mechanism of the base parser class will be wakened by telling `I_ParserPolicy` error token id is `TID_LEX_Error`, which will be defined in **Parser**_IdDef.h_ _(to be explained)_
 
@@ -169,7 +171,7 @@ Read all 3 output files of link:../example/MinLang/[MinLang] to find exact locat
 *tokens.txt* | This option tells `parsergen` to treat keywords case-insensitively. Convenient when you define a case-insensitive language, e.g. `SQL`
 
 //--------------------------
-| %HEADERS_FOR_HEADER | **Parser**_.h_ | Output right _before_ where namespace scope of user's parser class begins:
+| %HEADERS_FOR_HEADER | **Parser**_.h_ | Output _before_ entering namespace scope of the target parser class:
 [source,c++]
 ----
  // %HEADERS_FOR_HEADER expanded BEGIN
@@ -177,7 +179,7 @@ Read all 3 output files of link:../example/MinLang/[MinLang] to find exact locat
  // %HEADERS_FOR_HEADER expanded END
 ----
 
-| %PRECLASSDECL | **Parser**_.h_ | Output _within_ namespace scope of user's parser class and _before_ the class is defined:
+| %PRECLASSDECL | **Parser**_.h_ | Output _within_ namespace scope of the target parser class and _before_ the class is defined:
 [source,c++]
 ----
  // %PRECLASSDECL expanded BEGIN
@@ -185,7 +187,7 @@ Read all 3 output files of link:../example/MinLang/[MinLang] to find exact locat
  // %PRECLASSDECL expanded END
 ----
 
-| %INCLASSDECL | **Parser**_.h_ | Output _within_ the definition of user's parser class and right _after_ the common members are declared:
+| %INCLASSDECL | **Parser**_.h_ | Output _within_ the definition of target parser class and right _after_ the common members are declared:
 [source,c++]
 ----
  // %INCLASSDECL expanded BEGIN
@@ -226,9 +228,11 @@ Read all 3 output files of link:../example/MinLang/[MinLang] to find exact locat
 ----
 
 | %SCANNEROPTION | *tokens.txt* | Output as the first part of *tokens.txt*
-| %EXTRA_TOKENS | *tokens.txt* | \|-separated token identifiers which again \| with `parsergen`-generated keywords & compound operators to for the final token definition for `scannergen`. The very last token is the mandated _initial state_ of the underlying https://en.wikipedia.org/wiki/Finite-state_machine[finite state machine]. +
- +
-Multiple `%EXTRA_TOKENS` definitions are allowed. The result token will \|-concatenate all of them.
+| %EXTRA_TOKENS | *tokens.txt* | *\|*-separated token identifiers which again *\|* with `parsergen`-generated keywords & compound operators to for the final token definition for `scannergen`. The very last token is the mandated _initial state_ of the underlying https://en.wikipedia.org/wiki/Finite-state_machine[finite state machine].
+
+NOTE: Multiple `%EXTRA_TOKENS` are allowed. The result token will *\|*-concatenate all of them.
+
+.Input
 [source,c++]
 ----
 %EXTRA_TOKENS   [[dec_num\|hex_num\|identifier\|c_char\|c_str\|spaces]]
@@ -297,8 +301,8 @@ Seriously, these are not preprocessor directives but processed in the same pass 
 |===
 ^.^h| Directive ^.^h| Meaning
 | [source%nowrap,c++]
-#include "Foo" 
-| Replace this line with lines within file _"Foo"_
+#include "Foo.txt" 
+| Replace this line with lines read from file _"Foo.txt"_
 
 | [source%nowrap,c++]
 #ifdef _Bar_ 
@@ -348,8 +352,6 @@ NOTE: *left*: Left-associative, left operator first +
 *right*  ( )
 
 NOTE: Operator list parsed later gets higher precedence.
-
-.Notes
 
 == Generated files
 _(To be explained)_

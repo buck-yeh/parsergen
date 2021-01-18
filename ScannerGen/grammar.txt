@@ -230,30 +230,17 @@ right  ( ) { }
     $r = bux::createLex<C_WeightedStrList>(w, bux::unlex<C_StrList>($2), is_final);
 ]]
 
-<WithFinalCond> ::= [[]]
-<WithFinalCond> ::= @ <FinalCond>   [[
+<WithFinalCond> ::=                         [[]]
+<WithFinalCond> ::= @ <Integer>             [[
     $r = $2;
 ]]
-
-<FinalCond> ::= <Integer> <OptionalIfFinal> [[
-    if (!$2)
-        $r = $1;
-    else
-        $r = bux::createLex<std::pair<int,C_StrList>>(
-                dynamic_cast<bux::C_IntegerLex&>(*$1).value<int>(),
-                std::move(bux::unlex<C_StrList>($2)));
+<WithFinalCond> ::= @ if <LexExpr>          [[
+    $r = $3;
 ]]
-<FinalCond> ::= <IfFinal>                   [[
-    $r = $1;
-]]
-
-<OptionalIfFinal> ::= [[]]
-<OptionalIfFinal> ::= <IfFinal> [[
-    $r = $1;
-]]
-
-<IfFinal> ::= if <LexExpr>  [[
-    $r = $2;
+<WithFinalCond> ::= @ <Integer> if <LexExpr> [[
+    $r = bux::createLex<std::pair<int,C_StrList>>(
+            dynamic_cast<bux::C_IntegerLex&>(*$2).value<int>(),
+            std::move(bux::unlex<C_StrList>($4)));
 ]]
 
 <Integer> ::= $Num      [[ $r = $1; ]]
