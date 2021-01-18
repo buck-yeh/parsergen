@@ -176,7 +176,7 @@ By default, the prefix is "" and hence the scanner class is named _C_Scanner_
 ...(your code)...
  // User-defined %HEADERS_FOR_CPP ends
 ----
-NOTE: Multiple `%HEADERS_FOR_CPP` will be merged into one along the parsing order.
+ℹ️ Multiple `%HEADERS_FOR_CPP` will be merged into one along the parsing order.
 
 | %LOCAL_ACTION_DEFS | *Scanner*_.cpp_ | Output _within_ anonymous namespace scope and right _before_ constant array `STATES[]`(the target 'user'):
 [source,c++]
@@ -185,7 +185,7 @@ NOTE: Multiple `%HEADERS_FOR_CPP` will be merged into one along the parsing orde
 ...(your code)...
  // User-defined %LOCAL_ACTION_DEFS ends
 ----
-NOTE: Multiple `%LOCAL_ACTION_DEFS` will be merged into one along the parsing order.
+ℹ️ Multiple `%LOCAL_ACTION_DEFS` will be merged into one along the parsing order.
 
 | %HEADERS_FOR_HEADER | *Scanner*_.h_ | Output _before_ entering namespace scope of the target scanner class and _after_ the common include directive `#include <bux/ImplScanner.h>`:
 [source,c++]
@@ -194,7 +194,7 @@ NOTE: Multiple `%LOCAL_ACTION_DEFS` will be merged into one along the parsing or
 ...(your code)...
  // User-defined %HEADERS_FOR_HEADER ends
 ----
-NOTE: Multiple `%HEADERS_FOR_CPP` will be merged into one along the parsing order.
+ℹ️ Multiple `%HEADERS_FOR_CPP` will be merged into one along the parsing order.
 
 |===
 
