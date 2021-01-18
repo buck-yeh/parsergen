@@ -1,8 +1,8 @@
-- The `parsergen`/`scannergen` combo generates source code files of LR1/GLR parser & scanner from a set of annotated production rules, aka grammar.
-- Both `parsergen` & `scannergen` use the same combo to re-generate their own parser & scanner, respectively, to evolve themselves.
+- The `parsergen`/`scannergen` combo generates source code files of [LR1/GLR parser](https://en.wikipedia.org/wiki/LR_parser) & [scanner](https://en.wikipedia.org/wiki/Lexical_analysis#Scanner) from a set of annotated production rules, aka grammar.
+- Both `parsergen` & `scannergen` use the same combo (_i.e._ themselves) to re-generate their own parser & scanner, respectively, to evolve.
 - Building the generated code with [`-std=c++2a`](https://gcc.gnu.org/projects/cxx-status.html#cxx20) is required.
 - 🧘 Most often you need *the combo*, but not always:
-  - Sometimes reusing an existing scanner with another parser is feasible and cheaper. *(to be explained)*
+  - Sometimes reusing an existing scanner with another parser is feasible and cheaper. *([%IDDEF_SOURCE](ParserGen/README.adoc#IDDEF_SOURCE))*
   - Sometimes a standalone scanner suffices. (see [`CBrackets`](https://github.com/buck-yeh/CBrackets)) 
 
 # Table of Contents
@@ -72,6 +72,8 @@
 When you need to quickly implement a parser for an improvised or deliberately designed [DSL](https://en.wikipedia.org/wiki/Domain-specific_language), prepare a grammar file in simple [BNF](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form#Example) rules with semantic annotations and then let the combo generate C++ code of parser & scanner. 
 
 ## Write grammar
+ℹ️ [The whole nine yards](ParserGen/README.adoc#grammar)
+
 [`example/CalcInt/grammar.txt`](example/CalcInt/grammar.txt) defines a calculator for basic arithmetics `+ - * / %` of integral constants in *decimal*, *octal*, or *hexadecimal*.
 ~~~php
 lexid   Spaces

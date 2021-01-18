@@ -132,7 +132,7 @@ CAUTION: 💣 `parsergen` has to know the start symbol before calculation. If th
 |===
 ^.^h| Known Option ^.^h| Output To ^.^h| Action / Meaning
 
-| %IDDEF_SOURCE | **Parser**_IdDef.h_ | Let "Path/To/IdDef.h" be value of `%IDDEF_SOURCE` +
+| %IDDEF_SOURCE | **Parser**_IdDef.h_ | [[IDDEF_SOURCE]]Let "Path/To/IdDef.h" be value of `%IDDEF_SOURCE` +
 **Parser**_IdDef.h_ will have one line:
 [source,c++]
 #include "Path/To/IdDef.h"
@@ -310,7 +310,7 @@ Seriously, these are not preprocessor directives but processed in the same pass 
 
 | [source%nowrap,c++]
 #ifndef Bar 
-| 💣 If option `%Bar` is undefined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
+| 💣 If option `%Bar` is not defined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
 
 | [source,c++]
 #else 
