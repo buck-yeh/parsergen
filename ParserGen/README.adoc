@@ -146,7 +146,21 @@ _User is on his own to ensure this._
 [source,c++]
 bool C_ParserPolicy::changeToken(T_LexID &token, C_LexPtr &attr) const
 
-A change to break down a scanned token input and take its first char as new input to resume parsing.
+A try to break down a scanned token input and take its first char as new input to resume parsing.
+
+.Example
+[source,c++]
+----
+%UPCAST_TOKEN [[
+    if (isascii($token) && !iscntrl($token) && !isalnum($token) && !isspace($token))
+    {
+        $attr.assign(bux::createLex<std::string>(1,char($token)), true);
+        $token = TID_LEX_Operator;
+        return true;
+    }
+    return false;
+]]
+----
 
 | %ON_ERROR | **Parser**_.cpp_ | Implement the following policy method with valid mnemonics link:#reduction_mnemonics[`$p` `$P` `$c`] `$pos` `$message`
 [source,c++]
@@ -154,6 +168,24 @@ void C_ParserPolicy::onError(
      bux::LR1::C_Parser     &, 
      const bux::C_SourcePos &pos, 
      const std::string      &message) const
+
+.Example 1
+[source,c++]
+----
+%CONTEXT  [[C_Context]]
+%ON_ERROR [[
+    $c.issueError(LL_ERROR, $pos, $message);
+]]
+----
+
+.Example 2
+[source,c++]
+----
+%CONTEXT  [[std::ostream &]]
+%ON_ERROR [[
+    $c <<'(' <<$pos.m_Line <<',' <<$pos.m_Col <<"): " <<$message <<'\n';
+]]
+----
 
 | %SHOW_UNDEFINED | **Parser**_.cpp_ +
 **Parser**_.h_ +
@@ -351,7 +383,7 @@ NOTE: *left*: Left-associative, left operator first +
 *left*   * / % +
 *right*  ( )
 
-NOTE: Operator list parsed later gets higher precedence.
+NOTE: Lines parsed later get higher precedence.
 
 == Generated files
 _(To be explained)_

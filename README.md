@@ -2,7 +2,7 @@
 - Both `parsergen` & `scannergen` use the same combo (_i.e._ themselves) to re-generate their own parser & scanner, respectively, to evolve.
 - Building the generated code with [`-std=c++2a`](https://gcc.gnu.org/projects/cxx-status.html#cxx20) is required.
 - 🧘 Most often you need *the combo*, but not always:
-  - Sometimes reusing an existing scanner with another parser is feasible and cheaper. *([%IDDEF_SOURCE](ParserGen/README.adoc#IDDEF_SOURCE))*
+  - Sometimes reusing an existing scanner with another parser is feasible and cheaper. *([`%IDDEF_SOURCE`](ParserGen/README.adoc#IDDEF_SOURCE))*
   - Sometimes a standalone scanner suffices. (see [`CBrackets`](https://github.com/buck-yeh/CBrackets)) 
 
 # Table of Contents
