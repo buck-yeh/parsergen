@@ -152,7 +152,10 @@ A try to break down a scanned token input and take its first char as new input t
 [source,c++]
 ----
 %UPCAST_TOKEN [[
-    if (isascii($token) && !iscntrl($token) && !isalnum($token) && !isspace($token))
+    if (isascii($token) && 
+       !iscntrl($token) && 
+       !isalnum($token) && 
+       !isspace($token))
     {
         $attr.assign(bux::createLex<std::string>(1,char($token)), true);
         $token = TID_LEX_Operator;
@@ -274,7 +277,7 @@ NOTE: Multiple `%EXTRA_TOKENS` are allowed. The result token will *\|*-concatena
 .Output
 _the_very_last_ = ...(generated keywords & compound operators)... \| dec_num\|hex_num\|identifier\|c_char\|c_str\|spaces\|bracketed\| ...(the rest)...
 
-| HEADERS_FOR_SCANNER_CPP | *tokens.txt* | Output as _part of_ `%HEADERS_FOR_CPP` option value for `scannergen` like
+| %HEADERS_FOR_SCANNER_CPP | *tokens.txt* | Output as _part of_ `%HEADERS_FOR_CPP` option value for `scannergen` like
 [source,c++]
 ----
 %HEADERS_FOR_CPP     [[
