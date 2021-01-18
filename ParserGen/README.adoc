@@ -305,11 +305,11 @@ Seriously, these are not preprocessor directives but processed in the same pass 
 | Replace this line with lines read from file _"Foo.txt"_
 
 | [source%nowrap,c++]
-#ifdef _Bar_ 
+#ifdef Bar 
 | 💣 If option `%Bar` is defined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
 
 | [source%nowrap,c++]
-#ifndef _Bar_ 
+#ifndef Bar 
 | 💣 If option `%Bar` is undefined, include subsequent lines until whichever the **paired** `#else` or `#endif` is reached first. Otherwise, include lines between `#else` and `#endif` if `#else` is present.
 
 | [source,c++]
