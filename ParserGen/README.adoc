@@ -162,7 +162,10 @@ A try to break down a scanned token input and take its first char as new input t
     }
     return false;
 ]]
+|===
 
+[%autowidth,cols="<.^m,^.^a,<.^a"]
+|===
 | %ON_ERROR | **Parser**_.cpp_ | Implement the following policy method with valid mnemonics link:#reduction_mnemonics[`$p` `$P` `$c`] `$pos` `$message`
 [source,c++]
 void C_ParserPolicy::onError(
