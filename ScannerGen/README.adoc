@@ -74,47 +74,47 @@ TIP: Comments can also disable other types of lines (and later re-enable them ju
 
 [source,php]
 ----
-<RegExpr> ::= <RegExprSeq>
-<RegExpr> ::= <RegExpr> | <RegExprSeq>
-<RegExprSeq> ::= <RegExprTerm>
-<RegExprSeq> ::= <RegExprSeq> <RegExprTerm>
-<RegExprTerm> ::= ( <RegExpr> )
-<RegExprTerm> ::= { <RegExpr> }
-<RegExprTerm> ::= $Id
-<RegExprTerm> ::= $String
-<RegExprTerm> ::= $Key
-<RegExprTerm> ::= <RegExprTerm> *
-<RegExprTerm> ::= <RegExprTerm> +
-<RegExprTerm> ::= <RegExprTerm> $Num
-<RegExprTerm> ::= [ <BW_List> ]
-<BW_List> ::=
-<BW_List> ::= ^
-<BW_List> ::= <SubCharSet>
-<BW_List> ::= ^ <SubCharSet>
-<SubCharSet> ::= <SubCharSet> , <SubCharSet>
-<SubCharSet> ::= $String
-<SubCharSet> ::= $Id
-<SubCharSet> ::= $Num
-<SubCharSet> ::= $Key
-<SubCharSet> ::= $Key - $Key
-<SubCharSet> ::= $Charset
-<LexResult> ::=
-<LexResult> ::= >> <LexExpr> <WithFinalCond>
+<RegExpr>       ::= <RegExprSeq>
+                |   <RegExpr> | <RegExprSeq>
+<RegExprSeq>    ::= <RegExprTerm>
+                |   <RegExprSeq> <RegExprTerm>
+<RegExprTerm>   ::= ( <RegExpr> )
+                |   { <RegExpr> }
+                |   $Id
+                |   $String
+                |   $Key
+                |   <RegExprTerm> *
+                |   <RegExprTerm> +
+                |   <RegExprTerm> $Num
+                |   [ <BW_List> ]
+<BW_List>       ::=
+                |   ^
+                |   <SubCharSet>
+                |   ^ <SubCharSet>
+<SubCharSet>    ::= <SubCharSet> , <SubCharSet>
+                |   $String
+                |   $Id
+                |   $Num
+                |   $Key
+                |   $Key - $Key
+                |   $Charset
+<LexResult>     ::=
+                |   >> <LexExpr> <WithFinalCond>
 <WithFinalCond> ::=
-<WithFinalCond> ::= @ <Integer>
-<WithFinalCond> ::= @ if <LexExpr>
-<WithFinalCond> ::= @ <Integer> if <LexExpr>
-<Integer> ::= $Num
-<Integer> ::= + $Num
-<Integer> ::= - $Num
-<LexExpr> ::= <LexTerm>
-<LexExpr> ::= <LexExpr> <LexTerm>
-<LexTerm> ::= $Operator
-<LexTerm> ::= <@operator>
-<LexTerm> ::= $Id
-<LexTerm> ::= <@keyword>
-<LexTerm> ::= $Num
-<LexTerm> ::= $Key
+                |   @ <Integer>
+                |   @ if <LexExpr>
+                |   @ <Integer> if <LexExpr>
+<Integer>       ::= $Num
+                |   + $Num
+                |   - $Num
+<LexExpr>       ::= <LexTerm>
+                |   <LexExpr> <LexTerm>
+                |   $Operator
+                |   <@operator>
+                |   $Id
+                |   <@keyword>
+                |   $Num
+                |   $Key
 ----
 .plus one token definition for *$Charset*
 [source,php]
