@@ -221,6 +221,7 @@ Read all 3 output files of link:../example/MinLang/[MinLang] to find exact locat
 ...(your code)...
  // %INCLASSDECL expanded END
 ----
+ℹ️ If `%CONTEXT` is _not_ defined, the embedding block starts with *public* access. Otherwise, the embedding block starts with *private* access. The starting access can be explicitly changed within to whichever access you want, of course.
 
 | %HEADERS_FOR_CPP | **Parser**_.cpp_ | Output _after_ the banner comment and _before_ any non-comment code:
 [source,c++]
