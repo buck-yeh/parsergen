@@ -13,7 +13,7 @@ lexid   Spaces
 //%SHOW_UNDEFINED
 
 //
-//      Operator Precedency
+//      Operator Precedence
 //
 left   + -
 left   * / %

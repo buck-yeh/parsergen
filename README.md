@@ -72,14 +72,12 @@
 When you need to quickly implement a parser for an improvised or deliberately designed [DSL](https://en.wikipedia.org/wiki/Domain-specific_language), prepare a grammar file in simple [BNF](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form#Example) rules with semantic annotations and then let the combo generate C++ code of parser & scanner. 
 
 ## Write grammar
-ℹ️ [The whole nine yards](ParserGen/README.adoc#grammar)
-
 [`example/CalcInt/grammar.txt`](example/CalcInt/grammar.txt) defines a calculator for basic arithmetics `+ - * / %` of integral constants in *decimal*, *octal*, or *hexadecimal*.
 ~~~php
-lexid   Spaces
+lexid   Spaces // (1)
 
 //
-//      Output Options
+//      Output Options (2)
 //
 %CONTEXT [[std::ostream &]]
 
@@ -91,14 +89,14 @@ lexid   Spaces
 //%SHOW_UNDEFINED
 
 //
-//      Operator Precedency
+//      Operator Precedence (3)
 //
 left   + -
 left   * / %
 right  ( )
 
 //
-//      Grammar with Reduction Code
+//      Grammar with Reduction Code (4)
 //
 <@> ::= <Expr>  [[
     $r = $1;
@@ -131,6 +129,13 @@ right  ( )
     $r = bux::createLex(dynamic_cast<bux::C_IntegerLex&>(*$1).value<int>());
 ]]
 ~~~ 
+**(1)** [New lexid](ParserGen#4-new-lexid)
+
+**(2)** [% Option](ParserGen#3-option-definition)
+
+**(3)** [Operator precedence](ParserGen#7-operator-precedence)
+
+**(4)** [Production rule](ParserGen#2-production-rule)
 
 ## Generate C++ code of parser & scanner
 ### When package `parsergen` is installed [in ArchLinux](#in-archlinux)
@@ -207,15 +212,16 @@ if (!parser.accepted())
 // Apply the result 
 // parser.getFinalLex() ... (3)
 ~~~
-* *(1)* Screener is filter of scanner and can filter out, change, aggregate selected tokens. Don't use it if you don't need it:
+**(1)** Screener is filter of scanner and can filter out, change, aggregate selected tokens. Don't use it if you don't need it:
    ~~~c++
    C_Parser                            parser{/*args of context ctor*/};
    C_Scanner                           scanner{parser};
    bux::C_IMemStream                   in{line}; // or other std::istream derived
    bux::scanFile(">", in, scanner);
    ~~~
-* *(2)* Time to check integrity of your context status.
-* *(3)* `parser.getFinalLex()` returns reference to the merged result of type `bux::LR1::C_LexInfo`, defined in [`LR1.h`](https://github.com/buck-yeh/bux/blob/main/include/bux/LR1.h). In this example, the expected result is integral value of type `int` and can be conveniently obtained by expression 
+**(2)** Time to check integrity of your context status.
+
+**(3)** `parser.getFinalLex()` returns reference to the merged result of type `bux::LR1::C_LexInfo`, defined in [`LR1.h`](https://github.com/buck-yeh/bux/blob/main/include/bux/LR1.h). In this example, the expected result is integral value of type `int` and can be conveniently obtained by expression 
    ~~~c++
    bux::unlex<int>(parser.getFinalLex())
    ~~~
