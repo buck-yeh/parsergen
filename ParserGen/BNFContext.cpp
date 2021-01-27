@@ -303,12 +303,12 @@ std::optional<std::string> C_BNFContext::setClassName(C_StringList &qualified, C
         auto &s = t.m_TypeName;
         for (auto k: *j)
         {
-            if (!s.empty() && isalnum(s[s.size()-1]) && isalnum(k.front()))
+            if (!s.empty() && isalnum(s.back()) && isalnum(k.front()))
                 s += ' ';
 
             s += k;
         }
-        if (!s.empty() && isalnum(s[s.size()-1]))
+        if (!s.empty() && isalnum(s.back()))
             s += ' ';
     }
 #else
