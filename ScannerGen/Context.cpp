@@ -144,7 +144,7 @@ void C_Context::issueError  (
         ") INFO: ",
         ") VERBOSE: "
     };
-    fmt::print("{}({},{}{}{}\n", pos.m_Source, pos.m_Line, pos.m_Col, KIND[level], message);
+    fmt::print(FMT_STRING("{}({},{}{}{}\n"), pos.m_Source, pos.m_Line, pos.m_Col, KIND[level], message);
     static const size_t LIMIT[] ={
         0,
         10,

@@ -47,7 +47,7 @@ int main(int argc, const char* argv[])
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
-        fmt::print("{}", ret.m_error);
+        fmt::print(FMT_STRING("{}"), ret.m_error);
         return MAIN_ARG_ERROR;
     }
 
@@ -107,18 +107,18 @@ int main(int argc, const char* argv[])
             }
 
             for (auto &i: w2l)
-                fmt::print("{}\t{}\t{}\n", i.second.m_Lex, i.second.m_Assoc, i.first);
+                fmt::print(FMT_STRING("{}\t{}\t{}\n"), i.second.m_Lex, i.second.m_Assoc, i.first);
 
             fmt::print("\n");
         }
         for (auto &i: c.productions())
-            fmt::print("{}\n", i.str());
+            fmt::print(FMT_STRING("{}\n"), i.str());
 
         return MAIN_SUCCESS;
     }
     catch (const std::exception &t)
     {
-        fmt::print("{}: {} ... \n", HRTN(t), t.what());
+        fmt::print(FMT_STRING("{}: {} ... \n"), HRTN(t), t.what());
         return MAIN_CAUGHT;
     }
     catch (...)
