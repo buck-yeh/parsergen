@@ -484,10 +484,21 @@ and thus we have token `$MyErr` and corresponding token id `TID_LEX_MyErr` to re
 ----
 <1> Any _fatal_ or _error_ fails the parsing. IOW, parsing is ok with any number of _warning_, _info_, _verbose_ messages. But it is totally fine to have different criteria to be deemed ok with.
 
-=== Parsing error without `$Error`
+=== Parsing error/warning without `$Error`
+.Example 1
 [source,c++]
 ----
-<value> ::= ( <elements> ) [[
+<members> ::= <members> ,   [[  // <1>
+    $c.log(LL_WARNING, $2, "Superfluous ','");
+    $r = $1;
+]]
+----
+<1> The almost same production issues a warning already exemplified above except this one is `$Error`-free. The effect is completely identical.
+
+.Example 2
+[source,c++]
+----
+<value> ::= ( <elements> )  [[
     $p.onError($1, "Tuple (...) not allowed, use array [...] instead");
     $r = bux::createLex<json::value>(bux::unlex<json::array>($2));
 ]]
