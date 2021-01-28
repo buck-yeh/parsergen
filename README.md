@@ -153,16 +153,16 @@ where
 | Parameter | Description
 |:----------:|----------- 
 | `grammar.txt` | Annotated BNF rules and other types of options.
-| `Parser` | Output file base - generating __Parser__*.cpp* __Parser__*.h* __Parser__*IdDef.h*
-| `Scanner` | Output file base - generating __Scanner__*.cpp* __Scanner__*.h* 
+| `Parser` | Output file base - `parsergen` generates __Parser__*.cpp* __Parser__*.h* __Parser__*IdDef.h*
+| `Scanner` | Output file base - `scannergen` generates __Scanner__*.cpp* __Scanner__*.h* 
 | `tokens.txt` | Output of `parsergen` & input of `scannergen`
 | [`RE_Suite.txt`](ScannerGen/RE_Suite.txt) | Recurring token definitions provided with `scannergen` and used by `tokens.txt`
 
 ### If target source files already exist
 💡 Put the commands in a script called [`reparse`](test/archlinux/aur_poc/reparse) for recurring uses.
 
-ℹ️ `parsergen` will prompt `(y/n)` questions three times and `scannergen` will ask twice.
-~~~bash
+ℹ️ `parsergen` will prompt `(y/n)` questions three times and `scannergen` will prompt twice.
+~~~
 > ./reparse 
 About to parse 'grammar.txt' ...
 Total 1 lex-symbols 1 nonterms 9 literals
