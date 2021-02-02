@@ -644,7 +644,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     fmt::print(out, FMT_STRING(
         "    " ENCODED_TOKEN_LB_str "\t = {}\n"
         "}};\n"
-        "#define ZIP_TOKEN(x) (x-(bux::MIN_TOKEN_ID-" ENCODED_TOKEN_LB_str "))\n"
+        "constexpr auto ZIP_TOKEN(auto x) {{ return x-(bux::MIN_TOKEN_ID-" ENCODED_TOKEN_LB_str "); }}\n"
         "\n"), m_MinTokenId);
     if (!m_alphaPrimes.empty())
     {

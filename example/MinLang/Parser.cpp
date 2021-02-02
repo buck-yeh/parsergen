@@ -18,7 +18,7 @@ enum
 {
     ENCODED_TOKEN_LB	 = 1
 };
-#define ZIP_TOKEN(x) (x-(bux::MIN_TOKEN_ID-ENCODED_TOKEN_LB))
+constexpr auto ZIP_TOKEN(auto x) { return x-(bux::MIN_TOKEN_ID-ENCODED_TOKEN_LB); }
 
 template<uint8_t KEY> int isKey(uint8_t key)
 {

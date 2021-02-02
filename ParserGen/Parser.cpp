@@ -43,7 +43,7 @@ enum
     //---------------------------------------------------
     ENCODED_TOKEN_LB	 = 63
 };
-#define ZIP_TOKEN(x) (x-(bux::MIN_TOKEN_ID-ENCODED_TOKEN_LB))
+constexpr auto ZIP_TOKEN(auto x) { return x-(bux::MIN_TOKEN_ID-ENCODED_TOKEN_LB); }
 
 constinit const uint8_t
 alphaPrime0[5] = {

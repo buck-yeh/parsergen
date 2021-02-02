@@ -92,12 +92,12 @@ TIP: Comments can also disable other types of lines (and later re-enable them ju
                 |   <SubCharSet>
                 |   ^ <SubCharSet>
 <SubCharSet>    ::= <SubCharSet> , <SubCharSet>
-                |   $String
-                |   $Id
-                |   $Num
-                |   $Key
+                |   $String       // <1>
+                |   $Id           // <2>
+                |   $Num          // <3>
+                |   $Key          // <4>
                 |   $Key - $Key
-                |   $Charset
+                |   $Charset      // <5>
 <LexResult>     ::=
                 |   >> <LexExpr> <WithFinalCond>
 <WithFinalCond> ::=
@@ -109,16 +109,35 @@ TIP: Comments can also disable other types of lines (and later re-enable them ju
                 |   - $Num
 <LexExpr>       ::= <LexTerm>
                 |   <LexExpr> <LexTerm>
-                |   $Operator
-                |   <@operator>
+<LexTerm>       ::= $Operator     // <6>
+                |   <@operator>   // <7>
                 |   $Id
-                |   <@keyword>
+                |   <@keyword>    // <8>
                 |   $Num
                 |   $Key
 ----
-.plus one token definition for *$Charset*
-[source,php]
+<1> Token definition of `$String`
+[source,c++]
+c_str = '\"' (c_alphabet|'\'')* '\"'  >>bux::createEscapeString<TID_LEX_String,CHAR_TYPE,1,1>
+<2> Token definition of `$Id`
+[source,c++]
+identifier = alpha (alpha|dec_digit)*  >>bux::createPlainString<TID_LEX_Id,CHAR_TYPE>
+<3> Token definition of `$Num`
+[source,c++]
+dec_num = [1-9] dec_digit* | [0]  >>bux::createDecNum<TID_LEX_Num,CHAR_TYPE>
+oct_num = [0] oct_digit+          >>bux::createOctNum<TID_LEX_Num,CHAR_TYPE>
+hex_num = [0] [xX] hex_digit+     >>bux::createHexNum<TID_LEX_Num,CHAR_TYPE>
+<4> Token definition of `$Key`
+[source,c++]
+c_char = '\'' (c_alphabet|'\"') '\''  >>bux::createCharLiteral<TID_LEX_Key,CHAR_TYPE>
+<5> Token definition of `$Charset`
+[source,c++]
 EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec_digit)+  >>bux::createPlainString<TID_LEX_Charset,CHAR_TYPE> @-1
+<6> Token definition of `$Operator`
+[source,c++]
+CompoundSymbol = symbol (symbol|["\'\""])* symbol  >>bux::createPlainString<TID_LEX_Operator,CHAR_TYPE> @-1
+<7> Predefined non-terminal denoting all compound symbols used by `scannergen` grammar
+<8> Predefined non-terminal denoting all keywords used by `scannergen` grammar
 
 .Example
 > Please read link:../ScannerGen/RE_Suite.txt[RE_Suite.txt] 
