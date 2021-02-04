@@ -132,10 +132,7 @@ bool C_Context::getOptionString(const std::string &name, std::string &value) con
     return forEachOptionTerm(name, [&](auto &t){ value += t; });
 }
 
-void C_Context::issueError  (
-    bux::E_LogLevel         level,
-    const bux::C_SourcePos  &pos,
-    const std::string       &message    )
+void C_Context::log(bux::E_LogLevel level, const bux::C_SourcePos &pos, std::string_view message)
 {
     static const char *const KIND[] ={
         ") FATAL: ",

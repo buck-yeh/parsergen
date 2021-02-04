@@ -11,7 +11,7 @@ void parseFile(const std::string &filename, Main::C_BNFParser &parser, bux::T_Le
     std::ifstream   in(filename);
     if (!in.is_open())
     {
-        parser.m_context.issueError(LL_FATAL, bux::C_SourcePos(filename,0,0),
+        parser.m_context.log(LL_FATAL, bux::C_SourcePos(filename,0,0),
             "Fail to open the source file");
         return;
     }

@@ -82,8 +82,7 @@ public:
     const C_NfaLex *findRE(const std::string &name) const;
     bool forEachOptionTerm(const std::string &name, FH_ApplyLexTerm apply) const;
     bool getOptionString(const std::string &name, std::string &value) const;
-    void issueError(bux::E_LogLevel level, const bux::C_SourcePos &pos,
-        const std::string &message);
+    void log(bux::E_LogLevel level, const bux::C_SourcePos &pos, std::string_view message);
 
 private:
 

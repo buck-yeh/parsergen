@@ -1,7 +1,7 @@
 #include "impl.h"
 
 %ON_ERROR [[
-    $c.issueError(LL_ERROR, $pos, $message);
+    $c.log(LL_ERROR, $pos, $message);
 ]]
 
 %UPCAST_TOKEN [[

@@ -150,12 +150,20 @@
     dynamic_cast<C_IntegerLex&>(*$r).negate();
 ]]
 
+/* not allowed on left side of production
+<@keyword> ::=
+<@operator> ::=
+*/
 <Production> ::= $Nonterminal ::=           [[
     auto const t = new C_ProductionLex;
     try
     {
         t->m_Lval = bux::unlex<std::string>($1);
-        $r = t;
+        if (t->m_Lval == "@keyword" ||
+            t->m_Lval == "@operator" )
+            $p.onError($1, fmt::format("Reserved non-terminal <{}> not allowed on left side of production", t->m_Lval));
+
+        $r = t; // good or bad
     }
     catch (...)
     {

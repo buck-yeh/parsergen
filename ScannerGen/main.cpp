@@ -41,7 +41,7 @@ enum
     //
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 5,
-    VERSION_RELEASE         = 1,
+    VERSION_RELEASE         = 2,
     //
     //      Error Codes
     //
@@ -677,7 +677,7 @@ void parseFile(const std::string &filename, C_ScannerParser &parser, bux::T_LexI
     std::ifstream   in(filename);
     if (!in.is_open())
     {
-        parser.m_context.issueError(LL_FATAL, bux::C_SourcePos(filename,0,0),
+        parser.m_context.log(LL_FATAL, bux::C_SourcePos(filename,0,0),
             fmt::format(FMT_STRING("Fail to open the source file '{}'"), filename));
         return;
     }

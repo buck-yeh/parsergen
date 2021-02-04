@@ -976,7 +976,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     using namespace std::literals;
     const auto parserArgType = "bux::"s+nsLR+"::C_Parser &";
     out <<"    void getReduceInfo(size_t id, C_ReduceInfo &info) const override;\n"
-          "    void onError(" <<parserArgType <<ARG_NAME_PARSER ", const bux::C_SourcePos &pos, const std::string &message) const override;\n"
+          "    void onError(" <<parserArgType <<ARG_NAME_PARSER ", const bux::C_SourcePos &pos, std::string_view message) const override;\n"
           "}   g_policy;\n"
           "\n"
         <<actionRet <<" C_ParserPolicy::action(bux::T_StateID state, bux::T_LexID input) const\n"
@@ -1145,7 +1145,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
         if (ret.second & (1<<1))
             out <<"pos";
 
-        out <<", const std::string &";
+        out <<", std::string_view ";
         if (ret.second & (1<<2))
             out <<"message";
 
@@ -1161,7 +1161,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     }
     else
         out <<"\n"
-              "void C_ParserPolicy::onError(" <<parserArgType <<", const bux::C_SourcePos &pos, const std::string &message) const\n"
+              "void C_ParserPolicy::onError(" <<parserArgType <<", const bux::C_SourcePos &pos, std::string_view message) const\n"
               "{\n"
               "    RUNTIME_ERROR(\"{}@({},{}): {}\", pos.m_Source, pos.m_Line, pos.m_Col, message);\n"
               "}\n";

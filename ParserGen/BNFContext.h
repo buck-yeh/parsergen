@@ -52,8 +52,7 @@ public:
     bool equal(const C_Semantic &a, const C_Semantic &b) const;
     std::string expand_include(const std::string &org_path) const;
     void incWeight() { ++m_PriorWeight; }
-    void issueError(bux::E_LogLevel level, const bux::C_SourcePos &pos,
-        const std::string &message);
+    void log(bux::E_LogLevel level, const bux::C_SourcePos &pos, std::string_view  message);
     [[nodiscard]] std::optional<std::string> setClassName(C_StringList &qualified, C_TemplateArgs &targs);
     size_t tempReductionIndex(const C_IndexedProd &prod) const;
     void wrapup(const bux::C_SourcePos &pos);
