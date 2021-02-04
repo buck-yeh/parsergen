@@ -37,12 +37,12 @@ bool C_BNFContext::activateBuiltinNonterminal(const std::string &id)
     bool ret =false;
     if (id == "keyword")
     {
-        m_BuilinNonterminalMask |=BNM_KEYWORD;
+        m_BuilinNonterminalMask |= BNM_KEYWORD;
         ret =true;
     }
     else if (id == "operator")
     {
-        m_BuilinNonterminalMask |=BNM_OPERATOR;
+        m_BuilinNonterminalMask |= BNM_OPERATOR;
         ret =true;
     }
     return ret;
@@ -213,7 +213,7 @@ std::string C_BNFContext::expand_include(const std::string &org_path) const
     return bux::search_dirs(bux::expand_env(org_path.c_str()), m_IncDirs).string();
 }
 
-void C_BNFContext::issueError(bux::E_LogLevel level, const C_SourcePos &pos, const std::string &message)
+void C_BNFContext::log(bux::E_LogLevel level, const C_SourcePos &pos, std::string_view message)
 {
     static const char *const KIND[] ={
         "FATAL",
@@ -329,7 +329,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
 
     // Condition stack not emptied
     for (auto i = m_CondStack.rbegin(); i != m_CondStack.rend(); ++i)
-        issueError(LL_ERROR, i->m_pos, "No matching #endif");
+        log(LL_ERROR, i->m_pos, "No matching #endif");
 
     // Ensure every new token is added to m_GeneTokens
     for (auto &i: m_Productions)
@@ -437,12 +437,12 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
                 auto out = fmt::format(FMT_STRING("Duplicate priority assignments on id {}"), id);
                 if (id < 127)
                     out += fmt::format("(\'{}\')", asciiLiteral(char(id)));
-                issueError(LL_ERROR, pos, out);
+                log(LL_ERROR, pos, out);
             }
             break;
         case 1:
-            issueError(LL_ERROR, pos, std::get<1>(ret));
-            issueError(LL_WARNING, pos,
+            log(LL_ERROR, pos, std::get<1>(ret));
+            log(LL_WARNING, pos,
                 fmt::format(FMT_STRING("Fail to get id from the {}th priority record with token type {}"), count, HRTN(*i->m_pAttr)));
             break;
         }
@@ -452,7 +452,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
     if (m_Productions.size() != m_OntoPool.size() ||
         m_Productions.size() != m_OntoJumps.size())
     {
-        issueError(LL_FATAL, pos, "Inconsistent data for production optimization!");
+        log(LL_FATAL, pos, "Inconsistent data for production optimization!");
         return;
     }
 
@@ -491,7 +491,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
     }
     else if (rootCount > 1)
     {
-        issueError(LL_FATAL, pos, "<@> productions defined more than once!");
+        log(LL_FATAL, pos, "<@> productions defined more than once!");
         return;
     }
 
@@ -504,16 +504,20 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
             if ((m_BuilinNonterminalMask &BNM_KEYWORD) &&
                 !i.second.compare(0, 12, "TID_KEYWORD_"))
             {
-                t->m_Lval ="@keyword";
+                t->m_Lval = "@keyword";
                 t->m_Rval.emplace_back(new C_Id(i.first));
             }
             else if ((m_BuilinNonterminalMask &BNM_OPERATOR) &&
                 !i.second.compare(0, 12, "TID_LITERAL_"))
             {
-                t->m_Lval ="@operator";
+                t->m_Lval = "@operator";
                 t->m_Rval.emplace_back(new C_StrLiteral(i.first));
             }
-
+            else
+            {
+                log(LL_FATAL, pos, fmt::format("Neither keyword nor operator \"{}\"", i.first));
+                return;
+            }
             C_Semantic s;
             s.emplace_back(new C_BracketedLex(fmt::format(FMT_STRING("$r = createLex<std::string>(\"{}\");"),asciiLiteral(i.first))));
             addProduction(*t, &s);
@@ -578,7 +582,7 @@ void C_BNFContext::elseCond(const C_SourcePos &pos)
 {
     if (m_CondStack.empty() ||
         pos.m_Source != m_CondStack.back().m_pos.m_Source)
-        issueError(LL_ERROR, pos, "No matching #if");
+        log(LL_ERROR, pos, "No matching #if");
     else
     {
         auto &dst = m_CondStack.back().m_yes;
@@ -590,7 +594,7 @@ void C_BNFContext::endifCond(const C_SourcePos &pos)
 {
     if (m_CondStack.empty() ||
         pos.m_Source != m_CondStack.back().m_pos.m_Source)
-        issueError(LL_ERROR, pos, "No matching #if");
+        log(LL_ERROR, pos, "No matching #if");
     else
         m_CondStack.pop_back();
 }
