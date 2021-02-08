@@ -328,7 +328,8 @@ Seriously, these are not preprocessor directives but processed in the same pass 
 ^.^h| Directive ^.^h| Meaning
 | [source%nowrap,c++]
 #include "Foo.txt" 
-| Replace this line with lines read from file _"Foo.txt"_
+| Replace this line with lines read from file _"Foo.txt"_ +
+The link:grammar.txt[grammar definition file] of `parsergen` is pretty much a POC of this directive.
 
 | [source%nowrap,c++]
 #ifdef Bar 
