@@ -5,8 +5,8 @@
 #define ParserH
 
 #include <bux/LR1.h>
-// %HEADERS_FOR_HEADER undefined (expanded here otherwise)
-// %PRECLASSDECL undefined (expanded here otherwise)
+// Grammar %HEADERS_FOR_HEADER undefined (expanded here otherwise)
+// Grammar %PRECLASSDECL undefined (expanded here otherwise)
 
 class C_Parser: public bux::LR1::C_Parser
 {
@@ -14,7 +14,7 @@ public:
 
     // Ctor
     C_Parser();
-// %INCLASSDECL undefined (expanded here otherwise)
+// Grammar %INCLASSDECL undefined (expanded here otherwise)
 };
 
 #endif // ParserH

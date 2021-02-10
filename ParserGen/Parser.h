@@ -5,10 +5,9 @@
 #define ParserH
 
 #include <bux/LR1.h>
-
-// %HEADERS_FOR_HEADER expanded BEGIN
+// Grammar %HEADERS_FOR_HEADER begins
 #include "BNFContext.h"     // C_BNFContext
-// %HEADERS_FOR_HEADER expanded END
+// Grammar %HEADERS_FOR_HEADER ends
 
 namespace Main {
 

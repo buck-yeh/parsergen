@@ -19,9 +19,8 @@ _the_very_last_ = _literal_3a3a|_literal_3a3a3d|_literal_c_l_a_s_s_|_literal_e_l
 
 %HEADERS_FOR_CPP     [[
 #include "ParserIdDef.h"
-
-// %HEADERS_FOR_SCANNER_CPP expanded BEGIN
+// Grammar %HEADERS_FOR_SCANNER_CPP begins
 #include "BracketBalance.h"
-// %HEADERS_FOR_SCANNER_CPP expanded END
+// Grammar %HEADERS_FOR_SCANNER_CPP ends
 using namespace Main;
 ]]

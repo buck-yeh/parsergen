@@ -463,7 +463,7 @@ void C_Output::writeUserSection(std::ostream &out, const char *optionKey) const
     std::string value;
     if (m_context.getOptionString(optionKey, value))
     {
-        out <<"// User-defined %" <<optionKey <<" begins\n";
+        out <<"// Token-def %" <<optionKey <<" begins\n";
         bool first =true;
         for (const auto &i: value)
             if (i != '\r')
@@ -476,7 +476,7 @@ void C_Output::writeUserSection(std::ostream &out, const char *optionKey) const
                 }
                 out <<i;
             }
-        out <<"// User-defined %" <<optionKey <<" ends\n"
+        out <<"// Token-def %" <<optionKey <<" ends\n"
               "\n";
     }
 }

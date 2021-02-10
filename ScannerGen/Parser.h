@@ -5,10 +5,9 @@
 #define ParserH
 
 #include <bux/LR1.h>
-
-// %HEADERS_FOR_HEADER expanded BEGIN
+// Grammar %HEADERS_FOR_HEADER begins
 #include "Context.h"    // C_Context, C_StrList, C_WeightedStrList
-// %HEADERS_FOR_HEADER expanded END
+// Grammar %HEADERS_FOR_HEADER ends
 
 class C_ScannerParser: public bux::LR1::C_Parser
 {
