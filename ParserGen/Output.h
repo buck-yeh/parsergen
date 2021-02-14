@@ -14,7 +14,7 @@ enum
     //
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 6,
-    VERSION_RELEASE         = 2
+    VERSION_RELEASE         = 3
 };
 
 namespace bux { // reusability to be assessed
@@ -56,7 +56,7 @@ int findSubseq(const std::vector<T> &super, const std::vector<T> &sub)
     int ret = -1;
     if (!super.empty())
     {
-        for (auto i = super.begin(), end = super.end() - sub.size(); i <= end; ++i)
+        for (auto i = super.begin(), end = super.end() - ssize(sub); i <= end; ++i)
         {
             bool match = true;
             auto j = i;

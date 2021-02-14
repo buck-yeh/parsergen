@@ -5,9 +5,9 @@
 ]]
 
 %UPCAST_TOKEN [[
-    if (isascii($token) && !iscntrl($token) && !isalnum($token) && !isspace($token))
+    if (const auto it = int($token); isascii(it) && !iscntrl(it) && !isalnum(it) && !isspace(it))
     {
-        $attr.assign(bux::createLex<std::string>(1,char($token)), true);
+        $attr.assign(bux::createLex<std::string>(1u,char($token)), true);
         $token = TID_LEX_Operator;
         return true;
     }

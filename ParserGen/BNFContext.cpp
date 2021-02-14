@@ -436,7 +436,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
             {
                 auto out = fmt::format(FMT_STRING("Duplicate priority assignments on id {}"), id);
                 if (id < 127)
-                    out += fmt::format("(\'{}\')", asciiLiteral(char(id)));
+                    out += fmt::format("(\'{}\')", asciiLiteral(id));
                 log(LL_ERROR, pos, out);
             }
             break;

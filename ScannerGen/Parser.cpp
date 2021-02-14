@@ -1078,7 +1078,7 @@ void _reduce_11(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT
 {
     bux::C_NewNode<C_NfaLex> ret;
     for (auto i: bux::unlex<std::string>(_geT_(0)))
-        ret->m_NFA.append(C_LexSet(i));
+        ret->m_NFA.append(C_LexSet(uint8_t(i)));
 
     _reT_ = ret;
 }
@@ -1475,9 +1475,9 @@ bux::T_StateID C_ParserPolicy::nextState(bux::T_StateID state, bux::T_LexID inpu
 bool C_ParserPolicy::changeToken(T_LexID &token, C_LexPtr &attr) const
 {
     // Grammar %UPCAST_TOKEN begins
-    if (isascii(token) && !iscntrl(token) && !isalnum(token) && !isspace(token))
+    if (const auto it = int(token); isascii(it) && !iscntrl(it) && !isalnum(it) && !isspace(it))
     {
-        attr.assign(bux::createLex<std::string>(1,char(token)), true);
+        attr.assign(bux::createLex<std::string>(1u,char(token)), true);
         token = TID_LEX_Operator;
         return true;
     }

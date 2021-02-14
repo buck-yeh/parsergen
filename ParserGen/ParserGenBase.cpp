@@ -29,7 +29,7 @@ bool getNonterminalID(const std::string &str, std::string &dst)
 bool isKeyword(const std::string &str)
 {
     for (auto c: str)
-        if (!isascii(c) || c != '_' && !isalnum(c))
+        if (!isascii(c) || (c != '_' && !isalnum(c)))
             return false;
 
     return true;
@@ -38,16 +38,15 @@ bool isKeyword(const std::string &str)
 std::string literalSuffix(const std::string &s)
 {
     std::string ret;
-    for (auto i =s.begin(); i != s.end(); ++i)
+    for (auto c: s)
     {
-        unsigned char c =*i;
         if (isascii(c) && isalnum(c))
         {
-            ret +=c;
-            ret +='_';
+            ret += c;
+            ret += '_';
         }
         else
-            bux::addAsHex(ret, c);
+            bux::addAsHex(ret, (uint8_t)c);
     }
     return ret;
 }
@@ -238,7 +237,7 @@ std::string C_ParserInfo::outputId(const I_ProductionTerm *term) const
         idstr.assign("TID_LEX_").append(lex->m_Var);
     }
     else if (auto const slex =dynamic_cast<const C_StrLiteral*>(term))
-        return std::string(1,'\'').append(asciiLiteral(slex->m_Str[0])).append(1,'\'');
+        return std::string(1u,'\'').append(asciiLiteral(uint8_t(slex->m_Str[0]))).append(1u,'\'');
     else
         RUNTIME_ERROR("{}Fail to produce output id for {}", idstr, HRTN(*term));
 

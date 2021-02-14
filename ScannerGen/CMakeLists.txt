@@ -1,7 +1,6 @@
-#set(CMAKE_CXX_COMPILER "clang++")
+#set(CMAKE_CXX_COMPILER_ID "Clang")
 
 include_directories("../../bux/include" "../../CBrackets")
-string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Wno-parentheses -Wno-unknown-pragmas -Wno-maybe-uninitialized -Ofast -std=c++2a")
 
 add_executable(scannergen
     Context.cpp
@@ -11,10 +10,10 @@ add_executable(scannergen
     spec2charset.cpp
     )
 #target_compile_options(scannergen PRIVATE -O0 -g3)
-target_link_libraries(scannergen bracketPairing bux fmt)
+target_link_libraries(scannergen bracketPairing bux fmt stdc++)
 
 add_executable(handycharset
     HandyCharset.cpp
     spec2charset.cpp
     )
-target_link_libraries(handycharset bux fmt)
+target_link_libraries(handycharset bux fmt stdc++)

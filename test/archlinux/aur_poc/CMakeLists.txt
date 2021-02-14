@@ -10,4 +10,4 @@ add_executable(calci
     Parser.cpp
     Scanner.cpp
     )
-target_link_libraries(calci bux fmt)
+target_link_libraries(calci bux fmt stdc++)

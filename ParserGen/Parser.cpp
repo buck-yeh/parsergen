@@ -566,7 +566,7 @@ void _reduce_1(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
 
     if (auto targs = bux::tryUnlex<C_TemplateArgs>(_geT_(2)))
     {
-        if (auto err = c.setClassName(bux::unlex<C_StringList>(_geT_(1)), *targs)) [[unlikely]]
+        if (auto err = c.setClassName(bux::unlex<C_StringList>(_geT_(1)), *targs))
             _paRSeR_.onError(_geT_(0), *err);
     }
     else
@@ -609,7 +609,7 @@ void _reduce_4(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
         return;
 
     auto &prod = dynamic_cast<C_Production&>(*_geT_(0));
-    if (!c.addProduction(prod, bux::tryUnlex<C_Semantic>(_geT_(1)))) [[unlikely]]
+    if (!c.addProduction(prod, bux::tryUnlex<C_Semantic>(_geT_(1))))
         _paRSeR_.onError(_geT_(0), "Production re-defined:\n"
                              "\t" + prod.str());
 }
@@ -1148,9 +1148,9 @@ bux::T_StateID C_ParserPolicy::nextState(bux::T_StateID state, bux::T_LexID inpu
 bool C_ParserPolicy::changeToken(T_LexID &token, C_LexPtr &attr) const
 {
     // Grammar %UPCAST_TOKEN begins
-    if (isascii(token) && !iscntrl(token) && !isalnum(token) && !isspace(token))
+    if (const auto it = int(token); isascii(it) && !iscntrl(it) && !isalnum(it) && !isspace(it))
     {
-        attr.assign(bux::createLex<std::string>(1,char(token)), true);
+        attr.assign(bux::createLex<std::string>(1u,char(token)), true);
         token = TID_LEX_Operator;
         return true;
     }

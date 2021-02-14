@@ -41,7 +41,7 @@ enum
     //
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 5,
-    VERSION_RELEASE         = 2,
+    VERSION_RELEASE         = 3,
     //
     //      Error Codes
     //
@@ -257,11 +257,11 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
     if (!m_NS.empty())
     {
         out <<"using namespace ";
-        first =true;
+        first = true;
         for (const auto &i: m_NS)
         {
             if (first)
-                first =false;
+                first = false;
             else
                 out <<"::";
 
@@ -291,33 +291,30 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
     for (const auto &i: rawTrans)
     {
         C_Lex2State cookedMap;
-        first =true;
-        bux::T_LexID prevUB;
+        std::optional<bux::T_LexID> prevUB;
         for (const auto &j: i.second)
         {
-            if (first)
-                first =false;
-            else if (++prevUB < j.first.first)
-                cookedMap.emplace_back(prevUB, std::numeric_limits<int>::max());
+            if (prevUB && ++*prevUB < j.first.first)
+                cookedMap.emplace_back(*prevUB, std::numeric_limits<int>::max());
 
             cookedMap.emplace_back(j.first.first, j.second);
             prevUB = j.first.second;
         }
-        if (prevUB != std::numeric_limits<bux::T_LexID>::max())
-            cookedMap.emplace_back(prevUB+1, std::numeric_limits<int>::max());
+        if (const auto t = prevUB.value(); t != std::numeric_limits<bux::T_LexID>::max())
+            cookedMap.emplace_back(t+1u, std::numeric_limits<int>::max());
 
-        cookedTrans[i.first] = cookedMaps.insert(C_StateMap2Index::value_type(cookedMap,0)).first;
+        cookedTrans[i.first] = cookedMaps.insert(std::pair{cookedMap,0}).first;
     }
 
     if (!cookedMaps.empty())
     {
         out <<"// ASCII TABLE:";
-        for (int i =0; i < 128; ++i)
+        for (uint32_t i = 0; i < 128; ++i)
         {
             if (i %0x20 == 0)
-                out <<"\n// " <<std::hex <<std::setw(2) <<i <<std::dec <<": ";
+                fmt::print(out, "\n// {:2x}: ", i);
 
-            out <<bux::asciiLiteral(char(i));
+            out <<bux::asciiLiteral(i);
         }
 
         int tag =0;
@@ -332,8 +329,8 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
             {
                 out <<(first?'{':',') <<"\n"
                       "    {";
-                if (isascii(j.first))
-                    out <<'\'' <<bux::asciiLiteral(char(j.first)) <<"\', ";
+                if (isascii(int(j.first)))
+                    out <<'\'' <<bux::asciiLiteral(j.first) <<"\', ";
                 else
                     out <<"0x" <<std::hex <<j.first <<std::dec <<", ";
 
@@ -366,7 +363,7 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
     writeUserSection(out, "LOCAL_ACTION_DEFS");
     if (!stateMap.empty())
     {
-        const size_t ARR_SIZE = stateMap.crbegin()->first + 1;
+        const auto ARR_SIZE = stateMap.crbegin()->first + 1;
         out <<"\n"
               "constinit const C_" <<m_Prefix <<"Scanner::C_StateRec STATES[" <<ARR_SIZE <<"] = {\n";
         int stopState = 0;
@@ -378,7 +375,7 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
             const auto val0 = std::get<0>(i.second);
             const auto val2 = std::get<2>(i.second);
             out <<"    { " <<(val0.empty()?"nullptr":val0) <<",\t" <<(val2.empty()?"nullptr":val2)
-                <<(i.first + 1U < ARR_SIZE? "\t},  ": "\t}}; ") <<"// " <<(stopState++) <<'\n';
+                <<(i.first + 1 < ARR_SIZE? "\t},  ": "\t}}; ") <<"// " <<(stopState++) <<'\n';
         }
         out <<"\n"
               "constinit const " <<m_Limits.inputType() <<" GOTO_SIZE[" <<ARR_SIZE <<"] = {\n";
@@ -389,7 +386,7 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
                 out <<"    0,\t// " <<(stopState++) <<'\n';
 
             out <<"    " <<std::get<1>(i.second)
-                <<(i.first + 1U < ARR_SIZE? ",": "};") <<"\t// " <<(stopState++) <<'\n';
+                <<(i.first + 1 < ARR_SIZE? ",": "};") <<"\t// " <<(stopState++) <<'\n';
         }
     }
     if (!firstFits.empty())
@@ -464,13 +461,13 @@ void C_Output::writeUserSection(std::ostream &out, const char *optionKey) const
     if (m_context.getOptionString(optionKey, value))
     {
         out <<"// Token-def %" <<optionKey <<" begins\n";
-        bool first =true;
+        bool first = true;
         for (const auto &i: value)
             if (i != '\r')
             {
                 if (first)
                 {
-                    first =false;
+                    first = false;
                     if (i == '\n')
                         continue;
                 }
@@ -542,7 +539,7 @@ void FC_GetLimits::operator()(int state, const C_LexSet &inputs, int)
     for (auto i: inputs)
     {
         if (i.first < m_InputMin)
-            m_InputMin =i.first;
+            m_InputMin = i.first;
         if (i.second > m_InputMax && i.second != std::numeric_limits<bux::T_LexID>::max())
             m_InputMax =i.second;
     }

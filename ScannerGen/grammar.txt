@@ -90,7 +90,7 @@ right  ( ) { }
 <RegExprTerm> ::= $String           [[
     bux::C_NewNode<C_NfaLex> ret;
     for (auto i: bux::unlex<std::string>($1))
-        ret->m_NFA.append(C_LexSet(i));
+        ret->m_NFA.append(C_LexSet(uint8_t(i)));
 
     $r = ret;
 ]]
@@ -318,9 +318,9 @@ struct C_LexListLex: bux::I_LexAttr
 ]]
 
 %UPCAST_TOKEN [[
-    if (isascii($token) && !iscntrl($token) && !isalnum($token) && !isspace($token))
+    if (const auto it = int($token); isascii(it) && !iscntrl(it) && !isalnum(it) && !isspace(it))
     {
-        $attr.assign(bux::createLex<std::string>(1,char($token)), true);
+        $attr.assign(bux::createLex<std::string>(1u,char($token)), true);
         $token = TID_LEX_Operator;
         return true;
     }

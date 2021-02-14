@@ -265,7 +265,7 @@ void FC_CreateClosure::operator()(C_StateItems &dst) const
                             changed = true;
 
                         const auto n =la.size();
-                        for (auto k = seq.begin()+item.second; ++k != seq.end();)
+                        for (auto k = seq.begin()+std::ptrdiff_t(item.second); ++k != seq.end();)
                             if (auto const nt = dynamic_cast<C_Nonterminal*>(*k))
                             {
                                 auto &attrs =getAttr(nt->m_id);
@@ -433,8 +433,8 @@ FC_LessGotoKey::FC_LessGotoKey(const C_ParserInfo &parsed): m_LessTerm(parsed)
 
 bool FC_LessGotoKey::operator()(const C_GotoKey &a, const C_GotoKey &b) const
 {
-    return  a.first->m_id < b.first->m_id ||
-            a.first->m_id == b.first->m_id && m_LessTerm(a.second,b.second);
+    return  a.first->m_id < b.first->m_id || (
+            a.first->m_id == b.first->m_id && m_LessTerm(a.second,b.second));
 }
 
 C_GotoMap::C_GotoMap(const C_ParserInfo &parsed):
