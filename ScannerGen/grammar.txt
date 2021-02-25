@@ -42,7 +42,8 @@ right  ( ) { }
         action->m_1stFit = val.m_1stFit;
         val.m_NFA.setAction(std::move(*action));
     }
-    c.addRE(name, val);
+    if (!c.addRE(name, val))
+        c.log(LL_WARNING, $1, fmt::format("Overwrite token definition of \"{}\"", name));
     t.disown(); // val (aka *t) has been taken as &val the pointer.
 ]]
 

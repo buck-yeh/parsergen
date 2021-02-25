@@ -191,10 +191,12 @@ C_Output::C_Output(const C_LexDfa &dfa, C_Context &context):
 {
     context.forEachOptionTerm("NAMESPACE", FC_CollectNS(m_NS));
 
-    if (context.getOptionString("NAMEPREFIX",m_Prefix))
+    if (auto t = context.getOptionString("NAMEPREFIX"))
     {
-        if (!bux::isIdentifier(m_Prefix))
-            RUNTIME_ERROR("Illegal prefix contents: {}", m_Prefix);
+        if (!bux::isIdentifier(*t))
+            RUNTIME_ERROR("Prefix is not an identifier: {}", *t);
+
+        m_Prefix = *t;
     }
 
     m_buxNS = "bux::";
@@ -208,7 +210,9 @@ C_Output::C_Output(const C_LexDfa &dfa, C_Context &context):
                .append(m_Limits.stateType())
                .append(1, ',');
     std::string chType;
-    if (!m_context.getOptionString("CHAR_TYPE", chType))
+    if (auto t = m_context.getOptionString("CHAR_TYPE"))
+        chType = *t;
+    else
     {
         chType = m_buxNS + "C_LexUTF32";
         C_StrList value;
@@ -217,9 +221,8 @@ C_Output::C_Output(const C_LexDfa &dfa, C_Context &context):
     }
     m_baseClass += m_buxNS.empty() && !chType.compare(0, 5, "bux::")? chType.substr(5): chType;
 
-    std::string traitsType;
-    if (m_context.getOptionString("CHAR_TRAITS_TYPE", traitsType))
-        m_baseClass.append(1,',').append(traitsType);
+    if (auto traitsType = m_context.getOptionString("CHAR_TRAITS_TYPE"))
+        m_baseClass.append(1,',').append(*traitsType);
     m_baseClass += '>';
 }
 
@@ -457,12 +460,11 @@ void C_Output::writeHeader(std::ostream &out, const std::string &base) const
 
 void C_Output::writeUserSection(std::ostream &out, const char *optionKey) const
 {
-    std::string value;
-    if (m_context.getOptionString(optionKey, value))
+    if (auto value = m_context.getOptionString(optionKey))
     {
         out <<"// Token-def %" <<optionKey <<" begins\n";
         bool first = true;
-        for (const auto &i: value)
+        for (const auto &i: *value)
             if (i != '\r')
             {
                 if (first)

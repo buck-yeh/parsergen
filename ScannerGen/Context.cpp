@@ -16,23 +16,28 @@ std::string expand(const C_StrList &src, const C_Context &c)
     for (auto &i :src)
     {
         std::string value;
-        if (!c.getOptionString(i, value))
+        if (auto t = c.getOptionString(i))
+            value = *t;
+        else
             value = i;
-        if (value.empty())
-            continue;
 
-        if (!ret.empty() && isalnum(ret.back()) && isalnum(value.front()))
-            ret += ' ';
+        if (!value.empty())
+        {
+            if (!ret.empty() && isalnum(ret.back()) && isalnum(value.front()))
+                ret += ' ';
 
-        ret += value;
+            ret += value;
+        }
     }
     return ret;
 }
 
 std::string getOptionString(const C_Context &c, const std::string &name, const std::string &defString)
 {
-    std::string ret;
-    return c.getOptionString(name, ret)? ret: defString;
+    if (auto ret = c.getOptionString(name))
+        return *ret;
+
+    return defString;
 }
 
 //
@@ -59,10 +64,16 @@ void C_Context::addOption(const std::string &name, C_StrList &value)
         m_Options[name].swap(value);
 }
 
-void C_Context::addRE(const std::string &name, C_NfaLex &val)
+bool C_Context::addRE(const std::string &name, C_NfaLex &val)
 {
-    m_PoolRE[name] = &val;
+    const auto ret = m_PoolRE.try_emplace(name, &val);
+    if (!ret.second)
+    {
+        delete ret.first->second;
+        ret.first->second = &val;
+    }
     m_BuildName = name; // The last added is always assumed as the build root
+    return ret.second;
 }
 
 bool C_Context::eraseRE(const std::string &name)
@@ -127,14 +138,18 @@ bool C_Context::forEachOptionTerm_(const std::string &name, C_StrList &fifo, FH_
     return false;
 }
 
-bool C_Context::getOptionString(const std::string &name, std::string &value) const
+std::optional<std::string> C_Context::getOptionString(const std::string &name) const
 {
-    return forEachOptionTerm(name, [&](auto &t){ value += t; });
+    std::string value;
+    if (forEachOptionTerm(name, [&](auto &t){ value += t; }))
+        return value;
+
+    return {};
 }
 
 void C_Context::log(bux::E_LogLevel level, const bux::C_SourcePos &pos, std::string_view message)
 {
-    static const char *const KIND[] ={
+    constinit static const char *const KIND[] ={
         ") FATAL: ",
         ") ERROR: ",
         ") WARNING: ",
@@ -142,7 +157,7 @@ void C_Context::log(bux::E_LogLevel level, const bux::C_SourcePos &pos, std::str
         ") VERBOSE: "
     };
     fmt::print(FMT_STRING("{}({},{}{}{}\n"), pos.m_Source, pos.m_Line, pos.m_Col, KIND[level], message);
-    static const size_t LIMIT[] ={
+    constinit static const size_t LIMIT[] ={
         0,
         10,
         100,

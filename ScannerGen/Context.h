@@ -7,6 +7,7 @@
 #include "bux/Logger.h"     // bux::E_LogLevel
 #include <filesystem>       // std::filesystem::path
 #include <map>              // std::map<>
+#include <optional>         // std::optional<>
 #include <vector>           // std::vector<>
 
 #undef min
@@ -75,13 +76,13 @@ public:
     explicit C_Context(const C_Paths &inc_dirs): m_IncDirs(inc_dirs) {}
     ~C_Context();
     void addOption(const std::string &name, C_StrList &value);
-    void addRE(const std::string &name, C_NfaLex &val);
-    bool eraseRE(const std::string &name);
-    std::string expand_include(const std::string &org_path) const;
-    const C_LexNfa *finalExpr() const;
-    const C_NfaLex *findRE(const std::string &name) const;
+    [[nodiscard]]bool addRE(const std::string &name, C_NfaLex &val);
+    [[nodiscard]]bool eraseRE(const std::string &name);
+    [[nodiscard]]std::string expand_include(const std::string &org_path) const;
+    [[nodiscard]]const C_LexNfa *finalExpr() const;
+    [[nodiscard]]const C_NfaLex *findRE(const std::string &name) const;
     bool forEachOptionTerm(const std::string &name, FH_ApplyLexTerm apply) const;
-    bool getOptionString(const std::string &name, std::string &value) const;
+    [[nodiscard]]std::optional<std::string> getOptionString(const std::string &name) const;
     void log(bux::E_LogLevel level, const bux::C_SourcePos &pos, std::string_view message);
 
 private:
