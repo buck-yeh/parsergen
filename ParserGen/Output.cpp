@@ -356,7 +356,7 @@ FC_Output::FC_Output        (
     }
 }
 
-bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
+bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool always_overwite) const
 {
     if (!m_readySoFar)
         return false;
@@ -387,7 +387,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     //      Output ID def header
     //
     path.replace_extension() += "IdDef.h";
-    if (!bux::testWritability(path.c_str()))
+    if (!always_overwite && !bux::testWritability(path.c_str()))
         return false;
     std::ofstream   out{path};
     if (!out.is_open())
@@ -414,8 +414,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     }
     else
     {
-        out <<"#ifndef " <<base <<"IdDef_H\n"
-              "#define " <<base <<"IdDef_H\n"
+        out <<"#pragma once\n"
               "\n"
               "#include <bux/LexBase.h>    // bux::TOKENGEN_LB\n";
         if (!m_Parsed.idSet())
@@ -486,8 +485,6 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
         out <<"\n"
               "};\n";
         m_Parsed.leaveNamespaces(out);
-        out <<"\n"
-              "#endif // " <<base <<"IdDef_H\n";
     }
     out.close();
 
@@ -507,7 +504,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     //
     path = outputPath;
     path.replace_extension(".h");
-    if (!bux::testWritability(path.c_str()))
+    if (!always_overwite && !bux::testWritability(path.c_str()))
         return false;
     out.open(path);
     if (!out.is_open())
@@ -518,10 +515,9 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     const char *const nsLR = m_needGLR? "GLR": "LR1";
     fmt::print(out, FMT_STRING(
         "{0}"
-        "#ifndef {1}H\n"
-        "#define {1}H\n"
+        "#pragma once\n"
         "\n"
-        "#include <bux/{2}.h>\n"), m_Banner, base, nsLR);
+        "#include <bux/{1}.h>\n"), m_Banner, nsLR);
     writeUserSection(out, "HEADERS_FOR_HEADER");
     m_Parsed.enterNamespaces(out);
     writeUserSection(out, "PRECLASSDECL");
@@ -567,8 +563,6 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     writeUserSection(out, "INCLASSDECL");
     out <<"};\n";
     m_Parsed.leaveNamespaces(out);
-    out <<"\n"
-          "#endif // " <<base <<"H\n";
     out.close();
 
     //
@@ -576,7 +570,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath) const
     //
     path = outputPath;
     path.replace_extension(".cpp");
-    if (!bux::testWritability(path.c_str()))
+    if (!always_overwite && !bux::testWritability(path.c_str()))
         return false;
     out.open(path);
     if (!out.is_open())

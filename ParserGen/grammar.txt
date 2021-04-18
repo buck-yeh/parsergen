@@ -18,5 +18,5 @@ Nonterminal     = '<' {'@'} identifier '>' | "<@>"  >>bux::createPlainString<TID
 ]]
 //%SHOW_UNDEFINED    // Massive includes and this line are for demonstration and selftest
 
-%EXTRA_TOKENS   [[dec_num|hex_num|identifier|c_char|c_str|spaces|bracketed|c_comment|line_comment]]
+%EXTRA_TOKENS   [[dec_num|hex_num|identifier|c_char|c_str|spaces|bracketed|c_comment|cpp_comment]]
 %EXTRA_TOKENS   [[LexSymbol|Nonterminal|CompoundSymbol]]

@@ -1,5 +1,3 @@
-//#ifndef RE_Suite_txt
-//#define RE_Suite_txt
 
 //
 //      Building Blocks
@@ -23,7 +21,7 @@ identifier      = alpha (alpha|dec_digit)*      >>bux::createPlainString<TID_LEX
 spaces          = [" \r\t\v\f"]+                >>bux::createNothing<TID_LEX_Spaces,CHAR_TYPE>
 c_char          = '\'' (c_alphabet|'\"') '\''   >>bux::createCharLiteral<TID_LEX_Key,CHAR_TYPE>
 c_str           = '\"' (c_alphabet|'\'')* '\"'  >>bux::createEscapeString<TID_LEX_String,CHAR_TYPE,1,1>
-line_comment    = "//" [^'\n']* '\n'            >>bux::createNothing<'\n',CHAR_TYPE>
+cpp_comment    = "//" [^'\n']* '\n'            >>bux::createNothing<'\n',CHAR_TYPE>
 bracketed       = "[[" []* "]]"                 >>bux::createPlainString<TID_LEX_Bracketed,CHAR_TYPE,2,2> @if bux::bracketsMatched
 c_comment       = "/*" []* "*/"                 >>bux::createNothing<TID_LEX_Spaces,CHAR_TYPE>
 win32_newline   = "\r\n"                        >>bux::createNothing<'\n',CHAR_TYPE>
@@ -33,5 +31,3 @@ CompoundSymbol  = symbol (symbol|["\'\""])* symbol >>bux::createPlainString<TID_
 //      The Target
 //
 //all = dec_num | oct_num | hex_num | identifier | spaces | c_char | c_str
-
-//#endif // RE_Suite_txt

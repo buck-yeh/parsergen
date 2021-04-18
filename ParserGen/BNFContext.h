@@ -1,5 +1,4 @@
-#ifndef BNFContextH
-#define BNFContextH
+#pragma once
 
 #include "ParserGenBase.h"  // C_ParserInfo, ...
 //-------------------------------------------------------
@@ -134,5 +133,3 @@ class C_ProductionLex: public C_Production, public bux::I_LexAttr
 };
 
 } // namespace ParserGen
-
-#endif // BNFContextH

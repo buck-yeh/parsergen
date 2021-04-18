@@ -37,11 +37,11 @@ const char USERPREFIX[] ="create_";
 enum
 {
     //
-    //      Version Macros
+    //      Major.Minor.Release
     //
     VERSION_MAJOR           = 1,
-    VERSION_MINOR           = 5,
-    VERSION_RELEASE         = 3,
+    VERSION_MINOR           = 6,
+    VERSION_RELEASE         = 0,
     //
     //      Error Codes
     //
@@ -89,7 +89,7 @@ public:
     // Nonvirtuials
     C_Output(const C_LexDfa &dfa, C_Context &context);
     void writeCpp(std::ostream &out, const std::string &base) const;
-    void writeHeader(std::ostream &out, const std::string &base) const;
+    void writeHeader(std::ostream &out) const;
 
 private:
 
@@ -436,12 +436,11 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
     leaveNamespaces(out);
 }
 
-void C_Output::writeHeader(std::ostream &out, const std::string &base) const
+void C_Output::writeHeader(std::ostream &out) const
 {
     out <<banner()
         <<"\n"
-          "#ifndef " <<base <<"H\n"
-          "#define " <<base <<"H\n"
+          "#pragma once\n"
           "\n";
 
     out <<"#include <bux/ImplScanner.h>\n";
@@ -454,8 +453,6 @@ void C_Output::writeHeader(std::ostream &out, const std::string &base) const
           "    C_" <<m_Prefix <<"Scanner(" <<m_buxNS <<"I_Parser &parser);\n"
           "};\n";
     leaveNamespaces(out);
-    out <<"\n"
-          "#endif // " <<base <<"H\n";
 }
 
 void C_Output::writeUserSection(std::ostream &out, const char *optionKey) const
@@ -575,11 +572,16 @@ int main(int argc, const char *argv[])
         "  3. If no <REn> file is given, standard input is assumed.\n"),
         VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
     C_Paths         inc_dirs;
+    bool            yes2all{};
     ezargs.position_args({"ScannerBase", "RE1", "RE2"}, {1,2}, true)
           .add_flag("include_dir", 'I', "Search path of #include directive",
                     [&](auto s){
                         bux::C_IMemStream in{s};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
+                    })
+          .add_flag("yes_to_all", 'a', "Quietly overwrite all existing output files",
+                    [&]{
+                        yes2all = true;
                     });
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
@@ -630,7 +632,7 @@ int main(int argc, const char *argv[])
         const fs::path      path(argv[1]);
         const std::string   base =path.stem().generic_string();
         const std::string   path_h =path.string()+".h";
-        if (!bux::testWritability(path_h.c_str()))
+        if (!yes2all && !bux::testWritability(path_h.c_str()))
             return LEVEL_TEST_H;
         std::ofstream out(path_h.c_str());
         if (!out.is_open())
@@ -641,12 +643,12 @@ int main(int argc, const char *argv[])
         state = 6;
         C_Output   output(dfa, c);
         state = 7;
-        output.writeHeader(out, base);
+        output.writeHeader(out);
         out.close();
 
         state = 8;
         const auto  path_cpp = path.string()+".cpp";
-        if (!bux::testWritability(path_cpp.c_str()))
+        if (!yes2all && !bux::testWritability(path_cpp.c_str()))
             return LEVEL_TEST_CPP;
 
         out.open(path_cpp.c_str());
@@ -673,6 +675,11 @@ int main(int argc, const char *argv[])
 
 void parseFile(const std::string &filename, C_ScannerParser &parser, bux::T_LexID endToken)
 {
+    static std::set<std::string>    g_included;
+    if (g_included.contains(filename))
+        return;
+
+    g_included.emplace(filename);
     std::ifstream   in(filename);
     if (!in.is_open())
     {

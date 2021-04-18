@@ -63,11 +63,16 @@ int main(int argc, const char* argv[])
         "  3. Generated token definitions are written to <TokensOutput> to feed scannergen\n")
         , VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
     C_Paths         inc_dirs;
+    bool            yes2all{};
     ezargs.position_args({"Grammar","Filename","TokensOutput"})
           .add_flag("include_dir", 'I', "Search path of #include directive within <Grammar>",
                     [&](auto s){
                         bux::C_IMemStream in{s};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
+                    })
+          .add_flag("yes_to_all", 'a', "Quietly overwrite all existing output files",
+                    [&]{
+                        yes2all = true;
                     });
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
@@ -150,7 +155,7 @@ int main(int argc, const char* argv[])
 
         // Output result
         FC_Output output{c, stateMap, actionMap, argv[1]};
-        if (!output(argv[2], argv[3]))
+        if (!output(argv[2], argv[3], yes2all))
             return MAIN_OUTPUT_ERROR;
 
         if (c.checkUnusedOptions() ||

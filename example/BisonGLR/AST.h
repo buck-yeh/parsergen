@@ -1,5 +1,4 @@
-#ifndef AST_h_
-#define AST_h_
+#pragma once
 
 #include "bux/GLR.h"
 
@@ -28,5 +27,3 @@ struct C_TypeDecl: bux::I_LexAttr
 };
 
 typedef std::vector<std::string> C_IdList;
-
-#endif // AST_h_

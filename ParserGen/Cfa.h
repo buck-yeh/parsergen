@@ -1,5 +1,4 @@
-#ifndef CfaH
-#define CfaH
+#pragma once
 
 #include "ParserGenBase.h"
 
@@ -31,5 +30,3 @@ struct C_GotoMap: std::map<C_GotoKey,const C_State*,FC_LessGotoKey>
 //      Functions
 //
 size_t makeCfa(const C_ParserInfo &parsed, C_States &states, C_GotoMap &stateMap);
-
-#endif // CfaH

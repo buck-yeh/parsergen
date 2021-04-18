@@ -3,9 +3,15 @@
 //--------------------------------------------------------------------
 #include <fmt/core.h>   // fmt::print()
 #include <fstream>      // std::ifstream
+#include <set>          // std::set<>
 
 void parseFile(const std::string &filename, Main::C_BNFParser &parser, bux::T_LexID endToken)
 {
+    static std::set<std::string>    g_included;
+    if (g_included.contains(filename))
+        return;
+
+    g_included.emplace(filename);
     fmt::print("About to parse '{}' ...\n", filename);
 
     std::ifstream   in(filename);

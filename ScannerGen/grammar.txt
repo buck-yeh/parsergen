@@ -339,5 +339,5 @@ EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec
 ]]
 
 %EXTRA_TOKENS   [[oct_num|dec_num|hex_num|identifier|spaces|c_char|c_str|bracketed|EasyCharset]]
-%EXTRA_TOKENS   [[c_comment|line_comment]]
+%EXTRA_TOKENS   [[c_comment|cpp_comment]]
 //%SHOW_UNDEFINED

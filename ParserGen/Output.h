@@ -1,5 +1,4 @@
-#ifndef OutputH
-#define OutputH
+#pragma once
 
 #include "ActionMap.h"      // C_ActionMap
 #include "ParserGenBase.h"  // C_ParserInfo
@@ -10,11 +9,11 @@
 enum
 {
     //
-    //      Version Macros
+    //      Major.Minor.Release
     //
     VERSION_MAJOR           = 1,
-    VERSION_MINOR           = 6,
-    VERSION_RELEASE         = 3
+    VERSION_MINOR           = 7,
+    VERSION_RELEASE         = 0
 };
 
 namespace bux { // reusability to be assessed
@@ -152,7 +151,7 @@ public:
     // Nonvirtuals
     FC_Output(const C_ParserInfo &parsed, const C_GotoMap &stateMap,
         const C_ActionMap &actionMap, const std::string &grammarPath);
-    bool operator()(const char *outputPath, const char *tokenPath) const;
+    bool operator()(const char *outputPath, const char *tokenPath, bool always_overwite) const;
 
 private:
 
@@ -221,5 +220,3 @@ private:
     size_t serial(const C_Production*) const;
     void writeUserSection(std::ostream &out, const char *optionKey) const;
 };
-
-#endif // OutputH

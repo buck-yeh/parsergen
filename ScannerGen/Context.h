@@ -1,6 +1,3 @@
-#ifndef ContextH
-#define ContextH
-
 #include "bux/FA.h"         // bux::C_NFA<>
 #include "bux/Intervals.h"  // bux::C_Intervals<>
 #include "bux/LexBase.h"    // bux::T_LexID
@@ -100,5 +97,3 @@ private:
 //      Functions
 //
 std::string expand(const C_StrList &src, const C_Context &c);
-
-#endif // ContextH

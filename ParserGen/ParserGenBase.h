@@ -1,5 +1,4 @@
-#ifndef ParserGenBaseH
-#define ParserGenBaseH
+#pragma once
 
 #include "ParserIdDef.h"    // Main::TID_xxxx
 #include <functional>       // std::function<>
@@ -323,5 +322,3 @@ std::string ensureNoConcat(const C_Semantic &src);
 
 } // namespace ParserGen
 using namespace ParserGen;
-
-#endif // ParserGenBaseH

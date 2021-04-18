@@ -6,7 +6,7 @@ EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec
 _literal_3e3e 	= ">>"	>>bux::createNothing<TID_LITERAL_3e3e,CHAR_TYPE> @+1
 _literal_i_f_ 	= "if"	>>bux::createNothing<TID_KEYWORD_if,CHAR_TYPE> @+1
 _literal_i_n_c_l_u_d_e_ 	= "include"	>>bux::createNothing<TID_KEYWORD_include,CHAR_TYPE> @+1
-_the_very_last_ = _literal_3e3e|_literal_i_f_|_literal_i_n_c_l_u_d_e_ | oct_num|dec_num|hex_num|identifier|spaces|c_char|c_str|bracketed|EasyCharset|c_comment|line_comment
+_the_very_last_ = _literal_3e3e|_literal_i_f_|_literal_i_n_c_l_u_d_e_ | oct_num|dec_num|hex_num|identifier|spaces|c_char|c_str|bracketed|EasyCharset|c_comment|cpp_comment
 
 %HEADERS_FOR_CPP     [[
 #include "ParserIdDef.h"

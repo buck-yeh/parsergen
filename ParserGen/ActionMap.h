@@ -1,5 +1,4 @@
-#ifndef ActionMapH
-#define ActionMapH
+#pragma once
 
 #include "ParserGenBase.h"
 
@@ -28,5 +27,3 @@ typedef std::vector<std::pair<size_t,const I_Terminal*>> C_ActionShifts;
 //      Functions
 //
 C_ActionMap makeActionMap(const C_ParserInfo &parsed, const C_States &states, C_ActionShifts &loserShits);
-
-#endif // ActionMapH

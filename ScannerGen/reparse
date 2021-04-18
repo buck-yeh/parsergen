@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 TOOL_ROOT=..
-$TOOL_ROOT/ParserGen/parsergen grammar.txt Parser tokens.txt && \
-$TOOL_ROOT/ScannerGen/scannergen Scanner tokens.txt
+$TOOL_ROOT/ParserGen/parsergen grammar.txt Parser tokens.txt -a && \
+$TOOL_ROOT/ScannerGen/scannergen Scanner tokens.txt -a
