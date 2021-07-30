@@ -51,7 +51,7 @@ enum
 
 int main(int argc, const char* argv[])
 {
-    bux::C_EZArgs   ezargs{fmt::format(FMT_STRING(
+    bux::C_EZArgs   ezargs{fmt::format(
         "LR(1)/GLR-Parser Generator command line tool v{}.{}.{}\n"
         "\n"
         "  Where:\n"
@@ -60,7 +60,7 @@ int main(int argc, const char* argv[])
         "     <Filename>IdDef.h - Lexical token enumerations\n"
         "     <Filename>.h      - Header of parser class\n"
         "     <Filename>.cpp    - Implementation of parser class\n"
-        "  3. Generated token definitions are written to <TokensOutput> to feed scannergen\n")
+        "  3. Generated token definitions are written to <TokensOutput> to feed scannergen\n"
         , VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
     C_Paths         inc_dirs;
     bool            yes2all{};
@@ -77,7 +77,7 @@ int main(int argc, const char* argv[])
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
-        fmt::print(FMT_STRING("{}\n"), ret.m_error);
+        fmt::print("argv[{}]: {}\n", ret.m_index, ret.m_error);
         return MAIN_ARG_ERROR;
     }
     if (!inc_dirs.empty())
@@ -91,7 +91,7 @@ int main(int argc, const char* argv[])
             else
                 fmt::print(", ");
 
-            fmt::print(FMT_STRING("{}"), i.string());
+            fmt::print("{}", i.string());
         }
         fmt::print("}}\n");
     }
@@ -148,9 +148,9 @@ int main(int argc, const char* argv[])
                     stateMap.erase(found);
                 }
             }
-            fmt::print(FMT_STRING("{} out of {} goto keys erased for redundancy.\n"), count, orgSize);
+            fmt::print("{} out of {} goto keys erased for redundancy.\n", count, orgSize);
             if (count < loserShits.size())
-                fmt::print(FMT_STRING("Fail to find {} goto keys.\n"), loserShits.size() - count);
+                fmt::print("Fail to find {} goto keys.\n", loserShits.size() - count);
         }
 
         // Output result
@@ -172,7 +172,7 @@ int main(int argc, const char* argv[])
     }
     catch (const std::exception &t)
     {
-        fmt::print(FMT_STRING("{}: {} ... \n"), HRTN(t), t.what());
+        fmt::print("{}: {} ... \n", HRTN(t), t.what());
         return MAIN_CAUGHT;
     }
     catch (...)

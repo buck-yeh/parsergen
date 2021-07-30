@@ -224,12 +224,12 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
         for (auto &i: m_AttrMap)
             if (!i.second.m_FirstsDeps.empty())
             {
-                fmt::print(FMT_STRING("<{}>:\n"), i.first);
+                fmt::print("<{}>:\n", i.first);
                 for (auto &j: i.second.m_FirstsDeps)
                 {
                     bool first = true;
                     for (auto k = j.first; k != j.second; ++k, first = false)
-                        fmt::print(FMT_STRING("{}{}"), first? '\t': ' ', (**k).displayStr());
+                        fmt::print("{}{}", first? '\t': ' ', (**k).displayStr());
 
                     fmt::print("\n");
                 }

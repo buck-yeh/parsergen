@@ -156,7 +156,7 @@ void C_Context::log(bux::E_LogLevel level, const bux::C_SourcePos &pos, std::str
         ") INFO: ",
         ") VERBOSE: "
     };
-    fmt::print(FMT_STRING("{}({},{}{}{}\n"), pos.m_Source, pos.m_Line, pos.m_Col, KIND[level], message);
+    fmt::print("{}({},{}{}{}\n", pos.m_Source, pos.m_Line, pos.m_Col, KIND[level], message);
     constinit static const size_t LIMIT[] ={
         0,
         10,

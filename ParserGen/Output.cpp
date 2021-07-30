@@ -80,7 +80,7 @@ void onUnmappedReduction(const std::set<std::string> &unmap, std::function<std::
             out.append(delem).append(i);
             delem = ", $";
         }
-        RUNTIME_ERROR(out);
+        RUNTIME_ERROR("{}", out);
     }
 }
 
@@ -275,7 +275,7 @@ FC_Output::FC_Output        (
         {
             if (i.first.size() != i.second.m_outMapping.size())
             {
-                fmt::print(FMT_STRING("Size changed {} != {}\n"), i.first.size(), i.second.m_outMapping.size());
+                fmt::print("Size changed {} != {}\n", i.first.size(), i.second.m_outMapping.size());
                 m_readySoFar = false;
                 return;
             }
@@ -392,7 +392,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     std::ofstream   out{path};
     if (!out.is_open())
     {
-        fmt::print(FMT_STRING("Write error on {}\n"), path.generic_string());
+        fmt::print("Write error on {}\n", path.generic_string());
         return false;
     }
     out <<m_Banner;
@@ -509,24 +509,24 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     out.open(path);
     if (!out.is_open())
     {
-        fmt::print(FMT_STRING("Write error on {}\n"), path.generic_string());
+        fmt::print("Write error on {}\n", path.generic_string());
         return false;
     }
     const char *const nsLR = m_needGLR? "GLR": "LR1";
-    fmt::print(out, FMT_STRING(
+    fmt::print(out,
         "{0}"
         "#pragma once\n"
         "\n"
-        "#include <bux/{1}.h>\n"), m_Banner, nsLR);
+        "#include <bux/{1}.h>\n", m_Banner, nsLR);
     writeUserSection(out, "HEADERS_FOR_HEADER");
     m_Parsed.enterNamespaces(out);
     writeUserSection(out, "PRECLASSDECL");
-    fmt::print(out, FMT_STRING(
+    fmt::print(out,
         "\n"
         "class {}: public bux::{}::C_Parser\n"
         "{{\n"
         "public:\n"
-        "\n"), className, nsLR);
+        "\n", className, nsLR);
     if (hasContext())
     {
         fmt::print(out, !m_needGLR?
@@ -543,7 +543,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     out <<"    // Ctor\n";
     if (!hasContext())
         // Have no context
-        fmt::print(out, FMT_STRING("    {}();\n"), className);
+        fmt::print(out, "    {}();\n", className);
     else
     {
         fmt::print(out, m_needGLR?
@@ -556,9 +556,9 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
             "private:\n"
             "\n");
         if (m_needGLR)
-            fmt::print(out, FMT_STRING("    {}();\n"), className);
+            fmt::print(out, "    {}();\n", className);
         else
-            fmt::print(out, FMT_STRING("    static const bux::{}::I_ParserPolicy &policy();\n"), nsLR);
+            fmt::print(out, "    static const bux::{}::I_ParserPolicy &policy();\n", nsLR);
     }
     writeUserSection(out, "INCLASSDECL");
     out <<"};\n";
@@ -575,12 +575,12 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     out.open(path);
     if (!out.is_open())
     {
-        fmt::print(FMT_STRING("Write error on {}\n"), path.generic_string());
+        fmt::print("Write error on {}\n", path.generic_string());
         return false;
     }
     out <<m_Banner;
     writeUserSection(out, "HEADERS_FOR_CPP");
-    fmt::print(out, FMT_STRING(
+    fmt::print(out,
         "#include \"{0}.h\"\n"
         "#include \"{0}IdDef.h\"\n"
         "#include <bux/Impl{1}.h>\n"
@@ -588,11 +588,11 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
         "\n"
         "namespace {{\n"
         "\n"
-        "using namespace bux::{1};\n"),
+        "using namespace bux::{1};\n",
         base, nsLR);
     const auto targetNS = m_Parsed.fullNamespace();
     if (!targetNS.empty())
-        fmt::print(out, FMT_STRING("using namespace {};\n"), targetNS);
+        fmt::print(out, "using namespace {};\n", targetNS);
 
     writeUserSection(out, "LOCAL_CPP");
     out <<"\n"
@@ -616,7 +616,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
             if (s.size() < maxWidth)
                 s.append(maxWidth-s.size(), ' ');
 
-            fmt::print(out, FMT_STRING("    {} = TID_UB_+{},"), s, i.second-tid_ub);
+            fmt::print(out, "    {} = TID_UB_+{},", s, i.second-tid_ub);
             std::string name;
             if (!memcmp(i.first.data(), "NID_", 4))
                 name = '<' + i.first.substr(4) + '>';
@@ -633,14 +633,14 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
         out <<"    TOKENGEN_UB,\n"
               "    //---------------------------------------------------\n";
     }
-    fmt::print(out, FMT_STRING(
+    fmt::print(out,
         "    " ENCODED_TOKEN_LB_str "\t = {}\n"
         "}};\n"
         "constexpr auto ZIP_TOKEN(auto x) {{ return x-(bux::MIN_TOKEN_ID-" ENCODED_TOKEN_LB_str "); }}\n"
-        "\n"), m_MinTokenId);
+        "\n", m_MinTokenId);
     if (!m_alphaPrimes.empty())
     {
-        fmt::print(out, FMT_STRING("constinit const {}\n"), m_InputType);
+        fmt::print(out, "constinit const {}\n", m_InputType);
         bool first = true;
         m_alphaPrimes.visit([&](const C_Alphabet &belt, size_t ind){
             if (first)
@@ -648,7 +648,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
             else
                 out <<",\n";
 
-            fmt::print(out, FMT_STRING("{}[{}] = "), alphaPrime(ind), belt.size());
+            fmt::print(out, "{}[{}] = ", alphaPrime(ind), belt.size());
             bool first = true;
             for (auto j: belt)
             {
@@ -662,15 +662,15 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
               "\n";
     }
     if (m_isKeyCalled)
-        fmt::print(out, FMT_STRING(
+        fmt::print(out,
             "template<{0} KEY> int isKey({0} key)\n"
             "{{\n"
             "    return key == KEY? 0: -1;\n"
             "}}\n"
-            "\n"), m_InputType);
+            "\n", m_InputType);
     if (!m_findPrimes.empty())
     {
-        fmt::print(out, FMT_STRING(
+        fmt::print(out,
             "int findKey(const {0} *klist, int n, {0} key)\n"
             "{{\n"
             "    for (int i = 0; i < n; ++i)\n"
@@ -678,9 +678,9 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
             "             return i;\n"
             "    return -1;\n"
             "}}\n"
-            "\n"), m_InputType);
+            "\n", m_InputType);
         for (const auto &i: m_findPrimes)
-            fmt::print(out, FMT_STRING("int {}\t({} key)\t{{ {} }}\n"), i.first, m_InputType, i.second);
+            fmt::print(out, "int {}\t({} key)\t{{ {} }}\n", i.first, m_InputType, i.second);
 
         out <<'\n';
     }
@@ -690,7 +690,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
         {
             if (first)
             {
-                fmt::print(out, FMT_STRING("constinit const bux::C_KVPair<{},{}>\n"), m_InputType, m_ActionType);
+                fmt::print(out, "constinit const bux::C_KVPair<{},{}>\n", m_InputType, m_ActionType);
                 first = false;
             }
             else
@@ -703,8 +703,8 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
                 const auto input = m_lex2str.find(j.first)->second;
                 for (auto &k: j.second)
                 {
-                    fmt::print(out, FMT_STRING("{}\n"
-                        "    {{{},\t{}}}"), (first?'{':','), input, k);
+                    fmt::print(out, "{}\n"
+                        "    {{{},\t{}}}", (first?'{':','), input, k);
                     first = false;
                 }
             }
@@ -715,7 +715,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
               "\n";
     if (!m_state2iatbl.empty())
     {
-        fmt::print(out, FMT_STRING("constinit const bux::U_K2V<{},{}> mapActionPtr[{}] ="),
+        fmt::print(out, "constinit const bux::U_K2V<{},{}> mapActionPtr[{}] =",
             m_InputType, m_ActionType, m_state2iatbl.size());
         std::string restOfLine;
         int n = 0;
@@ -725,10 +725,10 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
                   "    " <<i.first;
             restOfLine = "\t// " + std::to_string(n++);
         }
-        fmt::print(out, FMT_STRING(
+        fmt::print(out,
             "}};{}\n"
             "\n"
-            "constinit const {} mapActionSizeEx[{}] ="), restOfLine, m_iaTblSzType, m_state2iatbl.size());
+            "constinit const {} mapActionSizeEx[{}] =", restOfLine, m_iaTblSzType, m_state2iatbl.size());
         n =0;
         restOfLine.clear();
         for (auto &i: m_state2iatbl)
@@ -737,9 +737,9 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
                   "    " <<i.second;
             restOfLine = "\t// " + std::to_string(n++);
         }
-        fmt::print(out, FMT_STRING(
+        fmt::print(out,
             "}};{}\n"
-            "\n"), restOfLine);
+            "\n", restOfLine);
     }
     first = true;
     for (auto &i: m_istbl2out)
@@ -748,7 +748,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
             if (first)
             {
                 first = false;
-                fmt::print(out, FMT_STRING("constinit const bux::C_KVPair<{},{}>\n"), m_InputType, m_StateType);
+                fmt::print(out, "constinit const bux::C_KVPair<{},{}>\n", m_InputType, m_StateType);
             }
             else
                 out <<",\n";
@@ -757,9 +757,10 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
             bool first = true;
             for (auto &j: i.first)
             {
-                fmt::print(out, FMT_STRING(
+                fmt::print(out,
                     "{}\n"
-                    "    {{{},\t{}}}"), (first?'{':','), m_lex2str.find(j.first)->second, j.second);
+                    "    {{{},\t{}}}",
+                    (first?'{':','), m_lex2str.find(j.first)->second, j.second);
                 first = false;
             }
             out <<'}';
@@ -770,19 +771,19 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
 
     if (!m_state2next.empty())
     {
-        fmt::print(out, FMT_STRING(
+        fmt::print(out,
             "constinit const struct C_MapGoto {{\n"
             "    bux::U_K2V<{},{}> m_k2v;\n"
             "    {}\tm_curState;\n"
             "    {}\tm_nextStateEx;\n"
-            "}}   mapGoto[{}] ="),
+            "}}   mapGoto[{}] =",
             m_InputType, m_ActionType, m_StateType, m_isTblSzType, m_state2next.size());
         first = true;
         for (auto &i: m_state2next)
         {
-            fmt::print(out, FMT_STRING(
+            fmt::print(out,
                 "{}\n"
-                "    {{{},\t{},\t{}}}"),
+                "    {{{},\t{},\t{}}}",
                 (first?'{':','), i.second.first, i.first, i.second.second);
             first = false;
         }
@@ -807,7 +808,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
             continue;
         }
 
-        fmt::print(out, FMT_STRING("void _reduce_{}(bux::{}::C_Parser &"), i, nsLR);
+        fmt::print(out, "void _reduce_{}(bux::{}::C_Parser &", i, nsLR);
         if (ret.second & (1<<0))
             out <<ARG_NAME_PARSER;
 
@@ -844,13 +845,13 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
             return "production "+prodStr;
         });
     }
-    fmt::print(out, FMT_STRING(
+    fmt::print(out,
         "struct C_ProductionInfo\n"
         "{{\n"
         "    {:15} (*m_pAction)(bux::{}::C_Parser&,const F_GetProduced&,C_RetLval{});\n"
         "    {:15} m_ReducedID;\n"
         "    {:15} m_PopLength;\n"
-        "}} constinit const prodInfo[{}] ="),
+        "}} constinit const prodInfo[{}] =",
         "void", nsLR, m_needGLR?",F_OncePostShift&":"",
         m_InputType, m_PoplenType, m_Parsed.productions().size());
     size_t maxLvalLen =0;
@@ -890,20 +891,20 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
             input +=' ';
 
         out <<input <<i.m_Rval.size() <<"}";
-        restOfLine = fmt::format(FMT_STRING("\t// {}: {}"), prodNum, i.str());
+        restOfLine = fmt::format("\t// {}: {}", prodNum, i.str());
         first = false;
     }
     if (acceptID < 0)
         RUNTIME_ERROR("Accept id: {}", acceptID);
 
-    fmt::print(out, FMT_STRING(
+    fmt::print(out,
         " {0}\n"
         "}};\n"
         "\n"
         "struct C_ActionTraits\n"
         "{{\n"
         "    template<class T1, class T2>\n"
-        "    static {1} map(T1 &&t1, T2 &&) {{ return static_cast<{1}>(t1); }}\n"),
+        "    static {1} map(T1 &&t1, T2 &&) {{ return static_cast<{1}>(t1); }}\n",
         restOfLine, m_ActionType);
     if (!m_needGLR)
           out <<"    static " <<m_ActionType <<" valueError() { return ACTION_ERROR; }\n";
@@ -911,14 +912,14 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     out <<"};\n"
           "\n";
     if (!m_state2next.empty())
-        fmt::print(out, FMT_STRING(
+        fmt::print(out,
             "struct C_ShiftTraits\n"
             "{{\n"
             "    template<class T1, class T2>\n"
             "    static {0} map(T1 &&t1, T2 &&t2) {{ return static_cast<{0}>(t1+t2); }}\n"
             "    static {0} valueError() {{ RUNTIME_ERROR(\"SHIFT ERROR\"); }}\n"
             "}};\n"
-            "\n"), m_StateType);
+            "\n", m_StateType);
 
     out <<"//\n"
           "//   Generated Parser Policy\n"
@@ -1162,14 +1163,14 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     m_Parsed.enterNamespaces(out);
     writeUserSection(out, "SCOPED_CPP_HEAD");
     if (!hasContext() || m_needGLR)
-        fmt::print(out, FMT_STRING(
+        fmt::print(out,
             "\n"
-            "{}::{}(): bux::{}::C_Parser(g_policy) {{}}\n"),
+            "{}::{}(): bux::{}::C_Parser(g_policy) {{}}\n",
             headClassName, className, nsLR);
     else
-        fmt::print(out, FMT_STRING(
+        fmt::print(out,
             "\n"
-            "const bux::{}::I_ParserPolicy &{}::policy() {{ return g_policy; }}\n"),
+            "const bux::{}::I_ParserPolicy &{}::policy() {{ return g_policy; }}\n",
             nsLR, headClassName);
     writeUserSection(out, "SCOPED_CPP_TAIL");
     m_Parsed.leaveNamespaces(out);
@@ -1191,7 +1192,7 @@ void FC_Output::addParserMap(C_RenderReduction &rr, const std::string &className
     {
         std::string c = ARG_NAME_PARSER ".userData()";
         if (hasContext())
-            c = fmt::format(FMT_STRING("*static_cast<{}::C_Context*>({})"), className, c);
+            c = fmt::format("*static_cast<{}::C_Context*>({})", className, c);
 
         rr.addMap("c", c, 1<<argInd);
     }
@@ -1201,15 +1202,15 @@ std::string FC_Output::outputFindKey(const C_Alphabet &alphabet)
 {
     if (auto ret = m_alphaPrimes.find(alphabet))
     {
-        const auto funcName = fmt::format(FMT_STRING("findPrime{}_{}_{}"), ret->first, ret->second, alphabet.size());
+        const auto funcName = fmt::format("findPrime{}_{}_{}", ret->first, ret->second, alphabet.size());
         if (m_findPrimes.find(funcName) == m_findPrimes.end())
             // Not yet defined
         {
             auto out = "return findKey(" + alphaPrime(ret->first);
             if (ret->second)
-                out += fmt::format(FMT_STRING("+{}"), ret->second);
+                out += fmt::format("+{}", ret->second);
 
-            m_findPrimes[funcName] = out += fmt::format(FMT_STRING(",{},key);"), alphabet.size());
+            m_findPrimes[funcName] = out += fmt::format(",{},key);", alphabet.size());
         }
         return funcName;
     }
@@ -1286,10 +1287,10 @@ void FC_Output::outputTokens(std::ostream &out, const std::string &headerBase) c
         if (found && !found->empty())
             out <<"_the_very_last_ = " <<found->expand() <<'\n';
     }
-    fmt::print(out, FMT_STRING(
+    fmt::print(out,
                 "\n"
                 "%HEADERS_FOR_CPP     [[\n"
-                "#include \"{}IdDef.h\"\n"), headerBase);
+                "#include \"{}IdDef.h\"\n", headerBase);
     writeUserSection(out, "HEADERS_FOR_SCANNER_CPP");
     if (!ns.empty())
         out <<"using namespace " <<ns <<";\n";
@@ -1364,7 +1365,7 @@ auto FC_Output::C_RenderReduction::render(std::string src, std::set<std::string>
                 }
                 else
                 {
-                    const auto get = fmt::format(FMT_STRING(ARG_NAME_GETLEX "({})"), n-1);
+                    const auto get = fmt::format(ARG_NAME_GETLEX "({})", n-1);
                     --i;
                     src.replace(i, end-i, get);
                     i += get.size();

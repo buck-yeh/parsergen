@@ -163,7 +163,7 @@ bool C_BNFContext::checkSemanticlessProductions() const
     {
         fmt::print("WARNING: The following productions are declared with no semantic!\n");
         for (auto i: m_Semanticless)
-             fmt::print(FMT_STRING("\t{}\n"), i->str());
+             fmt::print("\t{}\n", i->str());
 
         return true;
     }
@@ -176,7 +176,7 @@ bool C_BNFContext::checkUnusedOptions() const
     for (auto &i: m_OptMap)
         if (!i.second.m_Used)
         {
-            fmt::print(FMT_STRING("WARNING: Option %{} defined but not used !\n"), i.first);
+            fmt::print("WARNING: Option %{} defined but not used !\n", i.first);
             found = true;
         }
 
@@ -223,7 +223,7 @@ void C_BNFContext::log(bux::E_LogLevel level, const C_SourcePos &pos, std::strin
         "VERBOSE"
     };
     const auto kind = KIND[level];
-    fmt::print(FMT_STRING("{}({},{}) {}: {}\n"), pos.m_Source, pos.m_Line, pos.m_Col, kind, message);
+    fmt::print("{}({},{}) {}: {}\n", pos.m_Source, pos.m_Line, pos.m_Col, kind, message);
     static const size_t ERR_LIMIT[] ={
         0,
         10,
@@ -393,7 +393,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
                     RUNTIME_ERROR("Not expected final {}", s);
             }
         }
-        fmt::print(FMT_STRING("MAX(IdDef) = {}\n"), tid_max);
+        fmt::print("MAX(IdDef) = {}\n", tid_max);
 
         // Build m_Nonterm2Id from m_GeneTokens
         tid_max += bux::TOKENGEN_LB;
@@ -434,14 +434,14 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
             if (const auto id = std::get<0>(ret);
                 !m_PriorityMap.try_emplace(id, C_Priority{.m_Weight=i->m_Weight, .m_Assoc=i->m_Assoc}).second)
             {
-                auto out = fmt::format(FMT_STRING("Duplicate priority assignments on id {}"), id);
+                auto out = fmt::format("Duplicate priority assignments on id {}", id);
                 if (id < 127)
                     out += fmt::format("(\'{}\')", asciiLiteral(id));
                 log(LL_ERROR, pos, out);
             }
             break;
         case 1:
-            log(LL_ERROR, pos, fmt::format(FMT_STRING("Fail to get id from the {}th priority record with token type {}: {}"),
+            log(LL_ERROR, pos, fmt::format("Fail to get id from the {}th priority record with token type {}: {}",
                 count, HRTN(*i->m_pAttr), std::get<1>(ret)));
             break;
         }
@@ -519,7 +519,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
             }
 
             C_Semantic s;
-            s.emplace_back(new C_BracketedLex(fmt::format(FMT_STRING("$r = createLex<std::string>(\"{}\");"),asciiLiteral(i.first))));
+            s.emplace_back(new C_BracketedLex(fmt::format("$r = createLex<std::string>(\"{}\");",asciiLiteral(i.first))));
             addProduction(*t, &s);
         } // for (auto &i: m_Literal2IdName)
 
