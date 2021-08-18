@@ -24,9 +24,9 @@ toc::[]
 .Output of `parsergen -h`
 [source,bash]
 ----
-USAGE: ./parsergen <Grammar> <Filename> <TokensOutput> [-I ARG] [-h]
+argv[1]: USAGE: ./parsergen <Grammar> <Filename> <TokensOutput> [-I ARG] [-a] [-h]
 DESCRIPTION:
-  LR(1)/GLR-Parser Generator command line tool v1.6.1
+  LR(1)/GLR-Parser Generator command line tool v1.7.0
 
   Where:
   1. <Grammar> is a grammar definition file.
@@ -34,13 +34,16 @@ DESCRIPTION:
      <Filename>IdDef.h - Lexical token enumerations
      <Filename>.h      - Header of parser class
      <Filename>.cpp    - Implementation of parser class
-  3. Generated token definitions are written to <TokensOutput> to feed scannergen 
+  3. Generated token definitions are written to <TokensOutput> to feed scannergen
 
 VALID FLAGS:
   -I, --include_dir ARG
 	Search path of #include directive within <Grammar>
+  -a, --yes_to_all
+	Quietly overwrite all existing output files
   -h, --help
 	Display this help and exit
+
 ----
 
 == Grammar

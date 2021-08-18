@@ -24,9 +24,9 @@ toc::[]
 .Output of `scannergen -h`
 [source,bash]
 ----
-USAGE: ./scannergen <ScannerBase> [<RE1> <RE2> ...] [-I ARG] [-h]
+argv[1]: USAGE: ./scannergen <ScannerBase> [<RE1> <RE2> ...] [-I ARG] [-a] [-h]
 DESCRIPTION:
-  Scanner Generator command line tool v1.5.1
+  Scanner Generator command line tool v1.6.0
 
   Where:
   1. Generated C++ source files are named as:
@@ -38,8 +38,11 @@ DESCRIPTION:
 VALID FLAGS:
   -I, --include_dir ARG
 	Search path of #include directive
+  -a, --yes_to_all
+	Quietly overwrite all existing output files
   -h, --help
 	Display this help and exit
+
 ----
 
 == Lexical token definition file
