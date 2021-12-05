@@ -83,7 +83,7 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
                     if (auto nt = dynamic_cast<C_Nonterminal*>(*range.first))
                         names.emplace_back(nt->m_id);
                     else
-                        // Impossible to be m_Nullable
+                        // Terminal found! Impossible to be m_Nullable
                         goto postAddNames;
                 } while (++range.first != range.second);
 

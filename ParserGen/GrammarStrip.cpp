@@ -38,7 +38,7 @@ int main(int argc, const char* argv[])
         "\t1. <Grammar> is a grammar definition file.\n"
         "\t2. Print raw production rules to standard output.\n"};
     C_Paths         inc_dirs;
-    ezargs.position_args({"Grammar"})
+    ezargs.position_args(std::array{"Grammar"})
           .add_flag("include_dir", 'I', "Search path of #include directive within <Grammar>",
                     [&](auto s){
                         bux::C_IMemStream in{s};
@@ -47,7 +47,7 @@ int main(int argc, const char* argv[])
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
-        fmt::print("{}", ret.m_error);
+        fmt::print("{}\n", ret.message());
         return MAIN_ARG_ERROR;
     }
 

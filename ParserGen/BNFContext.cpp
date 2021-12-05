@@ -450,10 +450,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
     // Preconditions for building m_Productions and m_Reductions
     if (m_Productions.size() != m_OntoPool.size() ||
         m_Productions.size() != m_OntoJumps.size())
-    {
-        log(LL_FATAL, pos, "Inconsistent data for production optimization!");
-        return;
-    }
+        return log(LL_FATAL, pos, "Inconsistent data for production optimization!");
 
     // Add the root production if not found
     size_t rootCount{};
@@ -489,10 +486,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
         addProduction(*t, &s);
     }
     else if (rootCount > 1)
-    {
-        log(LL_FATAL, pos, "<@> productions defined more than once!");
-        return;
-    }
+        return log(LL_FATAL, pos, "<@> productions defined more than once!");
 
     // Add productions of activated builtin nonterminals
     if (m_BuilinNonterminalMask)

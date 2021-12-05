@@ -64,7 +64,7 @@ int main(int argc, const char* argv[])
         , VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
     C_Paths         inc_dirs;
     bool            yes2all{};
-    ezargs.position_args({"Grammar","Filename","TokensOutput"})
+    ezargs.position_args(std::array{"Grammar","Filename","TokensOutput"})
           .add_flag("include_dir", 'I', "Search path of #include directive within <Grammar>",
                     [&](auto s){
                         bux::C_IMemStream in{s};
@@ -77,7 +77,7 @@ int main(int argc, const char* argv[])
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
-        fmt::print("argv[{}]: {}\n", ret.m_index, ret.m_error);
+        fmt::print("{}\n", ret.message());
         return MAIN_ARG_ERROR;
     }
     if (!inc_dirs.empty())

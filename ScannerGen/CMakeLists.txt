@@ -1,6 +1,6 @@
 #set(CMAKE_CXX_COMPILER_ID "Clang")
 
-include_directories("../../bux/include" "../../CBrackets")
+include_directories("../${DEPENDEE_ROOT}/bux/include" "../${DEPENDEE_ROOT}/CBrackets")
 
 add_executable(scannergen
     Context.cpp

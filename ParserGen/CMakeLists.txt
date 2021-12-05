@@ -1,6 +1,6 @@
 #set(CMAKE_CXX_COMPILER_ID "Clang")
 
-include_directories("../../bux/include" "../../CBrackets") # ${Boost_INCLUDE_DIRS})
+include_directories("../${DEPENDEE_ROOT}/bux/include" "../${DEPENDEE_ROOT}/CBrackets") # ${Boost_INCLUDE_DIRS})
 string(APPEND CMAKE_CXX_FLAGS " -Wno-shadow")
 #string(APPEND CMAKE_CXX_FLAGS " -g3 -Og")
 

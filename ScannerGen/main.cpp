@@ -573,7 +573,7 @@ int main(int argc, const char *argv[])
         VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE)};
     C_Paths         inc_dirs;
     bool            yes2all{};
-    ezargs.position_args({"ScannerBase", "RE1", "RE2"}, {1,2}, true)
+    ezargs.position_args(std::array{"ScannerBase", "RE1", "RE2"}, std::array{1,2}, true)
           .add_flag("include_dir", 'I', "Search path of #include directive",
                     [&](auto s){
                         bux::C_IMemStream in{s};
@@ -586,7 +586,7 @@ int main(int argc, const char *argv[])
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
-        fmt::print("argv[{}]: {}\n", ret.m_index, ret.m_error);
+        fmt::print("{}\n", ret.message());
         return LEVEL_PARSE_ERROR;
     }
 
@@ -682,11 +682,8 @@ void parseFile(const std::string &filename, C_ScannerParser &parser, bux::T_LexI
     g_included.emplace(filename);
     std::ifstream   in(filename);
     if (!in.is_open())
-    {
-        parser.m_context.log(LL_FATAL, bux::C_SourcePos(filename,0,0),
-            fmt::format("Fail to open the source file '{}'", filename));
-        return;
-    }
+        return parser.m_context.log(LL_FATAL, bux::C_SourcePos(filename,0,0), fmt::format("Fail to open the source file '{}'", filename));
+
     parseFile(filename, in, parser, endToken);
 }
 
