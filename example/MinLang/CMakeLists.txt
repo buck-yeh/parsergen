@@ -5,5 +5,5 @@ add_executable(minlang
     )
 #target_compile_options(minlang PRIVATE -O0 -g3)
 target_include_directories(minlang PRIVATE "../../${DEPENDEE_ROOT}/bux/include")
-target_link_directories(grammarstrip PRIVATE "../../${DEPENDEE_ROOT}/bux/src")
+target_link_directories(minlang PRIVATE "../../${DEPENDEE_ROOT}/bux/src")
 target_link_libraries(minlang bux fmt stdc++)

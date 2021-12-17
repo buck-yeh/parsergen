@@ -16,6 +16,6 @@ add_executable(handycharset
     HandyCharset.cpp
     spec2charset.cpp
     )
-target_link_libraries(handycharset bux fmt stdc++)
 target_include_directories(handycharset PRIVATE ../${DEPENDEE_ROOT}/bux/include)
-target_link_directories(scannergen PRIVATE ../${DEPENDEE_ROOT}/bux/src)
+target_link_directories(handycharset PRIVATE ../${DEPENDEE_ROOT}/bux/src)
+target_link_libraries(handycharset bux fmt stdc++)
