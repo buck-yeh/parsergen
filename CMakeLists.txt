@@ -1,11 +1,11 @@
 cmake_minimum_required (VERSION 3.18)
 cmake_policy(VERSION 3.18)
 
-if(not ${DEPENDEE_ROOT})
+if(NOT DEFINED DEPENDEE_ROOT)
 set(DEPENDEE_ROOT "..")
 endif()
 
-if(${FETCH_DEPENDEES})
+if(DEFINED FETCH_DEPENDEES)
 include(FetchContent)
 
 FetchContent_Declare(
@@ -26,7 +26,7 @@ endif()
 project(ParserSuite)
 
 IF(CMAKE_CXX_COMPILER_ID MATCHES Clang|GNU)
-    string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Ofast -std=c++2a")
+    string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Ofast -std=c++20")
     IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         message("Clang")
         string(APPEND CMAKE_CXX_FLAGS " -Wno-potentially-evaluated-expression -Wno-deprecated-anon-enum-enum-conversion")

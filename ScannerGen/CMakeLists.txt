@@ -1,7 +1,5 @@
 #set(CMAKE_CXX_COMPILER_ID "Clang")
 
-include_directories("../${DEPENDEE_ROOT}/bux/include" "../${DEPENDEE_ROOT}/CBrackets")
-
 add_executable(scannergen
     Context.cpp
     main.cpp
@@ -10,6 +8,8 @@ add_executable(scannergen
     spec2charset.cpp
     )
 #target_compile_options(scannergen PRIVATE -O0 -g3)
+target_include_directories(scannergen PRIVATE ../${DEPENDEE_ROOT}/bux/include ../${DEPENDEE_ROOT}/CBrackets)
+target_link_directories(scannergen PRIVATE ../${DEPENDEE_ROOT}/bux/src ../${DEPENDEE_ROOT}/CBrackets)
 target_link_libraries(scannergen bracketPairing bux fmt stdc++)
 
 add_executable(handycharset
@@ -17,3 +17,5 @@ add_executable(handycharset
     spec2charset.cpp
     )
 target_link_libraries(handycharset bux fmt stdc++)
+target_include_directories(handycharset PRIVATE ../${DEPENDEE_ROOT}/bux/include)
+target_link_directories(scannergen PRIVATE ../${DEPENDEE_ROOT}/bux/src)
