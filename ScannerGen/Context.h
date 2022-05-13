@@ -3,6 +3,7 @@
 #include "bux/LexBase.h"    // bux::T_LexID
 #include "bux/Logger.h"     // bux::E_LogLevel
 #include <filesystem>       // std::filesystem::path
+#include <functional>       // std::function<>
 #include <map>              // std::map<>
 #include <optional>         // std::optional<>
 #include <vector>           // std::vector<>
