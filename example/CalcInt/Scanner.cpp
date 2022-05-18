@@ -2,6 +2,7 @@
 
 // Token-def %HEADERS_FOR_CPP begins
 #include "ParserIdDef.h"
+// Grammar %HEADERS_FOR_SCANNER_CPP undefined (expanded here otherwise)
 // Token-def %HEADERS_FOR_CPP ends
 
 #include "Scanner.h"

@@ -12,6 +12,7 @@
 namespace {
 
 using namespace bux::GLR;
+// Grammar %LOCAL_CPP undefined (expanded here otherwise)
 
 //
 //   Generated Constants
@@ -558,5 +559,7 @@ void C_ParserPolicy::onError(bux::GLR::C_Parser &_paRSeR_, const bux::C_SourcePo
 }
 
 } // namespace
+// Grammar %SCOPED_CPP_HEAD undefined (expanded here otherwise)
 
 ::C_Parser::C_Parser(): bux::GLR::C_Parser(g_policy) {}
+// Grammar %SCOPED_CPP_TAIL undefined (expanded here otherwise)

@@ -10,7 +10,7 @@ lexid   Spaces
 ]]
 
 %EXTRA_TOKENS   [[dec_num|oct_num|hex_num|spaces]]
-//%SHOW_UNDEFINED
+%SHOW_UNDEFINED
 
 //
 //      Operator Precedence

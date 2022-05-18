@@ -4,6 +4,8 @@
 #pragma once
 
 #include <bux/LR1.h>
+// Grammar %HEADERS_FOR_HEADER undefined (expanded here otherwise)
+// Grammar %PRECLASSDECL undefined (expanded here otherwise)
 
 class C_Parser: public bux::LR1::C_Parser
 {
@@ -19,4 +21,5 @@ public:
 private:
 
     static const bux::LR1::I_ParserPolicy &policy();
+// Grammar %INCLASSDECL undefined (expanded here otherwise)
 };

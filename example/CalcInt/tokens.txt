@@ -2,4 +2,5 @@ _the_very_last_ = dec_num|oct_num|hex_num|spaces
 
 %HEADERS_FOR_CPP     [[
 #include "ParserIdDef.h"
+// Grammar %HEADERS_FOR_SCANNER_CPP undefined (expanded here otherwise)
 ]]

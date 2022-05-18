@@ -15,6 +15,7 @@ lexid   Spaces
 ]]
 
 %EXTRA_TOKENS   [[spaces|identifier]]
+%SHOW_UNDEFINED
 
 //
 //      Operator Precedency
