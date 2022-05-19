@@ -2,6 +2,9 @@
 
 string(APPEND CMAKE_CXX_FLAGS " -Wno-shadow")
 #string(APPEND CMAKE_CXX_FLAGS " -g3 -Og")
+IF(DEFINED FETCH_DEPENDEES)
+    string(APPEND CMAKE_CXX_FLAGS " -I../${DEPENDEE_ROOT}/bux -I../${DEPENDEE_ROOT}/CBrackets")
+ENDIF()
 
 set(COMMON_SRC
     BNFContext.cpp

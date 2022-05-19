@@ -1,4 +1,7 @@
 #set(CMAKE_CXX_COMPILER_ID "Clang")
+IF(DEFINED FETCH_DEPENDEES)
+    string(APPEND CMAKE_CXX_FLAGS " -I../${DEPENDEE_ROOT}/bux -I../${DEPENDEE_ROOT}/CBrackets")
+ENDIF()
 
 add_executable(scannergen
     Context.cpp
