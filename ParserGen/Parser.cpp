@@ -889,73 +889,73 @@ void _reduce_34(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT
 void _reduce_35(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@operator> ::= ::
 {
-    _reT_ = createLex<std::string>("::");
+    _reT_ = bux::createLex<std::string>("::");
 }
 
 void _reduce_36(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@operator> ::= ::=
 {
-    _reT_ = createLex<std::string>("::=");
+    _reT_ = bux::createLex<std::string>("::=");
 }
 
 void _reduce_37(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= class
 {
-    _reT_ = createLex<std::string>("class");
+    _reT_ = bux::createLex<std::string>("class");
 }
 
 void _reduce_38(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= else
 {
-    _reT_ = createLex<std::string>("else");
+    _reT_ = bux::createLex<std::string>("else");
 }
 
 void _reduce_39(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= endif
 {
-    _reT_ = createLex<std::string>("endif");
+    _reT_ = bux::createLex<std::string>("endif");
 }
 
 void _reduce_40(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= ifdef
 {
-    _reT_ = createLex<std::string>("ifdef");
+    _reT_ = bux::createLex<std::string>("ifdef");
 }
 
 void _reduce_41(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= ifndef
 {
-    _reT_ = createLex<std::string>("ifndef");
+    _reT_ = bux::createLex<std::string>("ifndef");
 }
 
 void _reduce_42(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= include
 {
-    _reT_ = createLex<std::string>("include");
+    _reT_ = bux::createLex<std::string>("include");
 }
 
 void _reduce_43(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= left
 {
-    _reT_ = createLex<std::string>("left");
+    _reT_ = bux::createLex<std::string>("left");
 }
 
 void _reduce_44(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= lexid
 {
-    _reT_ = createLex<std::string>("lexid");
+    _reT_ = bux::createLex<std::string>("lexid");
 }
 
 void _reduce_45(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= prec
 {
-    _reT_ = createLex<std::string>("prec");
+    _reT_ = bux::createLex<std::string>("prec");
 }
 
 void _reduce_46(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= right
 {
-    _reT_ = createLex<std::string>("right");
+    _reT_ = bux::createLex<std::string>("right");
 }
 
 struct C_ProductionInfo

@@ -1294,19 +1294,19 @@ void _reduce_32(bux::LR1::C_Parser &, const F_GetProduced &_geT_, C_RetLval _reT
 void _reduce_33(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@operator> ::= >>
 {
-    _reT_ = createLex<std::string>(">>");
+    _reT_ = bux::createLex<std::string>(">>");
 }
 
 void _reduce_34(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= if
 {
-    _reT_ = createLex<std::string>("if");
+    _reT_ = bux::createLex<std::string>("if");
 }
 
 void _reduce_35(bux::LR1::C_Parser &, const F_GetProduced &, C_RetLval _reT_)
 //  <@keyword> ::= include
 {
-    _reT_ = createLex<std::string>("include");
+    _reT_ = bux::createLex<std::string>("include");
 }
 
 struct C_ProductionInfo

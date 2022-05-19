@@ -513,7 +513,7 @@ void C_BNFContext::wrapup(const bux::C_SourcePos &pos)
             }
 
             C_Semantic s;
-            s.emplace_back(new C_BracketedLex(fmt::format("$r = createLex<std::string>(\"{}\");",asciiLiteral(i.first))));
+            s.emplace_back(new C_BracketedLex(fmt::format("$r = bux::createLex<std::string>(\"{}\");",asciiLiteral(i.first))));
             addProduction(*t, &s);
         } // for (auto &i: m_Literal2IdName)
 
