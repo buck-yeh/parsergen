@@ -1,6 +1,6 @@
-#set(CMAKE_CXX_COMPILER_ID "Clang")
-IF(DEFINED FETCH_DEPENDEES)
-    string(APPEND CMAKE_CXX_FLAGS " -I../${DEPENDEE_ROOT}/bux -I../${DEPENDEE_ROOT}/CBrackets")
+IF(NOT DEFINED FETCH_DEPENDEES)
+    string(APPEND CMAKE_CXX_FLAGS " -I../${DEPENDEE_ROOT}/bux/include -L../${DEPENDEE_ROOT}/bux/src")
+    string(APPEND CMAKE_CXX_FLAGS " -I../${DEPENDEE_ROOT}/CBrackets -L../${DEPENDEE_ROOT}/CBrackets")
 ENDIF()
 
 add_executable(scannergen
@@ -11,14 +11,10 @@ add_executable(scannergen
     spec2charset.cpp
     )
 #target_compile_options(scannergen PRIVATE -O0 -g3)
-target_include_directories(scannergen PRIVATE ../${DEPENDEE_ROOT}/bux/include ../${DEPENDEE_ROOT}/CBrackets)
-target_link_directories(scannergen PRIVATE ../${DEPENDEE_ROOT}/bux/src ../${DEPENDEE_ROOT}/CBrackets)
 target_link_libraries(scannergen bracketPairing bux fmt stdc++)
 
 add_executable(handycharset
     HandyCharset.cpp
     spec2charset.cpp
     )
-target_include_directories(handycharset PRIVATE ../${DEPENDEE_ROOT}/bux/include)
-target_link_directories(handycharset PRIVATE ../${DEPENDEE_ROOT}/bux/src)
 target_link_libraries(handycharset bux fmt stdc++)
