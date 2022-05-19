@@ -27,6 +27,10 @@ project(ParserSuite)
 
 IF(CMAKE_CXX_COMPILER_ID MATCHES Clang|GNU)
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Ofast -std=c++20")
+    IF(DEFINED FETCH_DEPENDEES)
+        string(APPEND CMAKE_CXX_FLAGS " -I${DEPENDEE_ROOT}/bux -I${DEPENDEE_ROOT}/CBrackets")
+    ENDIF()
+
     IF(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         message("Clang")
         string(APPEND CMAKE_CXX_FLAGS " -Wno-potentially-evaluated-expression -Wno-deprecated-anon-enum-enum-conversion")
