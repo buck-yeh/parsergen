@@ -1192,7 +1192,7 @@ void FC_Output::addParserMap(C_RenderReduction &rr, const std::string &className
     {
         std::string c = ARG_NAME_PARSER ".userData()";
         if (hasContext())
-            c = fmt::format("*static_cast<{}::C_Context*>({})", className, c);
+            c = "(*static_cast<" + className + "::C_Context*>(" + c + "))";
 
         rr.addMap("c", c, 1<<argInd);
     }

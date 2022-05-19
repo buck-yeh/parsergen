@@ -554,7 +554,7 @@ void C_ParserPolicy::getReduceInfo(size_t id, C_ReduceInfo &info) const
 void C_ParserPolicy::onError(bux::GLR::C_Parser &_paRSeR_, const bux::C_SourcePos &pos, std::string_view message) const
 {
     // Grammar %ON_ERROR begins
-    *static_cast<::C_Parser::C_Context*>(_paRSeR_.userData()) <<"COL#" <<pos.m_Col <<": " <<message <<'\n';
+    (*static_cast<::C_Parser::C_Context*>(_paRSeR_.userData())) <<"COL#" <<pos.m_Col <<": " <<message <<'\n';
     // Grammar %ON_ERROR ends
 }
 
