@@ -45,7 +45,7 @@
 1. Make sure you have installed `cmake` `make` `gcc` `git` `fmt`
 2. ~~~bash
    git clone -b main --single-branch https://github.com/buck-yeh/parsergen.git .
-   cmake .
+   cmake -D FETCH_DEPENDEES=1 -D DEPENDEE_ROOT=_deps .
    make -j
    PSGEN_DIR="/full/path/to/current/dir"
    ~~~
