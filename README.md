@@ -50,18 +50,19 @@
 
 1. Make sure you have installed `cmake` `make` `gcc` `git` `fmt`
 2. ~~~bash
-   git clone -b main --single-branch https://github.com/buck-yeh/parsergen.git .
+   git clone https://github.com/buck-yeh/parsergen.git
+   cd parsergen
    cmake -D FETCH_DEPENDEES=1 -D DEPENDEE_ROOT=_deps .
    make -j
    PSGEN_DIR="/full/path/to/current/dir"
    ~~~
 
    *p.s.* You can install a tagged version by replacing `main` with [tag name](https://github.com/buck-yeh/parsergen/tags).
-4. Three commands at your disposal:
+3. Three commands at your disposal:
    - `$PSGEN_DIR/ParserGen/grammarstrip` 
    - `$PSGEN_DIR/ParserGen/parsergen` 
    - `$PSGEN_DIR/ScannerGen/scannergen`
-5. 🤔 But is it possible to just type `grammarstrip` `parsergen` `scannergen` to run them?  
+4. 🤔 But is it possible to just type `grammarstrip` `parsergen` `scannergen` to run them?  
    💡 Append the following lines to `~/.bashrc`:
 
    ~~~bash
@@ -71,7 +72,7 @@
    alias scannergen="$PSGEN_DIR/ScannerGen/scannergen"
    ~~~
 
-   And type this in a console window:
+   And run the following line:
 
    ~~~bash
    . ~/.bashrc
