@@ -1,7 +1,7 @@
 #include "ParserGenBase.h"
 #include "ParserIdDef.h"    // namespace Main::LexId
 //---------------------------------------------------------------------------
-#include "bux/LogStream.h"  // HRTN()
+#include "bux/StrUtil.h"    // HRTN()
 #include "bux/XException.h" // RUNTIME_ERROR()
 #include <ctype.h>          // isascii(), isalnum()
 

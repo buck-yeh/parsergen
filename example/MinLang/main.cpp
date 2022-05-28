@@ -1,7 +1,7 @@
 #include "Parser.h"         // C_Parser, errors
 #include "Scanner.h"        // C_Scanner
 //-------------------------------------------------------------
-#include "bux/LogStream.h"  // HRTN()
+#include "bux/StrUtil.h"    // HRTN()
 #include "bux/MemIn.h"      // bux::C_IMemStream<>
 #include <iostream>         // std::cin, std::cerr
 

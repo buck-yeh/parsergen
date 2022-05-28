@@ -3,8 +3,8 @@
 #include "ParserIdDef.h"    // TID_LEX_Spaces
 #include "Scanner.h"        // C_Scanner
 //-------------------------------------------------------------
-#include "bux/LogStream.h"  // HRTN()
 #include "bux/MemIn.h"      // bux::C_IMemStream<>
+#include "bux/StrUtil.h"    // HRTN()
 #include <iostream>         // std::cin, std::cerr
 #include <sstream>          // std::ostringstream
 

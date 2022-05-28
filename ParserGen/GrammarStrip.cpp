@@ -2,8 +2,8 @@
 #include "Parser.h"         // Main::C_BNFParserPolicy, Main::C_BNFParser
 //------------------------------------------------------------------------------
 #include "bux/EZArgs.h"     // bux::C_EZArgs
-#include "bux/LogStream.h"  // HRTN()
 #include "bux/MemIn.h"      // bux::C_IMemStream<>
+#include "bux/StrUtil.h"    // HRTN()
 #include "bux/XException.h" // bux::catchSE()
 #include <fmt/core.h>       // fmt::print()
 
