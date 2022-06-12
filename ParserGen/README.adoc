@@ -143,7 +143,7 @@ CAUTION: 💣 `parsergen` has to know the start symbol before calculation. If th
 ℹ️ Defining this option means the parser will work with an existing scanner. "Path/To/IdDef.h" should have all token ids of the scanner and also happens to have all token ids needed by the target parser. +
 _User is on his own to ensure this._
 
-| %ERROR_TOKEN | **Parser**_.cpp_ | If `%ERROR_TOKEN` is defined valuelessly or with value \[[Error]] and `$Error` is found in productions, the underlying *error recovery* mechanism of the base parser class will be awakened by telling https://buck-yeh.github.io/bux/html/structbux_1_1LR1_1_1I__ParserPolicy.html[`I_ParserPolicy`] error token id is `TID_LEX_Error`, which will be defined in **Parser**_IdDef.h_ _(to be explained)_
+| %ERROR_TOKEN | **Parser**_.cpp_ | If `%ERROR_TOKEN` is either defined valuelessly or with value `\[[Error]]` and `$Error` is found in productions, the underlying *error recovery* mechanism of the base parser class will be awakened by telling https://buck-yeh.github.io/bux/html/structbux_1_1LR1_1_1I__ParserPolicy.html[`I_ParserPolicy`] the error token id is `TID_LEX_Error`, which will be defined in **Parser**_IdDef.h_ _(to be explained)_
 
 | %UPCAST_TOKEN | **Parser**_.cpp_ | Implement the following policy method with valid mnemonics `$token` `$attr`
 [source,c++]
