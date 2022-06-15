@@ -14,7 +14,7 @@ void parseFile(const std::string &filename, Main::C_BNFParser &parser, bux::T_Le
     g_included.emplace(filename);
     fmt::print("About to parse '{}' ...\n", filename);
 
-    std::ifstream   in(filename);
+    std::ifstream   in(filename, std::ios::binary);
     if (!in.is_open())
         return parser.m_context.log(LL_FATAL, bux::C_SourcePos(filename,0,0), "Fail to open the source file");
 

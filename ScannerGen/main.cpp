@@ -680,7 +680,7 @@ void parseFile(const std::string &filename, C_ScannerParser &parser, bux::T_LexI
         return;
 
     g_included.emplace(filename);
-    std::ifstream   in(filename);
+    std::ifstream   in(filename, std::ios::binary);
     if (!in.is_open())
         return parser.m_context.log(LL_FATAL, bux::C_SourcePos(filename,0,0), fmt::format("Fail to open the source file '{}'", filename));
 
