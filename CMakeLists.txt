@@ -11,7 +11,7 @@ include(FetchContent)
 FetchContent_Declare(
   FetchedBux
   GIT_REPOSITORY https://github.com/buck-yeh/bux.git
-  GIT_TAG        1.6.5
+  GIT_TAG        1.6.6
   SOURCE_DIR     ${DEPENDEE_ROOT}/bux
 )
 FetchContent_Declare(
