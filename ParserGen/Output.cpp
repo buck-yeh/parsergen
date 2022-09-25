@@ -529,16 +529,18 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
         "\n", className, nsLR);
     if (hasContext())
     {
-        fmt::print(out, !m_needGLR?
+        if (!m_needGLR)
             // LR1
-            "    // Data\n"
-            "    {:23} m_context;\n" // m_context will be at column 28 if context.size() <= 23
-            "\n":
+            fmt::print(out,
+                "    // Data\n"
+                "    {:23} m_context;\n" // m_context will be at column 28 if context.size() <= 23
+                "\n", m_ContextType);
+        else
             // GLR
-            "    // Type\n"
-            "    using C_Context = std::remove_reference_t<{}>;\n"
-            "\n",
-            m_ContextType);
+            fmt::print(out,
+                "    // Type\n"
+                "    using C_Context = std::remove_reference_t<{}>;\n"
+                "\n", m_ContextType);
     }
     out <<"    // Ctor\n";
     if (!hasContext())
@@ -546,19 +548,24 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
         fmt::print(out, "    {}();\n", className);
     else
     {
-        fmt::print(out, m_needGLR?
-            "    {0}(C_Context &context): {0}() {{ userData(&context); }}\n":
-            "    template<class...T_Args>\n"
-            "    {}(T_Args&&...args): bux::{}::C_Parser(policy()), m_context(std::forward<T_Args>(args)...) {{}}\n",
-            className, nsLR);
-        fmt::print(out,
-            "\n"
-            "private:\n"
-            "\n");
         if (m_needGLR)
-            fmt::print(out, "    {}();\n", className);
+            // GLR
+            fmt::print(out,
+                "    {0}(C_Context &context): {0}() {{ userData(&context); }}\n"
+                "\n"
+                "private:\n"
+                "\n"
+                "    {0}();\n", className);
         else
-            fmt::print(out, "    static const bux::{}::I_ParserPolicy &policy();\n", nsLR);
+            // LR1
+            fmt::print(out,
+                "    template<class...T_Args>\n"
+                "    {0}(T_Args&&...args): bux::{1}::C_Parser(policy()), m_context(std::forward<T_Args>(args)...) {{}}\n"
+                "\n"
+                "private:\n"
+                "\n"
+                "    static const bux::{1}::I_ParserPolicy &policy();\n",
+                className, nsLR);
     }
     writeUserSection(out, "INCLASSDECL");
     out <<"};\n";
