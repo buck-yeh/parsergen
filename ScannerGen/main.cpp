@@ -274,23 +274,18 @@ void C_Output::writeCpp(std::ostream &out, const std::string &base) const
               "\n";
     }
 
-    typedef std::map<C_Interval,int> C_Interval2State;
-    typedef std::map<int,C_Interval2State> C_RawTransitMap;
-
-    C_RawTransitMap rawTrans;
+    std::map<int,std::map<C_Interval,int>> rawTrans;
     m_DFA.eachTransition([&rawTrans](int state, const C_LexSet &inputs, int nextState) {
         auto &dst = rawTrans[state];
         for (auto i: inputs)
             dst[i] = nextState;
     });
 
-    typedef std::pair<bux::T_LexID,int> C_LexStatePair;
-    typedef std::vector<C_LexStatePair> C_Lex2State;
+    typedef std::vector<std::pair<bux::T_LexID,int>> C_Lex2State;
     typedef std::map<C_Lex2State,int> C_StateMap2Index;
-    typedef std::map<int,C_StateMap2Index::iterator> C_CookedTransitMap;
 
     C_StateMap2Index    cookedMaps;
-    C_CookedTransitMap  cookedTrans;
+    std::map<int,C_StateMap2Index::iterator>  cookedTrans;
     for (const auto &i: rawTrans)
     {
         C_Lex2State cookedMap;
