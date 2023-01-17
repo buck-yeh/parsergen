@@ -269,7 +269,21 @@ FC_Output::FC_Output        (
                     sameAction = false;
             }
             if (actions.size() > 1)
+            {
+                if (!m_Parsed.getOption("SUPPRESS_GLR_CONFLICTS"))
+                {
+                    std::string names;
+                    for (auto &k: actions)
+                    {
+                        if (!names.empty())
+                            names += ", ";
+
+                        names += k;
+                    }
+                    fmt::print("GLR needed for lex {} conflics on: {}\n", m_lex2str.find(id)->second, names);
+                }
                 m_needGLR = true;
+            }
         }
         if (!sameAction)
         {

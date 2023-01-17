@@ -294,6 +294,8 @@ using namespace Main;
 ]]
 ----
 
+| %SUPPRESS_GLR_CONFLICTS | | When defined, all conflicted actions turning the target parser a GLR will not be printed to console thruout parser generation.
+
 |===
 
 === 4. $ New lexid
