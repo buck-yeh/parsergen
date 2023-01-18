@@ -98,7 +98,7 @@ TIP: _NID_ is short for Non-terminal ID.
 ----
 <1> No [[ ]], no reduction.
 <2> [[reduction_mnemonics]]Doubly-bracketed [[reduction code]] may contain the following mnemonics:
-    - `$p` - Reference to the base parser class, _e.g._ of type `bux::LR1::C_Parser &`
+    - `$p` - Reference to the base parser class, either of type `bux::LR1::C_Parser &` or of type `bux::GLR::C_Parser &`
     - `$P` - Reference to the generated parser class
     - `$c` - Reference to the context instance of the generated parser class if context type is defined by option `%CONTEXT`
     - `$r` - The result token buffer which can be freely assigned
@@ -366,7 +366,10 @@ TIP: No `#if _(expr)_` and `#elif _(expr)_` because relevant scenarios are yet t
 
 .Notes
 . At most one such line is allowed. 
-. When absent, the parser class has the default name `::C_Parser`
+. When absent, the parser class has the default name formatted from the base name of the 2nd commandline argument, i.e. `<Filename>`, except every char which is neither letter nor digit will be replaced by '_'. For example:
+  - If `<Filename>` is `Parser`, the class name will be `C_Parser`.
+  - If `<Filename>` is `Script/Parser`, the class name will still be `C_Parser`.
+  - If `<Filename>` is `Parser-2nd`, the class name will be `C_Parser_2nd`.
 . This will become a problem only when an application uses multiple `parsergen`-generated parsers.   
 . Use of namespace(s) is encouraged when the generated parser is part of a library.
 
