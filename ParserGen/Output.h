@@ -14,6 +14,11 @@ enum
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 7,
     VERSION_RELEASE         = 1
+    //
+    //      Commmand-Line Flags
+    //
+    ALWAYS_OVERWRITE        = 1<<0,
+    WITH_BOM                = 1<<1,
 };
 
 namespace bux { // reusability to be assessed
@@ -151,7 +156,7 @@ public:
     // Nonvirtuals
     FC_Output(const C_ParserInfo &parsed, const C_GotoMap &stateMap,
         const C_ActionMap &actionMap, const std::string &grammarPath);
-    bool operator()(const char *outputPath, const char *tokenPath, bool always_overwite) const;
+    bool operator()(const char *outputPath, const char *tokenPath, int flags) const;
 
 private:
 

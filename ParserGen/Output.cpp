@@ -370,7 +370,7 @@ FC_Output::FC_Output        (
     }
 }
 
-bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool always_overwite) const
+bool FC_Output::operator()(const char *outputPath, const char *tokenPath, int flags) const
 {
     if (!m_readySoFar)
         return false;
@@ -401,7 +401,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     //      Output ID def header
     //
     path.replace_extension() += "IdDef.h";
-    if (!always_overwite && !bux::testWritability(path.c_str()))
+    if (!(flags & ALWAYS_OVERWRITE) && !bux::testWritability(path.c_str()))
         return false;
     std::ofstream   out{path};
     if (!out.is_open())
@@ -409,6 +409,10 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
         fmt::print("Write error on {}\n", path.generic_string());
         return false;
     }
+    static const auto U8BOM = reinterpret_cast<const char*>(u8"\ufeff");
+    if (flags & WITH_BOM)
+        out.write(U8BOM, 3);
+
     out <<m_Banner;
     if (auto found =m_Parsed.getOption("IDDEF_SOURCE"))
     {
@@ -508,6 +512,9 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     if (tokenPath)
     {
         std::ofstream out(tokenPath);
+        if (flags & WITH_BOM)
+            out.write(U8BOM, 3);
+
         outputTokens(out, base);
     }
     else
@@ -518,7 +525,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     //
     path = outputPath;
     path.replace_extension(".h");
-    if (!always_overwite && !bux::testWritability(path.c_str()))
+    if (!(flags & ALWAYS_OVERWRITE) && !bux::testWritability(path.c_str()))
         return false;
     out.open(path);
     if (!out.is_open())
@@ -526,6 +533,9 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
         fmt::print("Write error on {}\n", path.generic_string());
         return false;
     }
+    if (flags & WITH_BOM)
+        out.write(U8BOM, 3);
+
     const char *const nsLR = m_needGLR? "GLR": "LR1";
     fmt::print(out,
         "{0}"
@@ -591,7 +601,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
     //
     path = outputPath;
     path.replace_extension(".cpp");
-    if (!always_overwite && !bux::testWritability(path.c_str()))
+    if (!(flags & ALWAYS_OVERWRITE) && !bux::testWritability(path.c_str()))
         return false;
     out.open(path);
     if (!out.is_open())
@@ -599,6 +609,9 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, bool a
         fmt::print("Write error on {}\n", path.generic_string());
         return false;
     }
+    if (flags & WITH_BOM)
+        out.write(U8BOM, 3);
+
     out <<m_Banner;
     writeUserSection(out, "HEADERS_FOR_CPP");
     fmt::print(out,
