@@ -13,7 +13,7 @@ enum
     //
     VERSION_MAJOR           = 1,
     VERSION_MINOR           = 7,
-    VERSION_RELEASE         = 1
+    VERSION_RELEASE         = 4,
     //
     //      Commmand-Line Flags
     //
