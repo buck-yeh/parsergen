@@ -16,6 +16,7 @@ lexid   Spaces
 
 %EXTRA_TOKENS   [[spaces|identifier]]
 %SHOW_UNDEFINED
+//%SUPPRESS_GLR_CONFLICTS
 
 //
 //      Operator Precedency
