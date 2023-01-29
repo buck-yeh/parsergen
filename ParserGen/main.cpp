@@ -65,12 +65,12 @@ int main(int argc, const char* argv[])
     C_Paths         inc_dirs;
     bool            yes2all{};
     ezargs.position_args(std::array{"Grammar","Filename","TokensOutput"})
-          .add_flag("include_dir", 'I', "Search path of #include directive within <Grammar>",
+          .add_flag("include-dir", 'I', "Search path of #include directive within <Grammar>",
                     [&](auto s){
                         bux::C_IMemStream in{s};
                         for (std::string line; std::getline(in, line, ':'); inc_dirs.emplace_back(line));
                     })
-          .add_flag("yes_to_all", 'a', "Quietly overwrite all existing output files",
+          .add_flag("yes-to-all", 'a', "Quietly overwrite all existing output files",
                     [&]{
                         yes2all = true;
                     });
