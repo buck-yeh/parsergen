@@ -250,10 +250,10 @@ if (!parser.accepted())
 
 **(2)** Time to check integrity of your context status.
 
-**(3)** `parser.getFinalLex()` returns reference to the merged result of type `bux::LR1::C_LexInfo`, defined in [`LR1.h`](https://github.com/buck-yeh/bux/blob/main/include/bux/LR1.h). In this example, the expected result is integral value of type `int` and can be conveniently obtained by expression
+**(3)** `parser.getFinalLex()` returns reference to the merged result of type [`bux::LR1::C_LexInfo`](https://buck-yeh.github.io/bux/html/namespacebux_1_1LR1.html#a9f21b058332fdbeccb1750ffb3992fcd). In this example, the expected result is integral value of type `int` and can be conveniently obtained by calling [`bux::unlex<T>()`](https://buck-yeh.github.io/bux/html/namespacebux.html#a87e9dc688a9916093227ad927268e4f3)
 
    ~~~c++
    bux::unlex<int>(parser.getFinalLex())
    ~~~
 
-   An alternative way is to reap the result from the user context instance instead of calling `parser.getFinalLex()`. The difference is the former resides on stack whereas the latter resides on heap. 
+   An alternative way is to store the result in the user context instance thru "production code" instead of calling `parser.getFinalLex()`.

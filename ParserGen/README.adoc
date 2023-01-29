@@ -24,9 +24,10 @@ toc::[]
 .Output of `parsergen -h`
 [source,bash]
 ----
-argv[1]: USAGE: ./parsergen <Grammar> <Filename> <TokensOutput> [-I ARG] [-a] [-h]
+USAGE: parsergen <Grammar> <Filename> <TokensOutput> [-I ARG] [-a] [--with-bom] [-h]
+
 DESCRIPTION:
-  LR(1)/GLR-Parser Generator command line tool v1.7.0
+  LR(1)/GLR-Parser Generator command line tool v1.7.4
 
   Where:
   1. <Grammar> is a grammar definition file.
@@ -37,10 +38,12 @@ DESCRIPTION:
   3. Generated token definitions are written to <TokensOutput> to feed scannergen
 
 VALID FLAGS:
-  -I, --include_dir ARG
+  -I, --include-dir ARG
 	Search path of #include directive within <Grammar>
-  -a, --yes_to_all
+  -a, --yes-to-all
 	Quietly overwrite all existing output files
+  --with-bom
+	Prefix BOM to all output files
   -h, --help
 	Display this help and exit
 
@@ -75,7 +78,7 @@ TIP: Comments can also disable other types of lines (and later re-enable them ju
 .Syntax
 > _<NID>_ ::= (_<NID>_|_AnythingElse_)* +
   _<NID>_ ::= (_<NID>_|_AnythingElse_)* [[ +
-　   Multi-lined reduction code in C++ +
+? Multi-lined reduction code in C++ +
 ]]
 
 TIP: _NID_ is short for Non-terminal ID. 
@@ -117,7 +120,7 @@ CAUTION: 💣 `parsergen` has to know the start symbol before calculation. If th
 > %Id +
   %Id [[Single-lined contents]] +
   %Id [[ +
-　   Multi-lined contents +
+?   Multi-lined contents +
 ]]
 
 .Example
