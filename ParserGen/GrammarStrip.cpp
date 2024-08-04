@@ -5,7 +5,7 @@
 #include "bux/MemIn.h"      // bux::C_IMemStream<>
 #include "bux/StrUtil.h"    // HRTN()
 #include "bux/XException.h" // bux::catchSE()
-#include <fmt/core.h>       // fmt::print()
+#include <print>            // std::print()
 
 #undef PROGNAME
 #ifdef _WIN32
@@ -47,7 +47,7 @@ int main(int argc, const char* argv[])
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
-        fmt::print("{}\n", ret.message());
+        std::print("{}\n", ret.message());
         return MAIN_ARG_ERROR;
     }
 
@@ -60,7 +60,7 @@ int main(int argc, const char* argv[])
         parseFile(argv[1], parser, TID_EOF);
         if (!parser.accepted())
         {
-            fmt::print("Not accepted on EOF\n");
+            std::print("Not accepted on EOF\n");
             return MAIN_NOT_ACCEPTED;
         }
         parser.m_context.wrapup(C_SourcePos("[wrapup]",0,0));
@@ -107,23 +107,23 @@ int main(int argc, const char* argv[])
             }
 
             for (auto &i: w2l)
-                fmt::print("{}\t{}\t{}\n", i.second.m_Lex, i.second.m_Assoc, i.first);
+                std::print("{}\t{}\t{}\n", i.second.m_Lex, i.second.m_Assoc, i.first);
 
-            fmt::print("\n");
+            std::print("\n");
         }
         for (auto &i: c.productions())
-            fmt::print("{}\n", i.str());
+            std::print("{}\n", i.str());
 
         return MAIN_SUCCESS;
     }
     catch (const std::exception &t)
     {
-        fmt::print("{}: {} ... \n", HRTN(t), t.what());
+        std::print("{}: {} ... \n", HRTN(t), t.what());
         return MAIN_CAUGHT;
     }
     catch (...)
     {
-        fmt::print("Unknown exception\r\n");
+        std::print("Unknown exception\r\n");
         return MAIN_CAUGHT;
     }
 }

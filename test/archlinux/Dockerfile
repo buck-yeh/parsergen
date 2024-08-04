@@ -9,7 +9,7 @@ Server = http://ftp.tku.edu.tw/Linux/ArchLinux/$repo/os/$arch\n' | tee /etc/pacm
     fi && \
     sed -Ei 's|^#TotalDownload\s*$|TotalDownload|g' /etc/pacman.conf && \
     sed -Ei 's|^#VerbosePkgLists\s*$|VerbosePkgLists|g' /etc/pacman.conf && \
-    pacman -Sy --needed --noconfirm cmake make gcc git binutils fmt fakeroot sed gawk && \
+    pacman -Sy --needed --noconfirm cmake make gcc git binutils fakeroot debugedit sed gawk && \
     rm -rf /root/.cache
 RUN useradd -m guest
 

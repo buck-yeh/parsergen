@@ -3,4 +3,4 @@ add_executable(bisonglr
     Parser.cpp
     Scanner.cpp
     )
-target_link_libraries(bisonglr bux fmt stdc++)
+target_link_libraries(bisonglr bux stdc++)

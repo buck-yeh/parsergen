@@ -22,12 +22,12 @@ add_executable(parsergen
     ${COMMON_SRC}
     )
 #target_compile_options(parsergen PRIVATE -O0 -g3)
-target_link_libraries(parsergen bracketPairing bux fmt stdc++)
+target_link_libraries(parsergen bracketPairing bux stdc++)
 #add_dependencies(parsergen bracketPairing bux)
 
 add_executable(grammarstrip
     GrammarStrip.cpp
     ${COMMON_SRC}
     )
-target_link_libraries(grammarstrip bracketPairing bux fmt stdc++)
+target_link_libraries(grammarstrip bracketPairing bux stdc++)
 #add_dependencies(grammarstrip bracketPairing bux)

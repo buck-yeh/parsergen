@@ -755,7 +755,7 @@ void _reduce_21(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetL
         t->m_Lval = bux::unlex<std::string>(_geT_(0));
         if (t->m_Lval == "@keyword" ||
             t->m_Lval == "@operator" )
-            _paRSeR_.onError(_geT_(0), fmt::format("Reserved non-terminal <{}> not allowed on left side of production", t->m_Lval));
+            _paRSeR_.onError(_geT_(0), std::format("Reserved non-terminal <{}> not allowed on left side of production", t->m_Lval));
 
         _reT_ = t; // good or bad
     }

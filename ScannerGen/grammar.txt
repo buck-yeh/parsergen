@@ -43,7 +43,7 @@ right  ( ) { }
         val.m_NFA.setAction(std::move(*action));
     }
     if (!c.addRE(name, val))
-        c.log(LL_WARNING, $1, fmt::format("Overwrite token definition of \"{}\"", name));
+        c.log(LL_WARNING, $1, std::format("Overwrite token definition of \"{}\"", name));
     t.disown(); // val (aka *t) has been taken as &val the pointer.
 ]]
 

@@ -999,7 +999,7 @@ void _reduce_3(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLv
         val.m_NFA.setAction(std::move(*action));
     }
     if (!c.addRE(name, val))
-        c.log(LL_WARNING, _geT_(0), fmt::format("Overwrite token definition of \"{}\"", name));
+        c.log(LL_WARNING, _geT_(0), std::format("Overwrite token definition of \"{}\"", name));
     t.disown(); // val (aka *t) has been taken as &val the pointer.
 }
 

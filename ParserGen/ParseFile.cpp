@@ -1,8 +1,8 @@
 #include "Parser.h"     // Main::C_BNFParser
 #include "Scanner.h"    // C_ParserScanner
 //--------------------------------------------------------------------
-#include <fmt/core.h>   // fmt::print()
 #include <fstream>      // std::ifstream
+#include <print>        // std::print()
 #include <set>          // std::set<>
 
 void parseFile(const std::string &filename, Main::C_BNFParser &parser, bux::T_LexID endToken)
@@ -12,7 +12,7 @@ void parseFile(const std::string &filename, Main::C_BNFParser &parser, bux::T_Le
         return;
 
     g_included.emplace(filename);
-    fmt::print("About to parse '{}' ...\n", filename);
+    std::print("About to parse '{}' ...\n", filename);
 
     std::ifstream   in(filename, std::ios::binary);
     if (!in.is_open())

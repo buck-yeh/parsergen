@@ -4,6 +4,7 @@
 #include "bux/StrUtil.h"    // HRTN()
 #include "bux/XException.h" // RUNTIME_ERROR()
 #include <ctype.h>          // isascii(), isalnum()
+#include <ostream>          // std::ostream
 
 namespace ParserGen {
 

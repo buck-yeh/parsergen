@@ -11,10 +11,10 @@ add_executable(scannergen
     spec2charset.cpp
     )
 #target_compile_options(scannergen PRIVATE -O0 -g3)
-target_link_libraries(scannergen bracketPairing bux fmt stdc++)
+target_link_libraries(scannergen bracketPairing bux stdc++)
 
 add_executable(handycharset
     HandyCharset.cpp
     spec2charset.cpp
     )
-target_link_libraries(handycharset bux fmt stdc++)
+target_link_libraries(handycharset bux stdc++)

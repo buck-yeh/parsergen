@@ -2,8 +2,8 @@
 //--------------------------------------------------------------------
 #include "bux/FsUtil.h"     // bux::search_dirs()
 #include "bux/StrUtil.h"    // bux::expand_env()
-#include <fmt/core.h>       // fmt::print()
 #include <limits>           // std::numeric_limits<>
+#include <print>            // std::print()
 
 namespace fs = std::filesystem;
 
@@ -156,7 +156,7 @@ void C_Context::log(bux::E_LogLevel level, const bux::C_SourcePos &pos, std::str
         ") INFO: ",
         ") VERBOSE: "
     };
-    fmt::print("{}({},{}{}{}\n", pos.m_Source, pos.m_Line, pos.m_Col, KIND[level], message);
+    std::print("{}({},{}{}{}\n", pos.m_Source, pos.m_Line, pos.m_Col, KIND[level], message);
     constinit static const size_t LIMIT[] ={
         0,
         10,

@@ -161,7 +161,7 @@
         t->m_Lval = bux::unlex<std::string>($1);
         if (t->m_Lval == "@keyword" ||
             t->m_Lval == "@operator" )
-            $p.onError($1, fmt::format("Reserved non-terminal <{}> not allowed on left side of production", t->m_Lval));
+            $p.onError($1, std::format("Reserved non-terminal <{}> not allowed on left side of production", t->m_Lval));
 
         $r = t; // good or bad
     }

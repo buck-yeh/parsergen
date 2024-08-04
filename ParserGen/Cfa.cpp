@@ -5,7 +5,7 @@
 //-------------------------------------------------------
 #include "bux/StrUtil.h"    // HRTN()
 #include "bux/XException.h" // RUNTIME_ERROR()
-#include <fmt/core.h>       // fmt::print()
+#include <print>            // std::print()
 
 namespace {
 
@@ -220,18 +220,18 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
 
     if (!complete)
     {
-        fmt::print("Can't determine lookahead sets of the following:\n");
+        std::print("Can't determine lookahead sets of the following:\n");
         for (auto &i: m_AttrMap)
             if (!i.second.m_FirstsDeps.empty())
             {
-                fmt::print("<{}>:\n", i.first);
+                std::print("<{}>:\n", i.first);
                 for (auto &j: i.second.m_FirstsDeps)
                 {
                     bool first = true;
                     for (auto k = j.first; k != j.second; ++k, first = false)
-                        fmt::print("{}{}", first? '\t': ' ', (**k).displayStr());
+                        std::print("{}{}", first? '\t': ' ', (**k).displayStr());
 
-                    fmt::print("\n");
+                    std::print("\n");
                 }
             }
         m_Ready =false;
@@ -334,7 +334,7 @@ size_t makeCfa              (
         {
             if (initProd)
             {
-                fmt::print("Root production rule expression <@> ::= ... can only be defined once\n");
+                std::print("Root production rule expression <@> ::= ... can only be defined once\n");
                 ++ret;
             }
             initProd = &i;
@@ -342,7 +342,7 @@ size_t makeCfa              (
     }
     if (!initProd)
     {
-        fmt::print("Can't find start production\n");
+        std::print("Can't find start production\n");
         return ++ret;
     }
 
@@ -359,7 +359,7 @@ size_t makeCfa              (
             }
         if (!ok)
         {
-            fmt::print("Can't find any production for <{}>\n", name);
+            std::print("Can't find any production for <{}>\n", name);
             return ++ret;
         }
     }
@@ -368,7 +368,7 @@ size_t makeCfa              (
         const std::string name = dynamic_cast<const C_LexSymbol&>(*i).m_Var;
         if (!parsed.hasLexSymbol(name))
         {
-            fmt::print("Can't find macro resolution for ${}\n", name);
+            std::print("Can't find macro resolution for ${}\n", name);
             return ++ret;
         }
     }
@@ -379,7 +379,7 @@ size_t makeCfa              (
     if (!createClosure)
         return ++ret;
 
-    fmt::print("Total {} lex-symbols {} nonterms {} literals\n", variables.size(), nonterminals.size(), alphabet.size());
+    std::print("Total {} lex-symbols {} nonterms {} literals\n", variables.size(), nonterminals.size(), alphabet.size());
     size_t stateId{};
     states.clear();
     stateMap.clear();
@@ -415,9 +415,9 @@ size_t makeCfa              (
                     k = stateLookup.insert(&states.emplace_back(std::move(t))).first;
                 }
                 if (!stateMap.try_emplace({&i, j}, *k).second)
-                    fmt::print(" Err #{}: Duplicate state mapping\n", ++ret);
+                    std::print(" Err #{}: Duplicate state mapping\n", ++ret);
 
-                fmt::print("\rstates = {}\tshifts = {}\x1b[K", states.size(), stateMap.size());
+                std::print("\rstates = {}\tshifts = {}\x1b[K", states.size(), stateMap.size());
             }
         } // for (auto &j: alphabet)
     } // for (auto &i: states)

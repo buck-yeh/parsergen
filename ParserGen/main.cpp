@@ -30,8 +30,8 @@
 #include "bux/StrUtil.h"    // HRTN()
 #include "bux/XConsole.h"   // bux::pressAKey();
 #include "bux/XException.h" // bux::catchSE()
-#include <fmt/core.h>       // fmt::print()
 #include <chrono>           // std::chrono::system_clock::*
+#include <print>            // std::print()
 
 using namespace bux;
 
@@ -51,7 +51,7 @@ enum
 
 int main(int argc, const char* argv[])
 {
-    bux::C_EZArgs   ezargs{fmt::format(
+    bux::C_EZArgs   ezargs{std::format(
         "LR(1)/GLR-Parser Generator command line tool v{}.{}.{}\n"
         "\n"
         "  Where:\n"
@@ -81,23 +81,23 @@ int main(int argc, const char* argv[])
     auto ret = ezargs.parse(argc, argv);
     if (!ret)
     {
-        fmt::print("{}\n", ret.message());
+        std::print("{}\n", ret.message());
         return MAIN_ARG_ERROR;
     }
     if (!inc_dirs.empty())
     {
-        fmt::print("INCLUDE_PATHS: {{");
+        std::print("INCLUDE_PATHS: {{");
         bool first = true;
         for (auto &i: inc_dirs)
         {
             if (first)
                 first = false;
             else
-                fmt::print(", ");
+                std::print(", ");
 
-            fmt::print("{}", i.string());
+            std::print("{}", i.string());
         }
-        fmt::print("}}\n");
+        std::print("}}\n");
     }
     try
     {
@@ -125,7 +125,7 @@ int main(int argc, const char* argv[])
         if (const auto n = makeCfa(c, states, stateMap))
             // Errors happened
         {
-            fmt::print("\n"
+            std::print("\n"
                        "There are {} errors in call to makeCfa()", n);
             return MAIN_MAKECFA_ERROR;
         }
@@ -133,7 +133,7 @@ int main(int argc, const char* argv[])
         // Generate action table
         C_ActionShifts loserShits;
         auto actionMap = makeActionMap(c, states, loserShits);
-        fmt::print("\n"
+        std::print("\n"
                    "Spent {}\"\n", std::chrono::duration<double>(std::chrono::system_clock::now() - startTime).count());
 
         // Strip redundant goto keys
@@ -152,9 +152,9 @@ int main(int argc, const char* argv[])
                     stateMap.erase(found);
                 }
             }
-            fmt::print("{} out of {} goto keys erased for redundancy.\n", count, orgSize);
+            std::print("{} out of {} goto keys erased for redundancy.\n", count, orgSize);
             if (count < loserShits.size())
-                fmt::print("Fail to find {} goto keys.\n", loserShits.size() - count);
+                std::print("Fail to find {} goto keys.\n", loserShits.size() - count);
         }
 
         // Output result
@@ -165,23 +165,23 @@ int main(int argc, const char* argv[])
         if (c.checkUnusedOptions() ||
             c.checkSemanticlessProductions())
         {
-            fmt::print("Press a key to continue ...");
+            std::print("Press a key to continue ...");
             bux::pressAKey();
-            fmt::print("\n");
+            std::print("\n");
         }
 
         // Ok
-        fmt::print("Parser created\n");
+        std::print("Parser created\n");
         return MAIN_SUCCESS;
     }
     catch (const std::exception &t)
     {
-        fmt::print("{}: {} ... \n", HRTN(t), t.what());
+        std::print("{}: {} ... \n", HRTN(t), t.what());
         return MAIN_CAUGHT;
     }
     catch (...)
     {
-        fmt::print("Unknown exception\n");
+        std::print("Unknown exception\n");
         return MAIN_CAUGHT;
     }
 }
