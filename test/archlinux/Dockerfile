@@ -2,8 +2,12 @@ FROM archlinux/archlinux
 USER root
 #ENV PACDAY='2019/05/07'
 RUN echo $'\
-Server = http://archlinux.cs.nctu.edu.tw/$repo/os/$arch\n\
-Server = http://ftp.tku.edu.tw/Linux/ArchLinux/$repo/os/$arch\n' | tee /etc/pacman.d/mirrorlist && \
+Server = http://mirror.archlinux.tw/ArchLinux/$repo/os/$arch\n\
+Server = https://mirror.archlinux.tw/ArchLinux/$repo/os/$arch\n\
+Server = http://archlinux.ccns.ncku.edu.tw/archlinux/$repo/os/$arch\n\
+Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch\n\
+Server = http://mirror.rackspace.com/archlinux/$repo/os/$arch\n\
+Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch\n' | tee /etc/pacman.d/mirrorlist && \
     if [[ -n "$PACDAY" ]]; then \
         sed -Ei "s|^Include\s*=.+$|SigLevel = PackageRequired\nServer=https://archive.archlinux.org/repos/$PACDAY/\$repo/os/\$arch|g" /etc/pacman.conf ; \
     fi && \
