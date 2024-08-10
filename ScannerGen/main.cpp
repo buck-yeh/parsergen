@@ -34,14 +34,15 @@ void parseFile(const std::string &filename, C_ScannerParser &parser, bux::T_LexI
 #define PROGNAME "scannergen"
 const char USERPREFIX[] ="create_";
 
+//
+//      Major.Minor.Release
+//
+constinit const int VERSION_MAJOR   = 1;
+constinit const int VERSION_MINOR   = 6;
+constinit const int VERSION_RELEASE = 0;
+
 enum
 {
-    //
-    //      Major.Minor.Release
-    //
-    VERSION_MAJOR           = 1,
-    VERSION_MINOR           = 6,
-    VERSION_RELEASE         = 0,
     //
     //      Error Codes
     //

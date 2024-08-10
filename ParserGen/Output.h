@@ -6,14 +6,15 @@
 #include "bux/XException.h" // RUNTIME_ERROR()
 #include <optional>         // std::optional<>
 
+//
+//      Major.Minor.Release
+//
+constinit const int VERSION_MAJOR   = 1;
+constinit const int VERSION_MINOR   = 7;
+constinit const int VERSION_RELEASE = 5;
+
 enum
 {
-    //
-    //      Major.Minor.Release
-    //
-    VERSION_MAJOR           = 1,
-    VERSION_MINOR           = 7,
-    VERSION_RELEASE         = 4,
     //
     //      Commmand-Line Flags
     //
