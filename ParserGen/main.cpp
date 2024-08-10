@@ -74,7 +74,7 @@ int main(int argc, const char* argv[])
                     [&]{
                         flags |= ALWAYS_OVERWRITE;
                     })
-          .add_flag("with-bom", "Prefix BOM to all output files",
+          .add_flag("with-bom", "Prefix BOM to all output files (utf-8 encoding already)",
                     [&]{
                         flags |= WITH_BOM;
                     });
