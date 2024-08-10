@@ -1142,7 +1142,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, int fl
             <<ret.first
             <<"    // Grammar %UPCAST_TOKEN ends\n"
               "}\n";
-        onUnmappedReduction(unmap, [&]{
+        onUnmappedReduction(unmap, []{
             return "C_ParserPolicy::changeToken()";
         });
     }
@@ -1154,8 +1154,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, int fl
           "    info.m_PopLength = src.m_PopLength;\n"
           "    info.m_Reduce    = src.m_pAction;\n"
           "}\n";
-    const auto foundOnError = m_Parsed.getOption("ON_ERROR");
-    if (foundOnError)
+    if (const auto foundOnError = m_Parsed.getOption("ON_ERROR"))
     {
         rr.clearMap();
         addParserMap(rr, headClassName, 0);
@@ -1182,7 +1181,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, int fl
             <<ret.first
             <<"    // Grammar %ON_ERROR ends\n"
               "}\n";
-        onUnmappedReduction(unmap, [&]{
+        onUnmappedReduction(unmap, []{
             return "C_ParserPolicy::onError()";
         });
     }
