@@ -66,7 +66,7 @@ std::string ensureNoConcat(std::string s)
     if (s.find('\n',0) == std::string::npos)
     {
         stripPos = s.find_first_not_of(" \t\r");
-        if (stripPos)
+        if (stripPos != std::string::npos && stripPos)
             s.replace(0, stripPos, "    ");
         else
             s = "    " + s;

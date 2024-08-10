@@ -88,12 +88,12 @@ void onUnmappedReduction(const std::set<std::string> &unmap, std::function<std::
 std::string trim(std::string s)
 {
     auto pos = s.find_first_not_of(" \t\r\n");
-    if (pos)
+    if (pos != std::string::npos && pos)
         s.erase(0, pos);
 
     pos = s.find_last_not_of(" \t\r\n");
-    if (pos < s.size())
-        s.erase(pos);
+    if (pos != std::string::npos && pos + 1 < s.size())
+        s.erase(pos+1);
 
     return s;
 }
