@@ -110,7 +110,7 @@ int main(int argc, const char* argv[])
         parseFile(argv[1], parser, TID_EOF);
         if (!parser.accepted())
         {
-            fmt::print("Not accepted on EOF\n");
+            std::print("Not accepted on EOF\n");
             return MAIN_NOT_ACCEPTED;
         }
         c.wrapup(C_SourcePos("[wrapup]",0,0));
