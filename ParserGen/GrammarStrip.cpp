@@ -56,7 +56,8 @@ int main(int argc, const char* argv[])
         // Syntax analysis
         std::ios_base::sync_with_stdio(true);
 
-        Main::C_BNFParser   parser{inc_dirs};
+        C_BNFContext        c{inc_dirs};
+        Main::C_BNFParser   parser{c};
         parseFile(argv[1], parser, TID_EOF);
         if (!parser.accepted())
         {
@@ -66,7 +67,6 @@ int main(int argc, const char* argv[])
         parser.m_context.wrapup(C_SourcePos("[wrapup]",0,0));
 
         // Check if parsing is ok
-        const auto &c =parser.m_context;
         if (c.m_ErrorTotal[LL_ERROR] || c.m_ErrorTotal[LL_FATAL])
             return MAIN_PARSE_ERROR;
 

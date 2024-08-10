@@ -2,4 +2,5 @@
 #include "BNFContext.h"     // C_BNFContext
 ]]
 
-%CONTEXT        [[C_BNFContext]]
+%CONTEXT        [[ParserGen::C_BNFContext&]]
+//%SHOW_UNDEFINED
