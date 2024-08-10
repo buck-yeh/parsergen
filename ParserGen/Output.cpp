@@ -1075,13 +1075,12 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, int fl
                   "        const char       *m_value;\n"
                   "    }   MAP[] = ";
             first = true;
-            for (size_t i = 0, n = tokenStrs.size(); i < n; ++i)
+            for (auto &i: tokenStrs)
             {
-                const auto s = tokenStrs[i];
-                if (!s.empty())
+                if (!i.empty())
                 {
                     out <<(first? '{': ',') <<"\n"
-                          "        {bux::TOKENGEN_LB+" <<i <<", \"" <<bux::asciiLiteral(s) <<"\"}";
+                          "        {bux::TOKENGEN_LB+" <<i <<", \"" <<bux::asciiLiteral(i) <<"\"}";
                     first = false;
                 }
             }
