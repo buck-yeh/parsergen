@@ -1109,7 +1109,7 @@ bool FC_Output::operator()(const char *outputPath, const char *tokenPath, int fl
               "    else if (input >= " ENCODED_TOKEN_LB_str ")\n"
               "        LOGIC_ERROR(\"Invalid input: state={} input={}\", (int)state, printToken(input));\n"
               "\n"
-              "    auto end = mapGoto + " <<m_state2next.size() <<";\n"
+              "    static constinit const auto end = mapGoto + " <<m_state2next.size() <<";\n"
               "    auto found = std::lower_bound(mapGoto, end, state, [](const C_MapGoto &i, bux::T_StateID state_) {\n"
               "        return i.m_curState < state_;\n"
               "    });\n"
