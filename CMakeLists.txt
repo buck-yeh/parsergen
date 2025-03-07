@@ -1,6 +1,10 @@
 cmake_minimum_required (VERSION 3.20)
 cmake_policy(VERSION 3.20)
 
+if(APPLE)
+message(FATAL_ERROR "parsergen/scannergen will not build wt decent bux::expand_env() and linkable bux::testWritability()")
+endif()
+
 if(NOT DEFINED DEPENDEE_ROOT)
 set(DEPENDEE_ROOT "..")
 endif()
