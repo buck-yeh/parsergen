@@ -50,6 +50,10 @@ ELSE()
 ENDIF()
 message(DEBUG "Root/CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
 
+if(NOT WIN32)
+find_package(Iconv REQUIRED)
+endif()
+
 add_subdirectory (ParserGen)
 add_subdirectory (ScannerGen)
 add_subdirectory (example)
