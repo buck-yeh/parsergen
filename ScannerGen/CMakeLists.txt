@@ -10,6 +10,7 @@ add_executable(scannergen
     Scanner.cpp
     spec2charset.cpp
     )
+target_compile_features(scannergen PRIVATE cxx_std_23)
 #target_compile_options(scannergen PRIVATE -O0 -g3)
 target_link_libraries(scannergen bracketPairing bux stdc++)
 
@@ -18,3 +19,4 @@ add_executable(handycharset
     spec2charset.cpp
     )
 target_link_libraries(handycharset bux stdc++)
+target_compile_features(handycharset PRIVATE cxx_std_23)

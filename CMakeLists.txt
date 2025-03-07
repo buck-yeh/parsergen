@@ -26,7 +26,7 @@ endif()
 project(ParserSuite)
 
 IF(CMAKE_CXX_COMPILER_ID MATCHES Clang|GNU)
-    string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Ofast -std=c++23")
+    string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Wshadow -Wconversion -Ofast")
     IF(DEFINED FETCH_DEPENDEES)
         string(APPEND CMAKE_CXX_FLAGS " -I${fetchedbux_SOURCE_DIR}/include -I${fetchedcbrackets_SOURCE_DIR}")
         string(APPEND CMAKE_CXX_FLAGS " -L${fetchedbux_SOURCE_DIR}/src -L${fetchedcbrackets_SOURCE_DIR}")
