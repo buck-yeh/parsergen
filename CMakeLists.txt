@@ -1,5 +1,5 @@
-cmake_minimum_required (VERSION 3.18)
-cmake_policy(VERSION 3.18)
+cmake_minimum_required (VERSION 3.20)
+cmake_policy(VERSION 3.20)
 
 if(NOT DEFINED DEPENDEE_ROOT)
 set(DEPENDEE_ROOT "..")
