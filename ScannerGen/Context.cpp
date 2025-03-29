@@ -165,7 +165,7 @@ void C_Context::log(bux::E_LogLevel level, const bux::C_SourcePos &pos, std::str
         std::numeric_limits<size_t>::max()
     };
     if (++m_ErrorTotal[level] > LIMIT[level])
-        RUNTIME_ERROR("Too many errors !");
+        throw std::runtime_error{"Too many errors !"};
 }
 
 C_WeightedStrList::C_WeightedStrList(int w, C_StrList &expr, C_StrList *isFinal):
