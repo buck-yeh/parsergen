@@ -114,7 +114,7 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
                     if (attrs.m_NullableDeps.empty())
                         // Concluded nullity
                     {
-                        changed =true;
+                        changed = true;
                         if (attrs.m_Nullable)
                         {
                             j->erase(k++);
@@ -138,11 +138,11 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
                     }
                     else
                         ++k;
-                } // for (auto k =j->begin(); k != j->end();)
+                } // for (auto k = j->begin(); k != j->end();)
 
                 ++j;
             post_inc_j:;
-            } // for (auto j =deps.begin(); j != deps.end();)
+            } // for (auto j = deps.begin(); j != deps.end();)
 
 #ifdef __BuckDebug
             if (!deps.empty() && i.second.m_Nullable)
@@ -156,8 +156,8 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
     bool complete;
     do
     {
-        changed =false;
-        complete =true;
+        changed = false;
+        complete = true;
         for (auto &i: m_AttrMap)
         {
             auto &deps = i.second.m_FirstsDeps;
@@ -175,7 +175,7 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
                         {
                             if (!attrs.m_Nullable)
                             {
-                                spareDep =true;
+                                spareDep = true;
                                 break;
                             }
                         }
@@ -220,21 +220,24 @@ FC_CreateClosure::FC_CreateClosure(const C_ParserInfo &parsed):
 
     if (!complete)
     {
-        std::print("Can't determine lookahead sets of the following:\n");
+        std::string errorMsg = "Can't determine lookahead sets of the following:\n";
         for (auto &i: m_AttrMap)
             if (!i.second.m_FirstsDeps.empty())
             {
-                std::print("<{}>:\n", i.first);
+                errorMsg += "<" + i.first + ">:\n";
                 for (auto &j: i.second.m_FirstsDeps)
                 {
                     bool first = true;
                     for (auto k = j.first; k != j.second; ++k, first = false)
-                        std::print("{}{}", first? '\t': ' ', (**k).displayStr());
-
-                    std::print("\n");
+                    {
+                        errorMsg += first ? '\t' : ' ';
+                        errorMsg += (**k).displayStr();
+                    }
+                    errorMsg += '\n';
                 }
             }
-        m_Ready =false;
+        std::print("{}", errorMsg);
+        m_Ready = false;
     }
 }
 
@@ -268,7 +271,7 @@ void FC_CreateClosure::operator()(C_StateItems &dst) const
                         for (auto k = seq.begin()+std::ptrdiff_t(item.second); ++k != seq.end();)
                             if (auto const nt = dynamic_cast<C_Nonterminal*>(*k))
                             {
-                                auto &attrs =getAttr(nt->m_id);
+                                const auto &attrs = getAttr(nt->m_id);
                                 la.insert(attrs.m_Firsts.begin(), attrs.m_Firsts.end());
                                 if (!attrs.m_Nullable)
                                     goto afterMergeLookahead;
@@ -324,12 +327,14 @@ size_t makeCfa              (
     for (auto &i: parsed.productions())
     {
         for (auto &j: i.m_Rval)
+        {
             if (dynamic_cast<C_Nonterminal*>(j))
                 nonterminals.insert(j);
             else if (dynamic_cast<C_LexSymbol*>(j))
                 variables.insert(j);
             else
                 alphabet.insert(j);
+        }
         if (i.m_Lval == "@")
         {
             if (initProd)
@@ -349,12 +354,12 @@ size_t makeCfa              (
     // Ensure existency of production rules for each nonterminal
     for (auto &i: nonterminals)
     {
-        const auto name = dynamic_cast<const C_Nonterminal&>(*i).m_id;
-        bool ok =false;
+        const auto &name = dynamic_cast<const C_Nonterminal&>(*i).m_id;
+        bool ok = false;
         for (auto &j: parsed.productions())
             if (j.m_Lval == name)
             {
-                ok =true;
+                ok = true;
                 break;
             }
         if (!ok)
@@ -365,7 +370,7 @@ size_t makeCfa              (
     }
     for (auto &i: variables)
     {
-        const std::string name = dynamic_cast<const C_LexSymbol&>(*i).m_Var;
+        const auto &name = dynamic_cast<const C_LexSymbol&>(*i).m_Var;
         if (!parsed.hasLexSymbol(name))
         {
             std::print("Can't find macro resolution for ${}\n", name);
