@@ -9,9 +9,9 @@
 //
 //      Major.Minor.Release
 //
-constinit const int VERSION_MAJOR   = 1;
-constinit const int VERSION_MINOR   = 7;
-constinit const int VERSION_RELEASE = 5;
+constexpr int VERSION_MAJOR   = 1;
+constexpr int VERSION_MINOR   = 7;
+constexpr int VERSION_RELEASE = 5;
 
 enum
 {
