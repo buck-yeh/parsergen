@@ -1,5 +1,5 @@
 #include "spec2charset.h"
-#include <set>              // std::set<>
+#include <cstring>          // strstr()
 
 namespace {
 
@@ -21,33 +21,67 @@ E_CharRange rangeType(char c)
 
 } // namespace
 
-std::optional<C_S2C_Error> spec2charset(const std::string &spec, std::string &result)
+std::expected<bux::C_Intervals<bux::T_LexID>,C_S2C_Error> spec2charset(std::string_view spec)
 {
-    std::set<char> charset;
+    bux::C_Intervals<bux::T_LexID> charset;
     for (auto i = spec.begin(), end = spec.end(); i != end;)
     {
-        auto start = *i;
-        if (++i != end && *i == '-')
+        const auto start = *i;
+        if (++i != end)
         {
-            const auto t1 = rangeType(start);
-            if (t1 == CR_None)
-                return C_S2C_Error{i - spec.begin(), SCE_INVALID_CHAR};
+            if (*i == '-')
+            {
+                const auto t1 = rangeType(start);
+                if (t1 == CR_None)
+                    return std::unexpected(C_S2C_Error{i - spec.begin(), SCE_INVALID_CHAR});
+                if (++i == end)
+                    return std::unexpected(C_S2C_Error{spec.size(), SCE_MSSING_UB});
+                if (t1 != rangeType(*i))
+                    return std::unexpected(C_S2C_Error{i - spec.begin(), SCE_NOT_IN_SAME_GROUP});
+                if (*i < start)
+                    return std::unexpected(C_S2C_Error{i - spec.begin(), SCE_LB_GREATOR_THAN_UB});
 
-            if (++i == end)
-                return C_S2C_Error{spec.size(), SCE_MSSING_UB};
-            if (t1 != rangeType(*i))
-                return C_S2C_Error{i - spec.begin(), SCE_NOT_IN_SAME_GROUP};
-            if (*i < start)
-                return C_S2C_Error{i - spec.begin(), SCE_LB_GREATOR_THAN_UB};
+                if (start < *i)
+                    charset |= {bux::T_LexID(start), bux::T_LexID(*i)};
+                else if (start == *i)
+                    charset |= bux::T_LexID(start);
+                else
+                    {} // do nothing
 
-            do  charset.insert(start);
-                while (++start <= *i);
+                ++i;
+                continue;
+            }
+            if (start == '\\' && *i == 'u')
+            {
+                if (auto next_ucode_esc = strstr(++i, "\\u"))
+                {
+                    if (next_ucode_esc[-1] == '-')
+                    {
+                        char* from_end;
+                        const auto from = strtoul(i, &from_end, 16);
+                        char* to_end;
+                        const auto to = strtoul(next_ucode_esc+2, &to_end, 16);
+                        if (bux::T_LexID(from) == from &&
+                            bux::T_LexID(to) == to &&
+                            from_end == next_ucode_esc -1 &&
+                            (!*to_end || *to_end != '-'))
+                        {
+                            if (from < to)
+                                charset |= {bux::T_LexID(from), bux::T_LexID(to)};
+                            else if (from == to)
+                                charset |= bux::T_LexID(from);
+                            else
+                                {} // do nothing
 
-            ++i;
+                            i = to_end;
+                            continue;
+                        }
+                    }
+                }
+                return std::unexpected(C_S2C_Error{i - spec.begin(), SCE_UCODE_SYNTAX});
+            }
         }
-        else
-            charset.insert(start);
+        charset |= bux::T_LexID(start);
     }
-    result.assign(charset.cbegin(), charset.cend());
-    return {};
+    return charset;
 }

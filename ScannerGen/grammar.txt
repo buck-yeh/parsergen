@@ -187,26 +187,27 @@ right  ( ) { }
     $r = bux::createLex<C_LexSet>(c1, c2);
 ]]
 <SubCharSet> ::= $Charset                       [[
-    std::string s;
-    if (auto errPos = spec2charset(bux::unlex<std::string>($1), s))
+    if (auto ret = spec2charset(bux::unlex<std::string>($1)))
+        // On success
+        $r = bux::createLex<C_LexSet>(*ret);
+    else
         // On error
     {
+        const auto errPos = ret.error();
         const char *err;
-        switch (errPos->second)
+        switch (errPos.second)
         {
-        case SCE_INVALID_CHAR:          err = "Invalid char";       break;
-        case SCE_MSSING_UB:             err = "Missing range UB";   break;
-        case SCE_NOT_IN_SAME_GROUP:     err = "Not in same group";  break;
-        case SCE_LB_GREATOR_THAN_UB:    err = "Range LB < UB";      break;
+        case SCE_INVALID_CHAR:          err = "Invalid char";           break;
+        case SCE_MSSING_UB:             err = "Missing range UB";       break;
+        case SCE_NOT_IN_SAME_GROUP:     err = "Not in same group";      break;
+        case SCE_LB_GREATOR_THAN_UB:    err = "Range LB < UB";          break;
+        case SCE_UCODE_SYNTAX:          err = "Unicode escape syntax";  break;
         default:                        err = "Unknown error";
         }
         auto pos = $1.m_pos;
-        pos.m_Col += unsigned(errPos->first);
+        pos.m_Col += unsigned(errPos.first);
         $p.onError(pos, err);
     }
-    else
-        // On success
-        $r = bux::createLex<C_LexSet>(s.begin(), s.end());
 ]]
 
 <LexResult> ::=                                 [[]]
@@ -332,7 +333,7 @@ struct C_LexListLex: bux::I_LexAttr
 #include    "RE_Suite.txt"
 %NAMEPREFIX Scanner
 
-EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec_digit)+  >>bux::createPlainString<TID_LEX_Charset,CHAR_TYPE> @-1
+EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec_digit|ucode_esc4 '-' ucode_esc4|ucode_esc8 '-' ucode_esc8)+  >>bux::createPlainString<TID_LEX_Charset,CHAR_TYPE> @-1
 ]]
 %HEADERS_FOR_SCANNER_CPP    [[
 #include "BracketBalance.h"

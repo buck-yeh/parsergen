@@ -1,7 +1,7 @@
 #include "spec2charset.h"   // spec2charset()
 //--------------------------------------------------------------------
 #include "bux/LexBase.h"    // bux::asciiLiteral()
-#include <iostream>         // std::cout
+#include <print>            // std::println()
 
 enum
 {
@@ -13,28 +13,41 @@ int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-        std::cout <<"handycharset <CharsetSpec1> <CharsetSpec2> ...\n";
+        std::println("handycharset <CharsetSpec1> <CharsetSpec2> ...");
         return MAIN_HELP;
     }
     for (int i = 1; i < argc; ++i)
     {
-        std::cout <<'[' <<argv[i] <<"] ->\n";
-        std::string s;
-        if (auto errPos = spec2charset(argv[i], s))
-            // On error
+        std::println("[{}] ->", argv[i]);
+        if (auto ret = spec2charset(argv[i]))
         {
-            std::cout <<'#' <<(1+errPos->first) <<": ";
-            switch (errPos->second)
+            bool first = true;
+            for (auto& j: *ret)
             {
-            case SCE_INVALID_CHAR:          std::cout <<"Invalid char\n";       break;
-            case SCE_MSSING_UB:             std::cout <<"Missing range UB\n";   break;
-            case SCE_NOT_IN_SAME_GROUP:     std::cout <<"Not in same group\n";  break;
-            case SCE_LB_GREATOR_THAN_UB:    std::cout <<"Range LB < UB\n";      break;
+                if (first)
+                    first = false;
+                else
+                    std::print(", ");
+
+                std::print("[\\u{:x},\\u{:x}]", j.first, j.second);
             }
+            std::println();
         }
         else
-            // On success
-            std::cout <<bux::asciiLiteral(s) <<'\n';
+            // On error
+        {
+            const auto errPos = ret.error();
+            std::print("#{}: ", 1+errPos.first);
+            switch (errPos.second)
+            {
+            case SCE_INVALID_CHAR:          std::println("Invalid char");           break;
+            case SCE_MSSING_UB:             std::println("Missing range UB");       break;
+            case SCE_NOT_IN_SAME_GROUP:     std::println("Not in same group");      break;
+            case SCE_LB_GREATOR_THAN_UB:    std::println("Range LB < UB");          break;
+            case SCE_UCODE_SYNTAX:          std::println("Unicode escape syntax");  break;
+            default: std::println("Unknown error code {}", int(errPos.second));
+            }
+        }
     }
     return MAIN_OK;
 }

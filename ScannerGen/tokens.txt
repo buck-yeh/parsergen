@@ -1,7 +1,7 @@
 #include    "RE_Suite.txt"
 %NAMEPREFIX Scanner
 
-EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec_digit)+  >>bux::createPlainString<TID_LEX_Charset,CHAR_TYPE> @-1
+EasyCharset = (alpha|dec_digit|lcase '-' lcase|ucase '-' ucase|dec_digit '-' dec_digit|ucode_esc4 '-' ucode_esc4|ucode_esc8 '-' ucode_esc8)+  >>bux::createPlainString<TID_LEX_Charset,CHAR_TYPE> @-1
 
 _literal_3e3e 	= ">>"	>>bux::createNothing<TID_LITERAL_3e3e,CHAR_TYPE> @+1
 _literal_i_f_ 	= "if"	>>bux::createNothing<TID_KEYWORD_if,CHAR_TYPE> @+1

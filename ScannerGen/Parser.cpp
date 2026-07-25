@@ -1199,26 +1199,27 @@ void _reduce_23(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetL
 void _reduce_24(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval _reT_)
 //  <SubCharSet> ::= $Charset
 {
-    std::string s;
-    if (auto errPos = spec2charset(bux::unlex<std::string>(_geT_(0)), s))
+    if (auto ret = spec2charset(bux::unlex<std::string>(_geT_(0))))
+        // On success
+        _reT_ = bux::createLex<C_LexSet>(*ret);
+    else
         // On error
     {
+        const auto errPos = ret.error();
         const char *err;
-        switch (errPos->second)
+        switch (errPos.second)
         {
-        case SCE_INVALID_CHAR:          err = "Invalid char";       break;
-        case SCE_MSSING_UB:             err = "Missing range UB";   break;
-        case SCE_NOT_IN_SAME_GROUP:     err = "Not in same group";  break;
-        case SCE_LB_GREATOR_THAN_UB:    err = "Range LB < UB";      break;
+        case SCE_INVALID_CHAR:          err = "Invalid char";           break;
+        case SCE_MSSING_UB:             err = "Missing range UB";       break;
+        case SCE_NOT_IN_SAME_GROUP:     err = "Not in same group";      break;
+        case SCE_LB_GREATOR_THAN_UB:    err = "Range LB < UB";          break;
+        case SCE_UCODE_SYNTAX:          err = "Unicode escape syntax";  break;
         default:                        err = "Unknown error";
         }
         auto pos = _geT_(0).m_pos;
-        pos.m_Col += unsigned(errPos->first);
+        pos.m_Col += unsigned(errPos.first);
         _paRSeR_.onError(pos, err);
     }
-    else
-        // On success
-        _reT_ = bux::createLex<C_LexSet>(s.begin(), s.end());
 }
 
 void _reduce_25(bux::LR1::C_Parser &_paRSeR_, const F_GetProduced &_geT_, C_RetLval _reT_)
