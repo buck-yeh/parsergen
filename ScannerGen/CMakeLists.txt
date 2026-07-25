@@ -3,6 +3,18 @@ IF(NOT DEFINED FETCH_DEPENDEES)
     string(APPEND CMAKE_CXX_FLAGS " -I../${DEPENDEE_ROOT}/CBrackets -L../${DEPENDEE_ROOT}/CBrackets")
 ENDIF()
 
+add_executable(handycharset
+    HandyCharset.cpp
+    spec2charset.cpp
+    )
+target_compile_features(handycharset PRIVATE cxx_std_23)
+#target_compile_options(handycharset PRIVATE -O0 -g3)
+if(Iconv_FOUND)
+target_link_libraries(handycharset bux Iconv::Iconv stdc++)
+else()
+target_link_libraries(handycharset bux stdc++)
+endif()
+
 add_executable(scannergen
     Context.cpp
     main.cpp
@@ -16,15 +28,4 @@ if(Iconv_FOUND)
 target_link_libraries(scannergen bracketPairing bux Iconv::Iconv stdc++)
 else()
 target_link_libraries(scannergen bracketPairing bux stdc++)
-endif()
-
-add_executable(handycharset
-    HandyCharset.cpp
-    spec2charset.cpp
-    )
-target_compile_features(handycharset PRIVATE cxx_std_23)
-if(Iconv_FOUND)
-target_link_libraries(handycharset bux Iconv::Iconv stdc++)
-else()
-target_link_libraries(handycharset bux stdc++)
 endif()
