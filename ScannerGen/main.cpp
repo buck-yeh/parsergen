@@ -39,7 +39,7 @@ const char USERPREFIX[] ="create_";
 //
 constexpr int VERSION_MAJOR   = 1;
 constexpr int VERSION_MINOR   = 6;
-constexpr int VERSION_RELEASE = 0;
+constexpr int VERSION_RELEASE = 1;
 
 enum
 {
