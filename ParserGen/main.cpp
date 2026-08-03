@@ -19,19 +19,20 @@
         - Error Recovery in Yacc(p264), 4.9
 */
 
-#include "ActionMap.h"      // makeActionMap()
-#include "Cfa.h"            // makeCfa()
-#include "Output.h"         // FC_Output
-#include "ParseFile.h"      // parseFile()
-#include "Parser.h"         // Main::C_BNFParserPolicy, Main::C_BNFParser
+#include "ActionMap.h"          // makeActionMap()
+#include "Cfa.h"                // makeCfa()
+#include "Output.h"             // FC_Output
+#include "ParseFile.h"          // parseFile()
+#include "Parser.h"             // Main::C_BNFParserPolicy, Main::C_BNFParser
+#include "../common/Version.h"  // VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE
 //--------------------------------------------------------------------------------------------------
-#include "bux/EZArgs.h"     // bux::C_EZArgs
-#include "bux/MemIn.h"      // bux::C_IMemStream<>
-#include "bux/StrUtil.h"    // HRTN()
-#include "bux/XConsole.h"   // bux::pressAKey();
-#include "bux/XException.h" // bux::catchSE()
-#include <chrono>           // std::chrono::system_clock::*
-#include <print>            // std::print()
+#include "bux/EZArgs.h"         // bux::C_EZArgs
+#include "bux/MemIn.h"          // bux::C_IMemStream<>
+#include "bux/StrUtil.h"        // HRTN()
+#include "bux/XConsole.h"       // bux::pressAKey();
+#include "bux/XException.h"     // bux::catchSE()
+#include <chrono>               // std::chrono::system_clock::*
+#include <print>                // std::print()
 
 using namespace bux;
 

@@ -6,13 +6,6 @@
 #include "bux/XException.h" // RUNTIME_ERROR()
 #include <optional>         // std::optional<>
 
-//
-//      Major.Minor.Release
-//
-constexpr int VERSION_MAJOR   = 1;
-constexpr int VERSION_MINOR   = 7;
-constexpr int VERSION_RELEASE = 5;
-
 enum
 {
     //

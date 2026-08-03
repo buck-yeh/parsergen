@@ -1,5 +1,6 @@
 #include "Output.h"
 #include "Cfa.h"                // C_GotoMap
+#include "../common/Version.h"  // VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE
 //---------------------------------------------------------------------------
 #include "bux/GLR.h"            // bux::GLR::ACTION_REDUCE_MIN
 #include "bux/LR1.h"            // bux::LR1::ACTION_REDUCE_MIN

@@ -7,22 +7,23 @@
 //      * Figure 7.5 (p245): Algorithm NFA->DFA
 //      * Figure 7.7 (p247): Algorithm MinDFA
 //
-#include "Parser.h"         // C_ScannerParser
-#include "ParserIdDef.h"    // TID_LEX_Spaces
-#include "Scanner.h"        // C_ScannerScanner
+#include "Parser.h"             // C_ScannerParser
+#include "ParserIdDef.h"        // TID_LEX_Spaces
+#include "Scanner.h"            // C_ScannerScanner
+#include "../common/Version.h"  // VERSION_MAJOR, VERSION_MINOR, VERSION_RELEASE
 //------------------------------------------------------------------------------
-#include "bux/EZArgs.h"     // bux::C_EZArgs
-#include "bux/FA.h"         // bux::C_DFA
-#include "bux/LogStream.h"  // HRTN()
-#include "bux/MemIn.h"      // bux::C_IMemStream<>
-#include "bux/Range2Type.h" // bux::fittestType()
-#include "bux/XConsole.h"   // bux::testWritability()
-#include <cstring>          // strlen()
-#include <filesystem>       // std::filesystem::path
-#include <fstream>          // std::ifstream
-#include <iostream>         // std::cin, std::cerr
-#include <limits>           // std::numeric_limits<>
-#include <print>            // std::print()
+#include "bux/EZArgs.h"         // bux::C_EZArgs
+#include "bux/FA.h"             // bux::C_DFA
+#include "bux/LogStream.h"      // HRTN()
+#include "bux/MemIn.h"          // bux::C_IMemStream<>
+#include "bux/Range2Type.h"     // bux::fittestType()
+#include "bux/XConsole.h"       // bux::testWritability()
+#include <cstring>              // strlen()
+#include <filesystem>           // std::filesystem::path
+#include <fstream>              // std::ifstream
+#include <iostream>             // std::cin, std::cerr
+#include <limits>               // std::numeric_limits<>
+#include <print>                // std::print()
 
 namespace fs = std::filesystem;
 
@@ -33,13 +34,6 @@ void parseFile(const std::string &filename, C_ScannerParser &parser, bux::T_LexI
 //
 #define PROGNAME "scannergen"
 const char USERPREFIX[] ="create_";
-
-//
-//      Major.Minor.Release
-//
-constexpr int VERSION_MAJOR   = 1;
-constexpr int VERSION_MINOR   = 6;
-constexpr int VERSION_RELEASE = 1;
 
 enum
 {
